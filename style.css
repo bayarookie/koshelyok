@@ -1,0 +1,65 @@
+table, td, div {
+	border: 1px solid black;
+	border-radius: 4px;
+}
+input, select {
+	color: #0275d8;
+	background-color: #fff;
+	border-color: #0275d8;
+	border-radius: 4px;
+}
+input:focus,
+input:active,
+input:hover {
+	color: #fff;
+	background-color: #0275d8;
+	border-color: #0275d8;
+}
+.hide {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.7);
+	overflow: auto;
+}
+#money_table, #goods_table div, #groups_table div, #walls_table div {
+	margin: 30px auto;
+	padding: 5px;
+}
+#money_form div, #goods_form div, #groups_form div, #walls_form div {
+	margin: 30px auto;
+	width: 360px;
+	padding: 10px;
+}
+#money_table {
+	background-color: #66cccc;
+}
+#money_form div {
+	background-color: #407f7f;
+}
+#goods_table div {
+	background-color: #d49a6a;
+}
+#goods_form div {
+	background-color: #aa6c39;
+}
+#groups_table div {
+	background-color: #d46a6a;
+}
+#groups_form div {
+	background-color: #aa3939;
+}
+#walls_table div {
+	background-color: #55aa55;
+}
+#walls_form div {
+	background-color: #2d882d;
+}
+.plus {
+	background-color: #88cc88;
+}
+.minus {
+	background-color: #ffaaaa;
+}
