@@ -21,7 +21,7 @@ echo '<p>Выберите группу: <select size="1" name="g_groups_id" id="
 echo '<option';
 if (-1 == $r_id) echo ' selected';
 echo ' value="-1">без группы</option>';
-$query = "SELECT id, name FROM groups";
+$query = "SELECT id, name FROM groups ORDER BY name";
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
 	echo '<option';

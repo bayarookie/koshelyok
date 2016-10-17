@@ -1,8 +1,8 @@
 <?php
+include 'db.php';
 //редактирование или добавление категорий в БД
 if (isset($_POST['w_id'])) {
 	$w_id = intval($_POST['w_id']);
-	include 'db.php';
 	if (isset($_POST['w_name'])) {$name = $mysqli->real_escape_string($_POST['w_name']);} else {$name = '';}
 	if (isset($_POST['w_comment'])) {$komm = $mysqli->real_escape_string($_POST['w_comment']);} else {$komm = '';}
 	if ($w_id > -1) {

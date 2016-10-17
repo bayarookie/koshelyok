@@ -1,5 +1,5 @@
 <?php
-echo '<h3>Операции</h3>';
+echo '<div><h3>Операции</h3>';
 echo '<table><tr><th><th>Дата<th>Сумма<th><th>Категория<th>Группа<th>Комментарий<th>Кошелёк';
 
 //фильтр
@@ -23,7 +23,7 @@ $query = "SELECT SUM(op_summ) as summ, walls.name FROM money"
 		." GROUP BY walls_id";
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
-	echo ' <tr><td>На начало<td>' . $f_dtfr . '<td align="right">' . $row['summ'] . '<td><td><td><td><td>' . $row['name'];
+	echo '<tr><td>На начало<td>' . $f_dtfr . '<td align="right">' . $row['summ'] . '<td><td><td><td><td>' . $row['name'];
 }
 
 //движение денег
@@ -39,7 +39,7 @@ $query = "SELECT money.*,"
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
 	$summ = floatval($row['op_summ']);
-	if ($summ < 0) {echo ' <tr class="minus">';} else {echo ' <tr class="plus">';}
+	if ($summ < 0) {echo '<tr class="minus">';} else {echo '<tr class="plus">';}
 	echo '<td><input type="button" value="Редактировать" onclick="money_form(' . $row['id'] . ')">';
 	echo '<td>' . $row['op_date'];
 	echo '<td align="right">' . $row['summ1'];
@@ -60,11 +60,25 @@ $query = "SELECT SUM(if(op_summ>0,op_summ,0)) as summ1, SUM(if(op_summ<0,op_summ
 		." GROUP BY walls_id";
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
-	echo ' <tr><td>Сумма<td><td align="right">' . $row['summ1'] . '<td align="right">' . $row['summ2'] . '<td><td><td><td>'. $row['name'];
+	echo '<tr><td>Сумма<td><td align="right">' . $row['summ1'] . '<td align="right">' . $row['summ2'] . '<td><td><td><td>'. $row['name'];
+}
+
+//итого движение денег
+$query = "SELECT SUM(op_summ) as summ"
+		." FROM money"
+		." LEFT JOIN goods ON money.goods_id=goods.id"
+		." LEFT JOIN groups ON goods.groups_id=groups.id"
+		." LEFT JOIN walls ON money.walls_id=walls.id"
+		." WHERE money.op_date>='$f_dtfr' and money.op_date<='$f_dtto'" . $filter;
+$result = byQu($mysqli, $query);
+if ($row = $result->fetch_assoc()) {
+	$summ = floatval($row['summ']);
+	if ($summ < 0) {echo '<tr class="minus">';} else {echo '<tr class="plus">';}
+	echo '<td>Итого<td><td><td align="right">' . $row['summ'] . '<td><td><td><td>';
 }
 
 //остаток
-$query = "SELECT SUM(op_summ) as summ, walls.name"
+$query = "SELECT SUM(op_summ) as summ, walls.name, MAX(op_date) as dt"
 		." FROM money"
 		." LEFT JOIN goods ON money.goods_id=goods.id"
 		." LEFT JOIN groups ON goods.groups_id=groups.id"
@@ -73,10 +87,9 @@ $query = "SELECT SUM(op_summ) as summ, walls.name"
 		." GROUP BY walls_id";
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
-	echo ' <tr><td>Остаток<td><td><td align="right">' . $row['summ'] . '<td><td><td><td>'. $row['name'];
+	echo '<tr><td>Остаток<td>' . $row['dt'] . '<td><td align="right">' . $row['summ'] . '<td><td><td><td>'. $row['name'];
 }
 echo '</table>';
-echo '<input type="button" value="Добавить" onclick="money_form(-1)">';
 
 //фильтр по дате
 echo '<div><p>Фильтр: с <input type="date" name="date_from" id="date_from" placeholder="гггг-мм-дд" value="' . $f_dtfr . '">';
@@ -88,7 +101,8 @@ echo '<option';
 if (-1 == $f_goods_id) echo ' selected';
 echo ' value="-1">Все</option>';
 $query = "SELECT goods.id, goods.name, groups.name as groups_name FROM goods"
-		." LEFT JOIN groups ON goods.groups_id=groups.id";
+		." LEFT JOIN groups ON goods.groups_id=groups.id"
+		." ORDER BY groups.name, goods.name";
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
 	echo '<option';
@@ -104,7 +118,7 @@ echo '<p>группа: <select size="1" name="f_groups_id" id="f_groups_id">';
 echo '<option';
 if (-1 == $f_groups_id) echo ' selected';
 echo ' value="-1">Все</option>';
-$query = "SELECT id, name FROM groups";
+$query = "SELECT id, name FROM groups ORDER BY name";
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
 	echo '<option';
@@ -129,5 +143,7 @@ echo '</select></p>';
 
 //фильтровать
 echo '<p><input type="button" value="Обновить" onclick="money_table()"></p></div>';
+echo '<input type="button" value="Добавить" onclick="money_form(-1)">';
+echo '<input type="button" value="Закрыть" onclick="money_table_close()">';
 //echo '<pre>' . print_r($_POST) . '</pre>';
 ?>

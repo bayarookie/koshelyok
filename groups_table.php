@@ -1,7 +1,7 @@
 <?php
 echo "<div><h3>Группы</h3>";
 echo '<table><tr><th><th>Наименование<th>Комментарий';
-$query = 'SELECT * FROM groups';
+$query = 'SELECT * FROM groups ORDER BY name';
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
 	echo '<tr>';

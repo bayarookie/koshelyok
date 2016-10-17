@@ -24,7 +24,8 @@ echo '<p>Введите сумму: <input type="number" step="0.01" name="m_op_
 
 echo '<p>Выберите категорию: <select size="1" name="m_goods_id" id="m_goods_id">';
 $query = "SELECT goods.id, goods.name, groups.name as groups_name FROM goods"
-		." LEFT JOIN groups ON goods.groups_id=groups.id";
+		." LEFT JOIN groups ON goods.groups_id=groups.id"
+		." ORDER BY groups.name, goods.name";
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
 	echo '<option';

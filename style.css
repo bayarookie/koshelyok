@@ -24,8 +24,8 @@ input:hover {
 	background-color: rgba(0, 0, 0, 0.7);
 	overflow: auto;
 }
-#money_table, #goods_table div, #groups_table div, #walls_table div {
-	margin: 30px auto;
+#money_table div, #goods_table div, #groups_table div, #walls_table div, #report_table div {
+	margin: 10px auto;
 	padding: 5px;
 }
 #money_form div, #goods_form div, #groups_form div, #walls_form div {
@@ -33,7 +33,7 @@ input:hover {
 	width: 360px;
 	padding: 10px;
 }
-#money_table {
+#money_table div, #report_table div, #import_form div {
 	background-color: #66cccc;
 }
 #money_form div {

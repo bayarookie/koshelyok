@@ -2,7 +2,8 @@
 echo '<div><h3>Категории</h3>';
 echo '<table><tr><th><th>Наименование<th>Группа<th>Комментарий';
 $query = 'SELECT goods.*, groups.name as groups_name FROM goods'
-		.' LEFT JOIN groups ON goods.groups_id=groups.id';
+		.' LEFT JOIN groups ON goods.groups_id=groups.id'
+		.' ORDER BY groups.name, goods.name';
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
 	echo ' <tr>';

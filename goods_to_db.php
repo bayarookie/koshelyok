@@ -1,8 +1,8 @@
 <?php
+include 'db.php';
 //редактирование или добавление категорий в БД
 if (isset($_POST['g_id'])) {
 	$g_id = intval($_POST['g_id']);
-	include 'db.php';
 	if (isset($_POST['g_name'])) {$name = $mysqli->real_escape_string($_POST['g_name']);} else {$name = '';}
 	if (isset($_POST['g_comment'])) {$komm = $mysqli->real_escape_string($_POST['g_comment']);} else {$komm = '';}
 	if (isset($_POST['g_groups_id'])) {$r_id = intval($_POST['g_groups_id']);} else {$r_id = -1;}
