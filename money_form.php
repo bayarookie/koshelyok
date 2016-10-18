@@ -52,4 +52,4 @@ echo '<textarea name="m_comment" id="m_comment" cols="40" rows="3" maxlength="10
 <p><input type="button" value="Сохранить" onclick="money_to_db()">
 <input type="reset" value="Очистить">
 <input type="button" value="Редактировать категории" onclick="goods_table()">
-<input type="button" value="Закрыть" onclick="money_form_close()"></p></div>
+<input type="button" value="Закрыть" onclick="id_close('money_form')"></p></div>

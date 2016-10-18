@@ -1,4 +1,5 @@
 <?php
+include 'db.php';
 echo '<div><h3>Операции</h3>';
 echo '<table><tr><th><th>Дата<th>Сумма<th><th>Категория<th>Группа<th>Комментарий<th>Кошелёк';
 
@@ -140,10 +141,7 @@ while ($row = $result->fetch_assoc()) {
 	echo ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
 }
 echo '</select></p>';
-
-//фильтровать
-echo '<p><input type="button" value="Обновить" onclick="money_table()"></p></div>';
-echo '<input type="button" value="Добавить" onclick="money_form(-1)">';
-echo '<input type="button" value="Закрыть" onclick="money_table_close()">';
-//echo '<pre>' . print_r($_POST) . '</pre>';
 ?>
+<p><input type="button" value="Обновить" onclick="money_table(1)"></p></div>
+<input type="button" value="Добавить" onclick="money_form(-1)">
+<input type="button" value="Закрыть" onclick="id_close('money_table')">

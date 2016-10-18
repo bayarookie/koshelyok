@@ -22,5 +22,5 @@ while ($row = $result->fetch_assoc()) {
 }
 echo '<tr class="minus"><td>' . $mo . '<td align="right">' . $sm;
 echo '</table>';
-echo '<input type="button" value="Закрыть" onclick="report_table_close()"></div>';
 ?>
+<input type="button" value="Закрыть" onclick="id_close('report_table')"></div>

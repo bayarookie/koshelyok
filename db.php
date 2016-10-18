@@ -1,4 +1,5 @@
 <?php
+if (!function_exists('byQu')) {
 include 'config.php';
 
 function byQu($mysqli, $query) {
@@ -37,4 +38,5 @@ if (isset($_POST['mo'])) {
 if (isset($_POST['f_goods_id'])) {$f_goods_id = intval($_POST['f_goods_id']);} else {$f_goods_id = -1;}
 if (isset($_POST['f_groups_id'])) {$f_groups_id = intval($_POST['f_groups_id']);} else {$f_groups_id = -1;}
 if (isset($_POST['f_walls_id'])) {$f_walls_id = intval($_POST['f_walls_id']);} else {$f_walls_id = -1;}
+}
 ?>

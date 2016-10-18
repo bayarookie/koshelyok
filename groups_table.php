@@ -1,4 +1,5 @@
 <?php
+include 'db.php';
 echo "<div><h3>Группы</h3>";
 echo '<table><tr><th><th>Наименование<th>Комментарий';
 $query = 'SELECT * FROM groups ORDER BY name';
@@ -10,6 +11,6 @@ while ($row = $result->fetch_assoc()) {
 	echo '<td>' . $row['comment'];
 }
 echo "</table>";
-echo '<input type="button" value="Добавить" onclick="groups_form(-1)">';
-echo '<input type="button" value="Закрыть" onclick="groups_table_close()"></div>';
 ?>
+<input type="button" value="Добавить" onclick="groups_form(-1)">
+<input type="button" value="Закрыть" onclick="id_close('groups_table')"></div>

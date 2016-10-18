@@ -17,7 +17,7 @@ echo '<div><input type="hidden" name="w_id" id="w_id" value="' . $w_id . '">';
 echo '<p>Введите имя: <input type="text" name="w_name" id="w_name" placeholder="Наименование" value="' . $name . '"></p>';
 echo '<p>Комментарий<br>';
 echo '<textarea name="w_comment" id="w_comment" cols="40" rows="3" maxlength="1000" placeholder="Комментарий">' . $komm . '</textarea></p>';
-echo '<p><input type="button" value="Отправить" onclick="walls_to_db()">';
-echo '<input type="reset" value="Очистить">';
-echo '<input type="button" value="Закрыть" onclick="walls_form_close()"></p></div>';
 ?>
+<p><input type="button" value="Отправить" onclick="walls_to_db()">
+<input type="reset" value="Очистить">
+<input type="button" value="Закрыть" onclick="id_close('walls_form')"></p></div>

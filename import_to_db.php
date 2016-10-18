@@ -96,7 +96,5 @@ if ($c1 > 0) {
 } else {
 	echo "Ошибка во время импортирования выписки:<pre>" . $mysqli->error . "</pre>";
 }
-//echo '<pre>' . print_r($_POST) . '</pre>';
-//echo '<pre>' . print_r($_FILES) . '</pre>';
-echo '<input type="button" value="Закрыть" onclick="import_form_close()"></div>';
 ?>
+<input type="button" value="Закрыть" onclick="id_close('import_form')"></div>

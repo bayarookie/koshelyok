@@ -14,5 +14,5 @@ echo '</select></p>';
 ?>
 <p>Выбрать файл: <input type="file" id="i_file">
 <input type="button" value="Отправить этот файл" onclick="import_to_db()"></p>
-<input type="button" value="Закрыть" onclick="import_form_close()">
+<input type="button" value="Закрыть" onclick="id_close('import_form')">
 </div>

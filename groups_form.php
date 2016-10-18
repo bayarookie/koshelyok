@@ -17,7 +17,7 @@ echo '<div><input type="hidden" name="r_id" id="r_id" value="' . $r_id . '">';
 echo '<p>Введите имя: <input type="text" name="r_name" id="r_name" placeholder="Наименование" value="' . $name . '"></p>';
 echo '<p>Комментарий<br>';
 echo '<textarea name="r_comment" id="r_comment" cols="40" rows="3" maxlength="1000" placeholder="Комментарий">' . $komm . '</textarea></p>';
-echo '<p><input type="button" value="Отправить" onclick="groups_to_db()">';
-echo '<input type="reset" value="Очистить">';
-echo '<input type="button" value="Закрыть" onclick="groups_form_close()"></p></div>';
 ?>
+<p><input type="button" value="Отправить" onclick="groups_to_db()">
+<input type="reset" value="Очистить">
+<input type="button" value="Закрыть" onclick="id_close('groups_form')"></p></div>

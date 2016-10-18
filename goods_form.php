@@ -31,8 +31,8 @@ while ($row = $result->fetch_assoc()) {
 echo '</select></p>';
 echo '<p>Комментарий<br>';
 echo '<textarea name="g_comment" id="g_comment" cols="40" rows="3" maxlength="1000" placeholder="Комментарий">' . $komm . '</textarea></p>';
-echo '<p><input type="button" value="Отправить" onclick="goods_to_db()">';
-echo '<input type="reset" value="Очистить">';
-echo '<input type="button" value="Редактировать группы" onclick="groups_table()">';
-echo '<input type="button" value="Закрыть" onclick="goods_form_close()"></p></div>';
 ?>
+<p><input type="button" value="Отправить" onclick="goods_to_db()">
+<input type="reset" value="Очистить">
+<input type="button" value="Редактировать группы" onclick="groups_table()">
+<input type="button" value="Закрыть" onclick="id_close('goods_form')"></p></div>

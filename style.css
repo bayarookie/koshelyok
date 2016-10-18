@@ -17,45 +17,23 @@ input:hover {
 }
 .hide {
 	position: fixed;
-	top: 0;
+	top: 35px;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	background-color: rgba(0, 0, 0, 0.7);
 	overflow: auto;
 }
-#money_table div, #goods_table div, #groups_table div, #walls_table div, #report_table div {
-	margin: 10px auto;
+#money_table div, #goods_table div, #groups_table div, #walls_table div, #report_table div, #import_form div {
+	margin: auto;
 	padding: 5px;
-}
-#money_form div, #goods_form div, #groups_form div, #walls_form div {
-	margin: 30px auto;
-	width: 360px;
-	padding: 10px;
-}
-#money_table div, #report_table div, #import_form div {
 	background-color: #66cccc;
 }
-#money_form div {
+#money_form div, #goods_form div, #groups_form div, #walls_form div {
+	margin: 20px auto;
+	width: 360px;
+	padding: 10px;
 	background-color: #407f7f;
-}
-#goods_table div {
-	background-color: #d49a6a;
-}
-#goods_form div {
-	background-color: #aa6c39;
-}
-#groups_table div {
-	background-color: #d46a6a;
-}
-#groups_form div {
-	background-color: #aa3939;
-}
-#walls_table div {
-	background-color: #55aa55;
-}
-#walls_form div {
-	background-color: #2d882d;
 }
 .plus {
 	background-color: #88cc88;
