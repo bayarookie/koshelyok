@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-echo '<div><h1><a href="">Импорт</a></h1>';
+echo '<article><h1><a href="">Импорт</a></h1>';
 if (isset($_POST['w_id'])) {$w_id = intval($_POST['w_id']);} else {$w_id = 1;} //1 = Сбербанк
 $uploadfile = '/tmp/' . basename($_FILES['bankstate']['name']);
 echo '<pre>';
@@ -69,7 +69,7 @@ while ($line = fgets($fh)) {
 		echo '<tr><td>' . $date . '<td>' . $nm . '<td>' . $summ;
 		$g_id = byFg($mysqli, $nm);
 		if ($g_id < 0) {
-			$query = "INSERT INTO goods (name, groups_id) VALUES ('$nm', -1)";
+			$query = "INSERT INTO goods (name, groups_id, comment) VALUES ('$nm', -1, '')";
 			byQu($mysqli, $query);
 		}
 		$g_id = byFg($mysqli, $nm);
@@ -97,4 +97,4 @@ if ($c1 > 0) {
 	echo "Ошибка во время импортирования выписки:<pre>" . $mysqli->error . "</pre>";
 }
 ?>
-<input type="button" value="Закрыть" onclick="id_close('import_form')"></div>
+<input type="button" value="Закрыть" onclick="id_close('import_form')"></article>

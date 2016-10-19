@@ -3,30 +3,39 @@
 <html><head><meta charset="utf-8"><title>Кошелёк</title>
 <link rel="stylesheet" href="style.css">
 <script type="text/javascript">
-function getxhr() {
-	var xhr;
-	try {
-		xhr = new ActiveXObject("Msxml2.XMLHTTP");
-	} catch (e) {
-		try {
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		} catch (E) {
-			xhr = false;
-		}
-	}
-	if (!xhr && typeof XMLHttpRequest!='undefined') {
-		xhr = new XMLHttpRequest();
-	}
-	return xhr;
-}
 function id_close(id) {
 	var iDiv = document.getElementById(id);
 	if (iDiv) {iDiv.parentNode.removeChild(iDiv);}
 }
 
+//get content
+function get_form(form_id, id) {
+	id_close(form_id);
+	var iDiv = document.createElement('div');
+	iDiv.id = form_id;
+	iDiv.className = 'hide';
+	document.getElementsByTagName('body')[0].appendChild(iDiv);
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', form_id.concat('.php'), true);
+	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4) {
+			if(xhr.status == 200) {
+				iDiv.innerHTML = xhr.responseText;
+				if (null != id) {
+					inp = iDiv.children[0].children[1].children[0];
+					inp.focus();
+					inp.select();
+				}
+			}
+		}
+	}
+	if (null == id) {xhr.send();} else {xhr.send("id=" + encodeURIComponent(id));}
+}
+
 //money
-function money_table(fltr) {
-	if (fltr == 1) {
+function money_table(fltr, mo, f_groups_id) {
+	if (fltr === 1) {
 		var date_from = document.getElementById("date_from").value;
 		var date_to = document.getElementById("date_to").value;
 		var f_goods_id = document.getElementById("f_goods_id").value;
@@ -38,7 +47,7 @@ function money_table(fltr) {
 	iDiv.id = 'money_table';
 	iDiv.className = 'hide';
 	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
+	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'money_table.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
@@ -48,38 +57,20 @@ function money_table(fltr) {
 			}
 		}
 	}
-	if (fltr == 1) {
+	if (fltr === 1) {
 		xhr.send("&from=" + encodeURIComponent(date_from)
 		+ "&to=" + encodeURIComponent(date_to)
 		+ "&f_goods_id=" + encodeURIComponent(f_goods_id)
 		+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
 		+ "&f_walls_id=" + encodeURIComponent(f_walls_id)
 		);
+	} else if (fltr === 2) {
+		xhr.send("&mo=" + encodeURIComponent(mo)
+		+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
+		);
 	} else {
 		xhr.send();
 	}
-}
-//money form
-function money_form(m_id) {
-	id_close('money_form');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'money_form';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'money_form.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-				inp = document.getElementById("m_op_summ");
-				inp.focus();
-				inp.select();
-			}
-		}
-	}
-	xhr.send("m_id=" + encodeURIComponent(m_id));
 }
 //money save changes to db
 function money_to_db() {
@@ -95,7 +86,7 @@ function money_to_db() {
 	var f_ri = document.getElementById("f_groups_id").value;
 	var f_wi = document.getElementById("f_walls_id").value;
 	id_close('money_form');
-	var xhr = getxhr();
+	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'money_to_db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
@@ -119,47 +110,6 @@ function money_to_db() {
 	);
 }
 
-//goods
-function goods_table() {
-	id_close('goods_table');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'goods_table';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'goods_table.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-			}
-		}
-	}
-	xhr.send();
-}
-//goods form
-function goods_form(g_id) {
-	id_close('goods_form');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'goods_form';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'goods_form.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-				inp = document.getElementById("g_name");
-				inp.focus();
-				inp.select();
-			}
-		}
-	}
-	xhr.send("g_id=" + encodeURIComponent(g_id));
-}
 //goods save changes to db
 function goods_to_db() {
 	var g_id = document.getElementById("g_id").value;
@@ -167,7 +117,7 @@ function goods_to_db() {
 	var komm = document.getElementById("g_comment").value;
 	var r_id = document.getElementById("g_groups_id").value;
 	id_close('goods_form');
-	var xhr = getxhr();
+	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'goods_to_db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
@@ -184,54 +134,13 @@ function goods_to_db() {
 	);
 }
 
-//groups
-function groups_table() {
-	id_close('groups_table');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'groups_table';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'groups_table.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-			}
-		}
-	}
-	xhr.send();
-}
-//groups form
-function groups_form(r_id) {
-	id_close('groups_form');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'groups_form';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'groups_form.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-				inp = document.getElementById("r_name");
-				inp.focus();
-				inp.select();
-			}
-		}
-	}
-	xhr.send("r_id=" + encodeURIComponent(r_id));
-}
 //groups save changes to db
 function groups_to_db() {
 	var r_id = document.getElementById("r_id").value;
 	var name = document.getElementById("r_name").value;
 	var komm = document.getElementById("r_comment").value;
 	id_close('groups_form');
-	var xhr = getxhr();
+	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'groups_to_db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
@@ -247,54 +156,13 @@ function groups_to_db() {
 	);
 }
 
-//walls
-function walls_table() {
-	id_close('walls_table');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'walls_table';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'walls_table.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-			}
-		}
-	}
-	xhr.send();
-}
-//walls form
-function walls_form(w_id) {
-	id_close('walls_form');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'walls_form';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'walls_form.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-				inp = document.getElementById("w_name");
-				inp.focus();
-				inp.select();
-			}
-		}
-	}
-	xhr.send("w_id=" + encodeURIComponent(w_id));
-}
 //walls save changes to db
 function walls_to_db() {
 	var w_id = document.getElementById("w_id").value;
 	var name = document.getElementById("w_name").value;
 	var komm = document.getElementById("w_comment").value;
 	id_close('walls_form');
-	var xhr = getxhr();
+	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'walls_to_db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
@@ -310,75 +178,15 @@ function walls_to_db() {
 	);
 }
 
-//report
-function report_table() {
-	id_close('report_table');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'report_table';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'report.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-			}
-		}
-	}
-	xhr.send();
-}
-function report_money(mo,f_groups_id) {
-	id_close('money_table');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'money_table';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'money_table.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-			}
-		}
-	}
-	xhr.send("&mo=" + encodeURIComponent(mo)
-		+ "&f_goods_id=-1"
-		+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
-		+ "&f_walls_id=-1"
-	);
-}
-
-//import form
-function import_form(w_id) {
-	id_close('import_form');
-	var iDiv = document.createElement('div');
-	iDiv.id = 'import_form';
-	iDiv.className = 'hide';
-	document.getElementsByTagName('body')[0].appendChild(iDiv);
-	var xhr = getxhr();
-	xhr.open('POST', 'import_form.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-			}
-		}
-	}
-	xhr.send();
-}
+//import from bankstate to db
 function import_to_db() {
-	var w_id = document.getElementById("w_id").value;
+	var i_id = document.getElementById("i_id").value;
 	var i_fn = document.getElementById("i_file");
 	if (i_fn.files.length === 0) {return;}
 	var data = new FormData();
-	data.append('w_id', w_id);
+	data.append('i_id', i_id);
 	data.append('bankstate', i_fn.files[0]);
-	var xhr = getxhr();
+	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'import_to_db.php', true);
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4) {
@@ -389,18 +197,19 @@ function import_to_db() {
 	}
 	xhr.send(data);
 }
+
 </script>
 </head>
 <body>
-<form action="backup.php" method="post">
+<header><form action="backup.php" method="post">
 	<input type="button" value="Операции" onclick="money_table(0)">
-	<input type="button" value="Категории" onclick="goods_table()">
-	<input type="button" value="Группы" onclick="groups_table()">
-	<input type="button" value="Кошельки" onclick="walls_table()">
-	<input type="button" value="Отчёт помесячно" onclick="report_table()">
-	<input type="button" value="Импорт" onclick="import_form()">
+	<input type="button" value="Категории" onclick="get_form('goods_table')">
+	<input type="button" value="Группы" onclick="get_form('groups_table')">
+	<input type="button" value="Кошельки" onclick="get_form('walls_table')">
+	<input type="button" value="Отчёт помесячно" onclick="get_form('report')">
+	<input type="button" value="Импорт" onclick="get_form('import_form')">
 	<input type="submit" value="Резервное копирование">
 </form>
-<h1><a href="">Кошелёк</a></h1>
+<h1><a href="">Кошелёк</a></h1></header>
 <div id="money_table" class="hide"><?php include 'money_table.php';?></div>
 </body></html>

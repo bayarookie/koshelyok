@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-echo '<div><h3>Операции</h3>';
+echo '<article><h3>Операции</h3>';
 echo '<table><tr><th><th>Дата<th>Сумма<th><th>Категория<th>Группа<th>Комментарий<th>Кошелёк';
 
 //фильтр
@@ -41,7 +41,7 @@ $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
 	$summ = floatval($row['op_summ']);
 	if ($summ < 0) {echo '<tr class="minus">';} else {echo '<tr class="plus">';}
-	echo '<td><input type="button" value="Редактировать" onclick="money_form(' . $row['id'] . ')">';
+	echo '<td><input type="button" value="Редактировать" onclick="get_form(\'money_form\', ' . $row['id'] . ')">';
 	echo '<td>' . $row['op_date'];
 	echo '<td align="right">' . $row['summ1'];
 	echo '<td align="right">' . $row['summ2'];
@@ -77,6 +77,20 @@ if ($row = $result->fetch_assoc()) {
 	if ($summ < 0) {echo '<tr class="minus">';} else {echo '<tr class="plus">';}
 	echo '<td>Итого<td><td><td align="right">' . $row['summ'] . '<td><td><td><td>';
 }
+
+if ($f_dtto != date('Y-m-d')) {
+//остаток на день
+$query = "SELECT SUM(op_summ) as summ, walls.name, MAX(op_date) as dt"
+		." FROM money"
+		." LEFT JOIN goods ON money.goods_id=goods.id"
+		." LEFT JOIN groups ON goods.groups_id=groups.id"
+		." LEFT JOIN walls ON money.walls_id=walls.id"
+		." WHERE money.op_date<='$f_dtto'" . $filter
+		." GROUP BY walls_id";
+$result = byQu($mysqli, $query);
+while ($row = $result->fetch_assoc()) {
+	echo '<tr><td>Остаток<td>' . $row['dt'] . '<td><td align="right">' . $row['summ'] . '<td><td><td><td>'. $row['name'];
+}}
 
 //остаток
 $query = "SELECT SUM(op_summ) as summ, walls.name, MAX(op_date) as dt"
@@ -145,3 +159,4 @@ echo '</select></p>';
 <p><input type="button" value="Обновить" onclick="money_table(1)"></p></div>
 <input type="button" value="Добавить" onclick="money_form(-1)">
 <input type="button" value="Закрыть" onclick="id_close('money_table')">
+</article>

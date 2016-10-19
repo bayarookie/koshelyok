@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-echo '<div><h1><a href="">Отчёт</a></h1>
+echo '<article><h1><a href="">Отчёт</a></h1>
 <table><tr><th>Группа<th>Сумма';
 $query = "SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, groups.id, groups.name, SUM(op_summ) as summ"
 		." FROM money"
@@ -18,9 +18,9 @@ while ($row = $result->fetch_assoc()) {
 		echo '<tr class="plus"><td colspan=2>' . $mo;
 	} else $sm = $sm + floatval($row['summ']);
 	echo '<tr><td>' . $row['name'] . '<td align="right">
-<input type="button" value="' . $row['summ'] . '" onclick="report_money(' . "'" . $row['mo'] . "'," . $row['id'] . ')">';
+<input type="button" value="' . $row['summ'] . '" onclick="money_table(2,\'' . $row['mo'] . '\',' . $row['id'] . ')">';
 }
 echo '<tr class="minus"><td>' . $mo . '<td align="right">' . $sm;
 echo '</table>';
 ?>
-<input type="button" value="Закрыть" onclick="id_close('report_table')"></div>
+<input type="button" value="Закрыть" onclick="id_close('report')"></article>
