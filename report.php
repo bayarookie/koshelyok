@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
-echo '<article><h1><a href="">Отчёт</a></h1>';
+echo '<article><p>Отчёт помесячно
+<input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<style>
 .report {
 	padding: 10px;
@@ -37,6 +38,5 @@ while ($row = $result->fetch_assoc()) {
 }
 if ($sm < 0) {echo '<tr class="minus">';} else {echo '<tr class="plus">';}
 echo '<td>Итого<td align="right">' . $sm;
-echo '</table></figure>';
+echo '</table></figure></article>';
 ?>
-<input type="button" value="Закрыть" onclick="id_close('report')"></article>

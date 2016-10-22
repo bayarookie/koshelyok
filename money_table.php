@@ -1,7 +1,9 @@
 <?php
 include 'db.php';
-echo '<article><h3>Операции</h3>';
-echo '<table><tr><th><th>Дата<th>Сумма<th><th>Категория<th>Группа<th>Комментарий<th>Кошелёк';
+echo '<article><p>Операции
+<input type="button" value="Добавить" onclick="get_form(\'money_form\', -1)">
+<input type="button" value="Закрыть" onclick="id_close(\'money_table\')"></p>
+<table><tr><th><th>Дата<th>Сумма<th><th>Категория<th>Группа<th>Комментарий<th>Кошелёк';
 
 //фильтр
 $filter = "";
@@ -155,8 +157,10 @@ while ($row = $result->fetch_assoc()) {
 	echo ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
 }
 echo '</select></p>';
+
+echo '<p><input type="button" value="Обновить" onclick="money_table(1)"></p></div>
+<p>Операции
+<input type="button" value="Добавить" onclick="get_form(\'money_form\', -1)">
+<input type="button" value="Закрыть" onclick="id_close(\'money_table\')"></p>
+</article>';
 ?>
-<p><input type="button" value="Обновить" onclick="money_table(1)"></p></div>
-<input type="button" value="Добавить" onclick="money_form(-1)">
-<input type="button" value="Закрыть" onclick="id_close('money_table')">
-</article>

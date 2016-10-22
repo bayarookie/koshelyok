@@ -1,7 +1,9 @@
 <?php
 include 'db.php';
-echo '<article><h3>Категории</h3>';
-echo '<table><tr><th><th>Наименование<th>Группа<th>Комментарий';
+echo '<article><p>Категории
+<input type="button" value="Добавить" onclick="get_form(\'goods_form\', -1)">
+<input type="button" value="Закрыть" onclick="id_close(\'goods_table\')"></p>
+<table><tr><th><th>Наименование<th>Группа<th>Комментарий';
 $query = 'SELECT goods.*, groups.name as groups_name FROM goods'
 		.' LEFT JOIN groups ON goods.groups_id=groups.id'
 		.' ORDER BY groups.name, goods.name';
@@ -14,6 +16,8 @@ while ($row = $result->fetch_assoc()) {
 	echo '<td>' . $row['comment'];
 }
 echo '</table>';
+echo '<p>Категории
+<input type="button" value="Добавить" onclick="get_form(\'goods_form\', -1)">
+<input type="button" value="Закрыть" onclick="id_close(\'goods_table\')"></p>
+</article>';
 ?>
-<input type="button" value="Добавить" onclick="get_form('goods_form', -1)">
-<input type="button" value="Закрыть" onclick="id_close('goods_table')"></article>

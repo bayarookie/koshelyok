@@ -1,7 +1,9 @@
 <?php
 include 'db.php';
-echo "<article><h3>Кошельки</h3>";
-echo '<table><tr><th><th>Наименование<th>Комментарий';
+echo '<article><p>Кошельки
+<input type="button" value="Добавить" onclick="get_form(\'walls_form\', -1)">
+<input type="button" value="Закрыть" onclick="id_close(\'walls_table\')"></p>
+<table><tr><th><th>Наименование<th>Комментарий';
 $query = "SELECT * FROM walls";
 $result = byQu($mysqli, $query);
 while ($row = $result->fetch_assoc()) {
@@ -10,7 +12,5 @@ while ($row = $result->fetch_assoc()) {
 	echo '<td>' . $row['name'];
 	echo '<td>' . $row['comment'];
 }
-echo "</table>";
+echo '</table></article>';
 ?>
-<input type="button" value="Добавить" onclick="get_form('walls_form', -1)">
-<input type="button" value="Закрыть" onclick="id_close('walls_table')"></article>
