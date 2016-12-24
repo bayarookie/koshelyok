@@ -1,7 +1,7 @@
 <?php
 include 'db.php';
 echo '<article><h1><a href="">Импорт</a></h1>';
-if (isset($_POST['w_id'])) {$w_id = intval($_POST['w_id']);} else {$w_id = 1;} //1 = Сбербанк
+if (isset($_POST['w_id'])) $w_id = intval($_POST['w_id']); else $w_id = 1; //1 = Сбербанк
 $uploadfile = '/tmp/' . basename($_FILES['bankstate']['name']);
 echo '<pre>';
 if (move_uploaded_file($_FILES['bankstate']['tmp_name'], $uploadfile)) {
@@ -45,8 +45,7 @@ function byMo($m) {
 function byFg($mysqli, $name) {
 	$g_id = -1;
 	$name = $mysqli->real_escape_string($name);
-	$query = "SELECT id FROM goods WHERE name LIKE '$name'";
-	$result = byQu($mysqli, $query);
+	$result = byQu($mysqli, "SELECT id FROM goods WHERE name LIKE '$name'");
 	if ($row = $result->fetch_row()) {
 		$g_id = $row[0];
 	}
@@ -69,19 +68,18 @@ while ($line = fgets($fh)) {
 		echo '<tr><td>' . $date . '<td>' . $nm . '<td>' . $summ;
 		$g_id = byFg($mysqli, $nm);
 		if ($g_id < 0) {
-			$query = "INSERT INTO goods (name, groups_id, comment) VALUES ('$nm', -1, '')";
-			byQu($mysqli, $query);
+			byQu($mysqli, "INSERT INTO goods (name, groups_id, comment) VALUES ('$nm', -1, '')");
 		}
 		$g_id = byFg($mysqli, $nm);
 		if ($g_id < 0) {
 			die('какая то непонятная ошибка');
 		} else {
-			$query = "SELECT id FROM money"
-					." WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND goods_id=$g_id AND walls_id=$w_id";
-			$result = byQu($mysqli, $query);
+			$result = byQu($mysqli,
+				"SELECT id FROM money
+					WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND goods_id=$g_id AND walls_id=$w_id");
 			if ($result->num_rows > 0) $c1++;
-			$impo .= "INSERT INTO money (op_date, op_summ, goods_id, comment, walls_id)"
-					." VALUES (STR_TO_DATE('$date', '%Y-%m-%d'), $summ, $g_id, '', $w_id);\n";
+			$impo .= "INSERT INTO money (op_date, op_summ, goods_id, comment, walls_id)
+						VALUES (STR_TO_DATE('$date', '%Y-%m-%d'), $summ, $g_id, '', $w_id);\n";
 		}
 		echo '<br>';
 		$c2++;

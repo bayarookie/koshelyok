@@ -5,8 +5,7 @@ $name = '';
 $komm = '';
 if (isset($_POST['id'])) {
 	$w_id = intval($_POST['id']);
-	$query = "SELECT * FROM walls WHERE id=" . $w_id;
-	$result = byQu($mysqli, $query);
+	$result = byQu($mysqli, "SELECT * FROM walls WHERE id=$w_id");
 	if ($row = $result->fetch_assoc()) {
 		$name = $row['name'];
 		$komm = $row['comment'];

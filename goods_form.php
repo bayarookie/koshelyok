@@ -6,23 +6,20 @@ $komm = '';
 $r_id = -1;
 if (isset($_POST['id'])) {
 	$g_id = intval($_POST['id']);
-	$query = 'SELECT * FROM goods WHERE id=' . $g_id;
-	$result = byQu($mysqli, $query);
+	$result = byQu($mysqli, "SELECT * FROM goods WHERE id=$g_id");
 	if ($row = $result->fetch_assoc()) {
 		$name = $row['name'];
 		$komm = $row['comment'];
 		$r_id = $row['groups_id'];
 	}
 }
-
 echo '<figure><input type="hidden" id="g_id" value="' . $g_id . '">';
 echo '<p>Введите имя: <input type="text" id="g_name" placeholder="Наименование" value="' . $name . '"></p>';
 echo '<p>Выберите группу: <select size="1" id="g_groups_id">';
 echo '<option';
 if (-1 == $r_id) echo ' selected';
 echo ' value="-1">без группы</option>';
-$query = "SELECT id, name FROM groups ORDER BY name";
-$result = byQu($mysqli, $query);
+$result = byQu($mysqli, "SELECT id, name FROM groups ORDER BY name");
 while ($row = $result->fetch_assoc()) {
 	echo '<option';
 	if ($row['id'] == $r_id) echo ' selected';

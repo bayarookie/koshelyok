@@ -1,14 +1,13 @@
 <?php
 include 'db.php';
-if (isset($_POST['id'])) {$m_id = intval($_POST['id']);} else {$m_id = -1;}
+if (isset($_POST['id'])) $m_id = intval($_POST['id']); else $m_id = -1;
 $date = date('Y-m-d');
 $summ = 0;
 $g_id = -1;
 $komm = '';
 $w_id = -1;
 if ($m_id > -1) {
-	$query = "SELECT * FROM money WHERE id=$m_id";
-	$result = byQu($mysqli, $query);
+	$result = byQu($mysqli, "SELECT * FROM money WHERE id=$m_id");
 	if ($row = $result->fetch_assoc()) {
 		$date = $row['op_date'];
 		$summ = $row['op_summ'];
@@ -24,10 +23,10 @@ echo '<p>Введите сумму: <input type="number" step="0.01" id="m_op_su
 echo '<input type="hidden" id="m_id" value="' . $m_id . '">';
 
 echo '<p>Выберите категорию: <select size="1" id="m_goods_id">';
-$query = "SELECT goods.id, goods.name, groups.name as groups_name FROM goods"
-		." LEFT JOIN groups ON goods.groups_id=groups.id"
-		." ORDER BY groups.name, goods.name";
-$result = byQu($mysqli, $query);
+$result = byQu($mysqli,
+	"SELECT goods.id, goods.name, groups.name as groups_name FROM goods
+		LEFT JOIN groups ON goods.groups_id=groups.id
+		ORDER BY groups.name, goods.name");
 while ($row = $result->fetch_assoc()) {
 	echo '<option';
 	if ($row['id'] == $g_id) echo ' selected';
@@ -38,8 +37,7 @@ while ($row = $result->fetch_assoc()) {
 echo '</select></p>';
 
 echo '<p>Выберите кошелёк: <select size="1" id="m_walls_id">';
-$query = "SELECT id, name FROM walls";
-$result = byQu($mysqli, $query);
+$result = byQu($mysqli, "SELECT id, name FROM walls");
 while ($row = $result->fetch_assoc()) {
 	echo '<option';
 	if ($row['id'] == $w_id) {echo ' selected';}

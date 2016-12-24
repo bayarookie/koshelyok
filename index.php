@@ -116,10 +116,10 @@ function goods_to_db() {
 	var name = document.getElementById("g_name").value;
 	var komm = document.getElementById("g_comment").value;
 	var r_id = document.getElementById("g_groups_id").value;
-	id_close('goods_form');
+	id_close("goods_form");
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'goods_to_db.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xhr.open("POST", "goods_to_db.php", true);
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4) {
 			if(xhr.status == 200) {
@@ -201,15 +201,23 @@ function import_to_db() {
 </script>
 </head>
 <body>
-<header><form action="backup.php" method="post">
-	<input type="button" value="Операции" onclick="money_table(0)">
-	<input type="button" value="Категории" onclick="get_form('goods_table')">
-	<input type="button" value="Группы" onclick="get_form('groups_table')">
-	<input type="button" value="Кошельки" onclick="get_form('walls_table')">
-	<input type="button" value="Отчёт помесячно" onclick="get_form('report')">
-	<input type="button" value="Импорт" onclick="get_form('import_form')">
-	<input type="submit" value="Резервное копирование">
-</form>
-<h1><a href="">Кошелёк</a></h1></header>
+<menu>
+	<li><a href="javascript:void(0)" onclick="money_table(0)">Операции</a>
+	<li class="dropdown">
+		<a href="javascript:void(0)" class="dropbtn">Списки</a>
+		<div class="dropdown-content">
+			<a href="javascript:void(0)" onclick="get_form('goods_table')">Категории</a>
+			<a href="javascript:void(0)" onclick="get_form('groups_table')">Группы</a>
+			<a href="javascript:void(0)" onclick="get_form('walls_table')">Кошельки</a>
+		</div>
+	<li class="dropdown">
+		<a href="javascript:void(0)" class="dropbtn">Отчёты</a>
+		<div class="dropdown-content">
+			<a href="javascript:void(0)" onclick="get_form('report')">Отчёт помесячно</a>
+			<a href="javascript:void(0)" onclick="get_form('report2')">Отчёт средний</a>
+		</div>
+	<li><a href="javascript:void(0)" onclick="get_form('import_form')">Импорт</a>
+	<li><a href="backup.php">Резервное копирование</a>
+</menu>
 <div id="money_table" class="hide"><?php include 'money_table.php';?></div>
 </body></html>

@@ -3,8 +3,7 @@ include 'db.php';
 echo '<article><h1><a href="">Импорт</a></h1>';
 $w_id = 1;
 echo '<p>Выберите кошелёк: <select size="1" id="i_id">';
-$query = "SELECT id, name FROM walls";
-$result = byQu($mysqli, $query);
+$result = byQu($mysqli, "SELECT id, name FROM walls");
 while ($row = $result->fetch_assoc()) {
 	echo '<option';
 	if ($row['id'] == $w_id) {echo ' selected';}
