@@ -10,7 +10,10 @@ if (!function_exists('byQu')) {
 
 	//подключение к базе
 	$mysqli = new mysqli(DB_ADRES, DB_LOGIN, DB_PASSW, DB_DATAB);
-	if ($mysqli->connect_errno) {die('Не удалось подключиться: ' . $mysqli->connect_error);}
+	if ($mysqli->connect_errno) {
+		header('Content-type: text/html; charset=UTF-8');
+		die('Не удалось подключиться: ' . $mysqli->connect_error);
+	}
 	$mysqli->set_charset(DB_CHARS);
 
 	//проверка на вшивость
