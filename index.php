@@ -34,13 +34,18 @@ function get_form(form_id, id) {
 }
 
 //money
-function money_table(fltr, mo, f_groups_id) {
+function money_table(fltr, s, id) {
 	if (fltr === 1) {
 		var date_from = document.getElementById("date_from").value;
 		var date_to = document.getElementById("date_to").value;
 		var f_goods_id = document.getElementById("f_goods_id").value;
 		var f_groups_id = document.getElementById("f_groups_id").value;
 		var f_walls_id = document.getElementById("f_walls_id").value;
+	} else if (fltr === 2) {
+		var mo = s;
+		var f_groups_id = id;
+	} else if (fltr === 3) {
+		var f_goods_id = id;
 	}
 	id_close('money_table');
 	var iDiv = document.createElement('div');
@@ -58,15 +63,21 @@ function money_table(fltr, mo, f_groups_id) {
 		}
 	}
 	if (fltr === 1) {
-		xhr.send("&from=" + encodeURIComponent(date_from)
-		+ "&to=" + encodeURIComponent(date_to)
-		+ "&f_goods_id=" + encodeURIComponent(f_goods_id)
-		+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
-		+ "&f_walls_id=" + encodeURIComponent(f_walls_id)
+		xhr.send("&f=" + encodeURIComponent(fltr)
+			+ "&from=" + encodeURIComponent(date_from)
+			+ "&to=" + encodeURIComponent(date_to)
+			+ "&f_goods_id=" + encodeURIComponent(f_goods_id)
+			+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
+			+ "&f_walls_id=" + encodeURIComponent(f_walls_id)
 		);
 	} else if (fltr === 2) {
-		xhr.send("&mo=" + encodeURIComponent(mo)
-		+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
+		xhr.send("&f=" + encodeURIComponent(fltr)
+			+ "&mo=" + encodeURIComponent(mo)
+			+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
+		);
+	} else if (fltr === 3) {
+		xhr.send("&f=" + encodeURIComponent(fltr)
+			+ "&f_goods_id=" + encodeURIComponent(f_goods_id)
 		);
 	} else {
 		xhr.send();

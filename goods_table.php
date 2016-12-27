@@ -12,7 +12,7 @@ $result = byQu($mysqli,
 while ($row = $result->fetch_assoc()) {
 	echo ' <tr>';
 	echo '<td class="edit" onclick="get_form(\'goods_form\', ' . $row['id'] . ')">Редактировать';
-	echo '<td>' . $row['name'];
+	echo '<td class="edit" onclick="money_table(3, \'\', ' . $row['id'] . ')">' . $row['name'];
 	echo '<td>' . $row['groups_name'];
 	echo '<td>' . $row['comment'];
 }

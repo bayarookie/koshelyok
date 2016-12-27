@@ -6,15 +6,32 @@
 <?php
 
 //фильтр по дате за последний месяц или как, по категории, по группе
-if (isset($_POST['to'])) $f_dtto = date('Y-m-d', strtotime($_POST['to'])); else $f_dtto = date('Y-m-d');
-if (isset($_POST['from'])) $f_dtfr = date('Y-m-d', strtotime($_POST['from'])); else $f_dtfr = date('Y-m-d', strtotime($f_dtto . ' -1 month'));
-if (isset($_POST['mo'])) {
-	$f_dtto = date('Y-m-d', strtotime($_POST['mo'] . '-01 +1 month -1 day'));
-	$f_dtfr = date('Y-m-d', strtotime($_POST['mo'] . '-01'));
+if (isset($_POST['f'])) $f = intval($_POST['f']); else $f = 1;
+if ($f == 1) {
+	if (isset($_POST['to'])) $f_dtto = date('Y-m-d', strtotime($_POST['to'])); else $f_dtto = date('Y-m-d');
+	if (isset($_POST['from'])) $f_dtfr = date('Y-m-d', strtotime($_POST['from'])); else $f_dtfr = date('Y-m-d', strtotime($f_dtto . ' -1 month'));
+	if (isset($_POST['f_goods_id'])) $f_goods_id = intval($_POST['f_goods_id']); else $f_goods_id = -1;
+	if (isset($_POST['f_groups_id'])) $f_groups_id = intval($_POST['f_groups_id']); else $f_groups_id = -1;
+	if (isset($_POST['f_walls_id'])) $f_walls_id = intval($_POST['f_walls_id']); else $f_walls_id = -1;
+} elseif ($f == 2) {
+	if (isset($_POST['mo'])) {
+		$f_dtto = date('Y-m-d', strtotime($_POST['mo'] . '-01 +1 month -1 day'));
+		$f_dtfr = date('Y-m-d', strtotime($_POST['mo'] . '-01'));
+	}
+	$f_goods_id = -1;
+	if (isset($_POST['f_groups_id'])) $f_groups_id = intval($_POST['f_groups_id']); else $f_groups_id = -1;
+	$f_walls_id = -1;
+} elseif ($f == 3) {
+	$f_dtto = date('Y-m-d');
+	$f_dtfr = date('Y-m-d', strtotime($f_dtto . ' -1 year'));
+	if (isset($_POST['f_goods_id'])) $f_goods_id = intval($_POST['f_goods_id']); else $f_goods_id = -1;
+	$f_groups_id = -1;
+	$f_walls_id = -1;
+} else {
+	$f_goods_id = -1;
+	$f_groups_id = -1;
+	$f_walls_id = -1;
 }
-if (isset($_POST['f_goods_id'])) $f_goods_id = intval($_POST['f_goods_id']); else $f_goods_id = -1;
-if (isset($_POST['f_groups_id'])) $f_groups_id = intval($_POST['f_groups_id']); else $f_groups_id = -1;
-if (isset($_POST['f_walls_id'])) $f_walls_id = intval($_POST['f_walls_id']); else $f_walls_id = -1;
 $filter = "";
 if ($f_goods_id > -1) $filter .= " AND goods_id=" . $f_goods_id;
 if ($f_groups_id > -1) $filter .= " AND groups_id=" . $f_groups_id;
