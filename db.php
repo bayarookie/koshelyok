@@ -17,10 +17,8 @@ if (!function_exists('byQu')) {
 	$mysqli->set_charset(DB_CHARS);
 
 	//проверка на вшивость
-	if (isset($_SERVER['PHP_AUTH_USER'])) $user = $_SERVER['PHP_AUTH_USER']; else $user = 'install';
-	if (isset($_SERVER['PHP_AUTH_PW'])) $pass = $_SERVER['PHP_AUTH_PW']; else $pass = 'it';
-	$user = $mysqli->real_escape_string($user);
-	$pass = $mysqli->real_escape_string($pass);
+	$user = isset($_SERVER['PHP_AUTH_USER']) ? $mysqli->real_escape_string($_SERVER['PHP_AUTH_USER']) : 'install';
+	$pass = isset($_SERVER['PHP_AUTH_PW']) ? $mysqli->real_escape_string($_SERVER['PHP_AUTH_PW']) : 'it';
 	$result = byQu($mysqli, "SELECT id FROM users WHERE username='$user' AND password='$pass'");
 	if ($row = $result->fetch_row()) {
 		$u_id = $row[0];

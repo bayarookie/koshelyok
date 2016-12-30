@@ -9,7 +9,7 @@ function id_close(id) {
 }
 
 //get content
-function get_form(form_id, id) {
+function get_form(form_id, id, s) {
 	id_close(form_id);
 	var iDiv = document.createElement('div');
 	iDiv.id = form_id;
@@ -19,22 +19,20 @@ function get_form(form_id, id) {
 	xhr.open('POST', form_id.concat('.php'), true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-				if (null != id) {
-					inp = iDiv.children[0].children[1].children[0];
-					inp.focus();
-					inp.select();
-				}
-			}
+		if ((xhr.readyState == 4) && (xhr.status == 200)) {
+			iDiv.innerHTML = xhr.responseText;
 		}
 	}
-	if (null == id) {xhr.send();} else {xhr.send("id=" + encodeURIComponent(id));}
+	if (null == id) {
+		xhr.send();
+	} else {
+		xhr.send("id=" + encodeURIComponent(id)
+			+ "&tbl=" + encodeURIComponent(s));
+	}
 }
 
 //money
-function money_table(fltr, s, id) {
+function money_table(fltr, id, s) {
 	if (fltr === 1) {
 		var date_from = document.getElementById("date_from").value;
 		var date_to = document.getElementById("date_to").value;
@@ -56,14 +54,12 @@ function money_table(fltr, s, id) {
 	xhr.open('POST', 'money_table.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				iDiv.innerHTML = xhr.responseText;
-			}
+		if ((xhr.readyState == 4) && (xhr.status == 200)) {
+			iDiv.innerHTML = xhr.responseText;
 		}
 	}
 	if (fltr === 1) {
-		xhr.send("&f=" + encodeURIComponent(fltr)
+		xhr.send("f=" + encodeURIComponent(fltr)
 			+ "&from=" + encodeURIComponent(date_from)
 			+ "&to=" + encodeURIComponent(date_to)
 			+ "&f_goods_id=" + encodeURIComponent(f_goods_id)
@@ -71,12 +67,12 @@ function money_table(fltr, s, id) {
 			+ "&f_walls_id=" + encodeURIComponent(f_walls_id)
 		);
 	} else if (fltr === 2) {
-		xhr.send("&f=" + encodeURIComponent(fltr)
+		xhr.send("f=" + encodeURIComponent(fltr)
 			+ "&mo=" + encodeURIComponent(mo)
 			+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
 		);
 	} else if (fltr === 3) {
-		xhr.send("&f=" + encodeURIComponent(fltr)
+		xhr.send("f=" + encodeURIComponent(fltr)
 			+ "&f_goods_id=" + encodeURIComponent(f_goods_id)
 		);
 	} else {
@@ -101,10 +97,8 @@ function money_to_db() {
 	xhr.open('POST', 'money_to_db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				document.getElementById("money_table").innerHTML = xhr.responseText;
-			}
+		if ((xhr.readyState == 4) && (xhr.status == 200)) {
+			document.getElementById("money_table").innerHTML = xhr.responseText;
 		}
 	}
 	xhr.send("m_id=" + encodeURIComponent(m_id)
@@ -121,71 +115,26 @@ function money_to_db() {
 	);
 }
 
-//goods save changes to db
-function goods_to_db() {
-	var g_id = document.getElementById("g_id").value;
-	var name = document.getElementById("g_name").value;
-	var komm = document.getElementById("g_comment").value;
-	var r_id = document.getElementById("g_groups_id").value;
-	id_close("goods_form");
+//save changes to db
+function edit_to_db(tbl) {
+	var e_id = document.getElementById("e_id").value;
+	var name = document.getElementById("e_name").value;
+	var komm = document.getElementById("e_comment").value;
+	var r_id = document.getElementById("e_groups_id").value;
+	id_close("edit_form");
 	var xhr = new XMLHttpRequest();
-	xhr.open("POST", "goods_to_db.php", true);
+	xhr.open("POST", "edit_to_db.php", true);
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				document.getElementById("goods_table").innerHTML = xhr.responseText;
-			}
+		if ((xhr.readyState == 4) && (xhr.status == 200)) {
+			document.getElementById("edit_table").innerHTML = xhr.responseText;
 		}
 	}
-	xhr.send("g_id=" + encodeURIComponent(g_id)
-		+ "&g_name=" + encodeURIComponent(name)
-		+ "&g_comment=" + encodeURIComponent(komm)
-		+ "&g_groups_id=" + encodeURIComponent(r_id)
-	);
-}
-
-//groups save changes to db
-function groups_to_db() {
-	var r_id = document.getElementById("r_id").value;
-	var name = document.getElementById("r_name").value;
-	var komm = document.getElementById("r_comment").value;
-	id_close('groups_form');
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'groups_to_db.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				document.getElementById("groups_table").innerHTML = xhr.responseText;
-			}
-		}
-	}
-	xhr.send("r_id=" + encodeURIComponent(r_id)
-		+ "&r_name=" + encodeURIComponent(name)
-		+ "&r_comment=" + encodeURIComponent(komm)
-	);
-}
-
-//walls save changes to db
-function walls_to_db() {
-	var w_id = document.getElementById("w_id").value;
-	var name = document.getElementById("w_name").value;
-	var komm = document.getElementById("w_comment").value;
-	id_close('walls_form');
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'walls_to_db.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				document.getElementById("walls_table").innerHTML = xhr.responseText;
-			}
-		}
-	}
-	xhr.send("w_id=" + encodeURIComponent(w_id)
-		+ "&w_name=" + encodeURIComponent(name)
-		+ "&w_comment=" + encodeURIComponent(komm)
+	xhr.send("tbl=" + encodeURIComponent(tbl)
+		+ "&e_id=" + encodeURIComponent(e_id)
+		+ "&e_name=" + encodeURIComponent(name)
+		+ "&e_comment=" + encodeURIComponent(komm)
+		+ "&e_groups_id=" + encodeURIComponent(r_id)
 	);
 }
 
@@ -200,13 +149,33 @@ function import_to_db() {
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'import_to_db.php', true);
 	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			if(xhr.status == 200) {
-				document.getElementById("import_form").innerHTML = xhr.responseText;
-			}
+		if ((xhr.readyState == 4) && (xhr.status == 200)) {
+			document.getElementById("import_form").innerHTML = xhr.responseText;
 		}
 	}
 	xhr.send(data);
+}
+
+//get report
+function get_report(rpt) {
+	var form_id = (rpt == 2) ? 'report2' : 'report';
+	var date_fr = document.getElementById("p_date_from").value;
+	var date_to = document.getElementById("p_date_to").value;
+	id_close(form_id);
+	var iDiv = document.createElement('div');
+	iDiv.id = form_id;
+	iDiv.className = 'hide';
+	document.getElementsByTagName('section')[0].appendChild(iDiv);
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', form_id.concat('.php'), true);
+	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xhr.onreadystatechange = function() {
+		if ((xhr.readyState == 4) && (xhr.status == 200)) {
+			iDiv.innerHTML = xhr.responseText;
+		}
+	}
+	xhr.send("from=" + encodeURIComponent(date_fr)
+			+ "&to=" + encodeURIComponent(date_to));
 }
 
 </script>
@@ -217,15 +186,15 @@ function import_to_db() {
 	<li>
 		<a href="javascript:void(0)">Списки</a>
 		<div>
-			<a href="javascript:void(0)" onclick="get_form('goods_table')">Категории</a>
-			<a href="javascript:void(0)" onclick="get_form('groups_table')">Группы</a>
-			<a href="javascript:void(0)" onclick="get_form('walls_table')">Кошельки</a>
+			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'goods')">Категории</a>
+			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'groups')">Группы</a>
+			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'walls')">Кошельки</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)">Отчёты</a>
 		<div>
-			<a href="javascript:void(0)" onclick="get_form('report')">Отчёт помесячно</a>
-			<a href="javascript:void(0)" onclick="get_form('report2')">Отчёт средний</a>
+			<a href="javascript:void(0)" onclick="get_form('report_form',1)">Отчёт помесячно</a>
+			<a href="javascript:void(0)" onclick="get_form('report_form',2)">Отчёт средний</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)">Служебные</a>
