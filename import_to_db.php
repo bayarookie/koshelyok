@@ -1,7 +1,7 @@
 <?php
 include 'db.php';
 echo '<article><h1><a href="">Импорт</a></h1>';
-if (isset($_POST['w_id'])) $w_id = intval($_POST['w_id']); else $w_id = 1; //1 = Сбербанк
+$w_id = isset($_POST['w_id']) ? intval($_POST['w_id']) : 1; //1 = Сбербанк
 $uploadfile = '/tmp/' . basename($_FILES['bankstate']['name']);
 echo '<pre>';
 if (move_uploaded_file($_FILES['bankstate']['tmp_name'], $uploadfile)) {

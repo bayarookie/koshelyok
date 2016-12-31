@@ -10,6 +10,7 @@ function id_close(id) {
 
 //get content
 function get_form(form_id, id, s) {
+	var data = (id == null) ? '' : "id=" + encodeURIComponent(id) + "&tbl=" + encodeURIComponent(s);
 	id_close(form_id);
 	var iDiv = document.createElement('div');
 	iDiv.id = form_id;
@@ -23,28 +24,26 @@ function get_form(form_id, id, s) {
 			iDiv.innerHTML = xhr.responseText;
 		}
 	}
-	if (null == id) {
-		xhr.send();
-	} else {
-		xhr.send("id=" + encodeURIComponent(id)
-			+ "&tbl=" + encodeURIComponent(s));
-	}
+	xhr.send(data);
 }
 
 //money
 function money_table(fltr, id, s) {
 	if (fltr === 1) {
-		var date_from = document.getElementById("date_from").value;
-		var date_to = document.getElementById("date_to").value;
-		var f_goods_id = document.getElementById("f_goods_id").value;
-		var f_groups_id = document.getElementById("f_groups_id").value;
-		var f_walls_id = document.getElementById("f_walls_id").value;
+		var data = "f=" + encodeURIComponent(fltr)
+			+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
+			+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
+			+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
+			+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
+			+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value);
 	} else if (fltr === 2) {
-		var mo = s;
-		var f_groups_id = id;
+		var data = "f=" + encodeURIComponent(fltr)
+			+ "&f_groups_id=" + encodeURIComponent(id)
+			+ "&mo=" + encodeURIComponent(s);
 	} else if (fltr === 3) {
-		var f_goods_id = id;
-	}
+		var data = "f=" + encodeURIComponent(fltr)
+			+ "&f_goods_id=" + encodeURIComponent(id);
+	} else return;
 	id_close('money_table');
 	var iDiv = document.createElement('div');
 	iDiv.id = 'money_table';
@@ -58,40 +57,21 @@ function money_table(fltr, id, s) {
 			iDiv.innerHTML = xhr.responseText;
 		}
 	}
-	if (fltr === 1) {
-		xhr.send("f=" + encodeURIComponent(fltr)
-			+ "&from=" + encodeURIComponent(date_from)
-			+ "&to=" + encodeURIComponent(date_to)
-			+ "&f_goods_id=" + encodeURIComponent(f_goods_id)
-			+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
-			+ "&f_walls_id=" + encodeURIComponent(f_walls_id)
-		);
-	} else if (fltr === 2) {
-		xhr.send("f=" + encodeURIComponent(fltr)
-			+ "&mo=" + encodeURIComponent(mo)
-			+ "&f_groups_id=" + encodeURIComponent(f_groups_id)
-		);
-	} else if (fltr === 3) {
-		xhr.send("f=" + encodeURIComponent(fltr)
-			+ "&f_goods_id=" + encodeURIComponent(f_goods_id)
-		);
-	} else {
-		xhr.send();
-	}
+	xhr.send(data);
 }
 //money save changes to db
 function money_to_db() {
-	var m_id = document.getElementById("m_id").value;
-	var o_da = document.getElementById("m_op_date").value;
-	var o_su = document.getElementById("m_op_summ").value;
-	var g_id = document.getElementById("m_goods_id").value;
-	var komm = document.getElementById("m_comment").value;
-	var w_id = document.getElementById("m_walls_id").value;
-	var dt_1 = document.getElementById("date_from").value;
-	var dt_2 = document.getElementById("date_to").value;
-	var f_gi = document.getElementById("f_goods_id").value;
-	var f_ri = document.getElementById("f_groups_id").value;
-	var f_wi = document.getElementById("f_walls_id").value;
+	var data = "m_id=" + encodeURIComponent(document.getElementById("m_id").value)
+		+ "&m_op_date=" + encodeURIComponent(document.getElementById("m_op_date").value)
+		+ "&m_op_summ=" + encodeURIComponent(document.getElementById("m_op_summ").value)
+		+ "&m_goods_id=" + encodeURIComponent(document.getElementById("m_goods_id").value)
+		+ "&m_comment=" + encodeURIComponent(document.getElementById("m_comment").value)
+		+ "&m_walls_id=" + encodeURIComponent(document.getElementById("m_walls_id").value)
+		+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
+		+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
+		+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
+		+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
+		+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
 	id_close('money_form');
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'money_to_db.php', true);
@@ -101,26 +81,16 @@ function money_to_db() {
 			document.getElementById("money_table").innerHTML = xhr.responseText;
 		}
 	}
-	xhr.send("m_id=" + encodeURIComponent(m_id)
-		+ "&m_op_date=" + encodeURIComponent(o_da)
-		+ "&m_op_summ=" + encodeURIComponent(o_su)
-		+ "&m_goods_id=" + encodeURIComponent(g_id)
-		+ "&m_comment=" + encodeURIComponent(komm)
-		+ "&m_walls_id=" + encodeURIComponent(w_id)
-		+ "&from=" + encodeURIComponent(dt_1)
-		+ "&to=" + encodeURIComponent(dt_2)
-		+ "&f_goods_id=" + encodeURIComponent(f_gi)
-		+ "&f_groups_id=" + encodeURIComponent(f_ri)
-		+ "&f_walls_id=" + encodeURIComponent(f_wi)
-	);
+	xhr.send(data);
 }
 
 //save changes to db
 function edit_to_db(tbl) {
-	var e_id = document.getElementById("e_id").value;
-	var name = document.getElementById("e_name").value;
-	var komm = document.getElementById("e_comment").value;
-	var r_id = document.getElementById("e_groups_id").value;
+	var data = "tbl=" + encodeURIComponent(tbl)
+		+ "&e_id=" + encodeURIComponent(document.getElementById("e_id").value)
+		+ "&e_name=" + encodeURIComponent(document.getElementById("e_name").value)
+		+ "&e_comment=" + encodeURIComponent(document.getElementById("e_comment").value)
+		+ "&e_groups_id=" + encodeURIComponent(document.getElementById("e_groups_id").value);
 	id_close("edit_form");
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "edit_to_db.php", true);
@@ -130,12 +100,7 @@ function edit_to_db(tbl) {
 			document.getElementById("edit_table").innerHTML = xhr.responseText;
 		}
 	}
-	xhr.send("tbl=" + encodeURIComponent(tbl)
-		+ "&e_id=" + encodeURIComponent(e_id)
-		+ "&e_name=" + encodeURIComponent(name)
-		+ "&e_comment=" + encodeURIComponent(komm)
-		+ "&e_groups_id=" + encodeURIComponent(r_id)
-	);
+	xhr.send(data);
 }
 
 //import from bankstate to db
@@ -159,8 +124,8 @@ function import_to_db() {
 //get report
 function get_report(rpt) {
 	var form_id = (rpt == 2) ? 'report2' : 'report';
-	var date_fr = document.getElementById("p_date_from").value;
-	var date_to = document.getElementById("p_date_to").value;
+	var data = "from=" + encodeURIComponent(document.getElementById("p_date_from").value)
+			+ "&to=" + encodeURIComponent(document.getElementById("p_date_to").value);
 	id_close(form_id);
 	var iDiv = document.createElement('div');
 	iDiv.id = form_id;
@@ -174,8 +139,7 @@ function get_report(rpt) {
 			iDiv.innerHTML = xhr.responseText;
 		}
 	}
-	xhr.send("from=" + encodeURIComponent(date_fr)
-			+ "&to=" + encodeURIComponent(date_to));
+	xhr.send(data);
 }
 
 </script>

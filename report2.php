@@ -2,8 +2,8 @@
 <article><p>Отчёт средний
 <input type="button" value="Закрыть" onclick="id_close('report2')"></p>
 <?php
-if (isset($_POST['to'])) $f_dtto = date('Y-m-d', strtotime($_POST['to'])); else $f_dtto = date('Y-m-d');
-if (isset($_POST['from'])) $f_dtfr = date('Y-m-d', strtotime($_POST['from'])); else $f_dtfr = date('Y-m-d', strtotime($f_dtto . ' -6 month'));
+$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
+$f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : date('Y-m-d', strtotime($f_dtto . ' -6 month'));
 echo '<figure class="report"><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption><table><tr><th>Группа<th>Сумма';
 $sm = 0;
 $result = byQu($mysqli,

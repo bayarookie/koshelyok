@@ -1,7 +1,7 @@
 <?php
-if (isset($_POST['id'])) $rpt = intval($_POST['id']); else $rpt = 1;
+$rpt = isset($_POST['id']) ? intval($_POST['id']) : 1;
 echo '<figure><figcaption>Отчёт ';
-if ($rpt == 2) echo 'средний'; else echo 'помесячно';
+echo ($rpt == 2) ? 'средний' : 'помесячно';
 echo '</figcaption>';
 $f_dtto = date('Y-m-d');
 $f_dtfr = date('Y-m-d', strtotime($f_dtto . ' -6 month'));

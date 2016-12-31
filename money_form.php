@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-if (isset($_POST['id'])) $m_id = intval($_POST['id']); else $m_id = -1;
+$m_id = isset($_POST['id']) ? intval($_POST['id']) : -1;
 $date = date('Y-m-d');
 $summ = 0;
 $g_id = -1;
