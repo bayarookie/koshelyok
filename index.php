@@ -122,11 +122,16 @@ function import_to_db() {
 }
 
 //get report
-function get_report(rpt) {
-	var form_id = (rpt == 2) ? 'report2' : 'report';
-	var data = "from=" + encodeURIComponent(document.getElementById("p_date_from").value)
-			+ "&to=" + encodeURIComponent(document.getElementById("p_date_to").value);
-	id_close(form_id);
+function get_report(form_id) {
+	var el_1 = document.getElementById("p_date_from");
+	var el_2 = document.getElementById("p_date_to");
+	if ((el_1 == null) || (el_2 == null)) {
+		var data = "";
+	} else {
+		var data = "from=" + encodeURIComponent(el_1.value) + "&to=" + encodeURIComponent(el_2.value);
+	}
+	id_close('report');
+	id_close('report2');
 	var iDiv = document.createElement('div');
 	iDiv.id = form_id;
 	iDiv.className = 'hide';
@@ -157,8 +162,8 @@ function get_report(rpt) {
 	<li>
 		<a href="javascript:void(0)">Отчёты</a>
 		<div>
-			<a href="javascript:void(0)" onclick="get_form('report_form',1)">Отчёт помесячно</a>
-			<a href="javascript:void(0)" onclick="get_form('report_form',2)">Отчёт средний</a>
+			<a href="javascript:void(0)" onclick="get_report('report')">Отчёт помесячно</a>
+			<a href="javascript:void(0)" onclick="get_report('report2')">Отчёт средний</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)">Служебные</a>

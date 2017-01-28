@@ -6,7 +6,7 @@
 <?php
 
 //фильтр по дате за последний месяц или как, по категории, по группе
-if (isset($_POST['f'])) $f = intval($_POST['f']); else $f = 1;
+$f = isset($_POST['f']) ? intval($_POST['f']) : 1;
 if ($f == 1) {
 	$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
 	$f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : date('Y-m-d', strtotime($f_dtto . ' -1 month'));

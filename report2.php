@@ -1,9 +1,12 @@
-<?php include 'db.php';?>
-<article><p>Отчёт средний
-<input type="button" value="Закрыть" onclick="id_close('report2')"></p>
 <?php
+include 'db.php';
 $f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
-$f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : date('Y-m-d', strtotime($f_dtto . ' -6 month'));
+$f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -6 month'));
+echo '<article><p>Отчёт средний
+с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '" autofocus>
+по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
+<input type="button" value="Отчёт" onclick="get_report(\'report2\')"> 
+<input type="button" value="Закрыть" onclick="id_close(\'report2\')"></p>';
 echo '<figure class="report"><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption><table><tr><th>Группа<th>Сумма';
 $sm = 0;
 $result = byQu($mysqli,
