@@ -24,14 +24,14 @@ CREATE TABLE `goods` (
   `groups_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `goods`
 --
 
 INSERT INTO `goods` (`id`, `name`, `comment`, `groups_id`) VALUES
-(0, 'Дом', 'Движение денег внутри квартиры', -1);
+(0, 'Дом', 'Движение денег внутри квартиры', 3);
 
 -- --------------------------------------------------------
 
@@ -53,7 +53,11 @@ CREATE TABLE `groups` (
 
 INSERT INTO `groups` (`id`, `name`, `comment`) VALUES
 (0, 'Коммуналка', 'Все коммунальные платежи'),
-(1, 'Еда', 'вся еда');
+(1, 'Еда', 'вся еда'),
+(2, 'Доходы', ''),
+(3, 'Дом', 'движение внутри дома'),
+(4, 'Ширпотреб', 'всё остальное'),
+(5, 'Лекарства', '');
 
 -- --------------------------------------------------------
 
@@ -71,7 +75,7 @@ CREATE TABLE `money` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `walls_id` (`walls_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=326 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `money`
