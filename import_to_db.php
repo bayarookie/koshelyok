@@ -44,7 +44,7 @@ function byMo($m) {
 }
 
 function byTr($c2, $date, $nm, $summ) {
-	global $c1, $mysqli, $w_id, $good, $impo;
+	global $c1, $mysqli, $w_id, $impo;
 	if ($summ < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
 	echo "<td align=right>" . $c2;
 	echo "<td>" . $date;
@@ -62,7 +62,12 @@ function byTr($c2, $date, $nm, $summ) {
 			$g_id = $row[0];
 			$name = $row[1];
 		} elseif ($result->num_rows == 0) {
-			$good .= "INSERT INTO goods (name, groups_id, comment) VALUES ('$nm', -1, '');\n";
+			$result = byQu($mysqli, "INSERT INTO goods (name, groups_id, comment) VALUES ('$nm', -1, '')");
+			$result = byQu($mysqli, "SELECT id, name FROM goods WHERE name LIKE '$nm'");
+			if ($row = $result->fetch_row()) {
+				$g_id = $row[0];
+				$name = $row[1];
+			}
 			$name = "не найден";
 		}
 	}
@@ -80,7 +85,6 @@ function byTr($c2, $date, $nm, $summ) {
 
 $c1 = 0;
 $c2 = 0;
-$good = '';
 $impo = '';
 
 $path_parts = pathinfo($uploadfile);
@@ -116,9 +120,7 @@ if ($fh = fopen($uploadfile,'r')) {
 } else {
 	echo 'Ошибка открытия файла: ' . $uploadfile . '<br>';
 }
-if ($good !== '') {
-	echo "Неизвестные категории:<pre>$good</pre>";
-} elseif ($c1 > 0) {
+if ($c1 > 0) {
 	echo 'Есть похожие записи: ' . $c1 . ' из ' . $c2 . '<br>';
 } elseif ($mysqli->multi_query($impo)) {
 	echo 'Выписка успешно импортирована<br>';
