@@ -131,6 +131,7 @@ function get_report(form_id) {
 		var data = "from=" + encodeURIComponent(el_1.value) + "&to=" + encodeURIComponent(el_2.value);
 	}
 	id_close('report');
+	id_close('report1');
 	id_close('report2');
 	var iDiv = document.createElement('div');
 	iDiv.id = form_id;
@@ -163,6 +164,7 @@ function get_report(form_id) {
 		<a href="javascript:void(0)">Отчёты</a>
 		<div>
 			<a href="javascript:void(0)" onclick="get_report('report')">Отчёт помесячно</a>
+			<a href="javascript:void(0)" onclick="get_report('report1')">Отчёт таблица</a>
 			<a href="javascript:void(0)" onclick="get_report('report2')">Отчёт средний</a>
 		</div>
 	<li>
