@@ -2,7 +2,6 @@
 <article><p>Операции
 <input type="button" value="Добавить" onclick="get_form('money_form', -1)">
 <input type="button" value="Закрыть" onclick="id_close('money_table')"></p>
-<table><tr><th><th>Дата<th>Сумма<th><th>Категория<th>Группа<th>Комментарий<th>Кошелёк
 <?php
 
 //фильтр по дате за последний месяц или как, по категории, по группе
@@ -37,6 +36,89 @@ if ($f_goods_id > -1) $filter .= " AND goods_id=" . $f_goods_id;
 if ($f_groups_id > -1) $filter .= " AND groups_id=" . $f_groups_id;
 if ($f_walls_id > -1) $filter .= " AND walls_id=" . $f_walls_id;
 
+//сортировка
+echo '<table><tr><th class="edit" onclick="money_table(4, 0)">';
+$order = "";
+$o = isset($_POST['o']) ? intval($_POST['o']) : 1;
+
+//по дате
+echo '<th class="edit" onclick="money_table(4, ';
+if ($o == 1) {
+	$order = "ORDER BY money.op_date";
+	echo '2)">↑';
+} elseif ($o == 2) {
+	$order = "ORDER BY money.op_date DESC";
+	echo '1)">↓';
+} else {
+	echo '1)">';
+}
+echo 'Дата';
+
+//по сумме
+echo '<th class="edit" colspan="2" onclick="money_table(4, ';
+if ($o == 3) {
+	$order = "ORDER BY money.op_summ";
+	echo '4)">↑';
+} elseif ($o == 4) {
+	$order = "ORDER BY money.op_summ DESC";
+	echo '3)">↓';
+} else {
+	echo '4)">';
+}
+echo 'Сумма';
+
+//по категориям
+echo '<th class="edit" onclick="money_table(4, ';
+if ($o == 5) {
+	$order = "ORDER BY goods.name";
+	echo '6)">↑';
+} elseif ($o == 6) {
+	$order = "ORDER BY goods.name DESC";
+	echo '5)">↓';
+} else {
+	echo '5)">';
+}
+echo 'Категория';
+
+//по группам
+echo '<th class="edit" onclick="money_table(4, ';
+if ($o == 7) {
+	$order = "ORDER BY groups.name";
+	echo '8)">↑';
+} elseif ($o == 8) {
+	$order = "ORDER BY groups.name DESC";
+	echo '7)">↓';
+} else {
+	echo '7)">';
+}
+echo 'Группа';
+
+//по комментам
+echo '<th class="edit" onclick="money_table(4, ';
+if ($o == 9) {
+	$order = "ORDER BY money.comment";
+	echo '10)">↑';
+} elseif ($o == 10) {
+	$order = "ORDER BY money.comment DESC";
+	echo '9)">↓';
+} else {
+	echo '9)">';
+}
+echo 'Комментарий';
+
+//по кошелькам
+echo '<th class="edit" onclick="money_table(4, ';
+if ($o == 11) {
+	$order = "ORDER BY walls.name";
+	echo '12)">↑';
+} elseif ($o == 12) {
+	$order = "ORDER BY walls.name DESC";
+	echo '11)">↓';
+} else {
+	echo '11)">';
+}
+echo 'Кошелёк';
+
 //остаток на начало
 $result = byQu($mysqli,
 	"SELECT SUM(op_summ) as summ, walls.name FROM money
@@ -59,11 +141,11 @@ $result = byQu($mysqli,
 		LEFT JOIN groups ON goods.groups_id=groups.id
 		LEFT JOIN walls ON money.walls_id=walls.id
 		WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'$filter
-		ORDER BY money.op_date");
+		$order");
 while ($row = $result->fetch_assoc()) {
 	$summ = floatval($row['op_summ']);
 	if ($summ < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-	echo '<td class="edit" onclick="get_form(\'money_form\', ' . $row['id'] . ')">Редактировать';
+	echo '<td class="edit" onclick="get_form(\'money_form\', ' . $o . ', ' . $row['id'] . ')">Редактировать';
 	echo '<td>' . $row['op_date'];
 	echo '<td align="right">' . $row['summ1'];
 	echo '<td align="right">' . $row['summ2'];
@@ -92,7 +174,6 @@ $result = byQu($mysqli,
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		LEFT JOIN groups ON goods.groups_id=groups.id
-		LEFT JOIN walls ON money.walls_id=walls.id
 		WHERE money.op_date>='$f_dtfr' and money.op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc()) {
 	$summ = floatval($row['summ']);
@@ -128,8 +209,11 @@ while ($row = $result->fetch_assoc()) {
 }
 echo '</table>';
 
+//фильтры
+echo '<div>';
+
 //фильтр по дате
-echo '<div><p>Фильтр: с <input type="date" name="date_from" id="date_from" placeholder="гггг-мм-дд" value="' . $f_dtfr . '">';
+echo '<p>Фильтр: с <input type="date" name="date_from" id="date_from" placeholder="гггг-мм-дд" value="' . $f_dtfr . '">';
 echo 'по <input type="date" name="date_to" id="date_to" placeholder="гггг-мм-дд" value="' . $f_dtto . '"></p>';
 
 //фильтр по категории
@@ -174,9 +258,26 @@ while ($row = $result->fetch_assoc()) {
 	if ($row['id'] == $f_walls_id) echo ' selected';
 	echo ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
 }
-?>
-</select></p>
+echo '</select></p>';
 
+//сортировка
+echo '<p>Cортировка: <select size="1" name="ordr" id="ordr">';
+echo '<option'; if (0 == $o) echo ' selected'; echo ' value="0">Без сортировки</option>';
+echo '<option'; if (1 == $o) echo ' selected'; echo ' value="1">По дате</option>';
+echo '<option'; if (2 == $o) echo ' selected'; echo ' value="2">По дате обратно</option>';
+echo '<option'; if (3 == $o) echo ' selected'; echo ' value="3">По сумме</option>';
+echo '<option'; if (4 == $o) echo ' selected'; echo ' value="4">По сумме обратно</option>';
+echo '<option'; if (5 == $o) echo ' selected'; echo ' value="5">По категориям</option>';
+echo '<option'; if (6 == $o) echo ' selected'; echo ' value="6">По категориям обратно</option>';
+echo '<option'; if (7 == $o) echo ' selected'; echo ' value="7">По группам</option>';
+echo '<option'; if (8 == $o) echo ' selected'; echo ' value="8">По группам обратно</option>';
+echo '<option'; if (9 == $o) echo ' selected'; echo ' value="9">По комментариям</option>';
+echo '<option'; if (10 == $o) echo ' selected'; echo ' value="10">По комментариям обратно</option>';
+echo '<option'; if (11 == $o) echo ' selected'; echo ' value="11">По кошелькам</option>';
+echo '<option'; if (12 == $o) echo ' selected'; echo ' value="12">По кошелькам обратно</option>';
+echo '</select></p>';
+
+?>
 <p><input type="button" value="Обновить" onclick="money_table(1)"></p></div>
 <p>Операции
 <input type="button" value="Добавить" onclick="get_form('money_form', -1)">

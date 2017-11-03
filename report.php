@@ -28,7 +28,7 @@ while ($row = $result->fetch_assoc()) {
 		echo '<figure class="report"><figcaption>' . $mo . '</figcaption><table><tr><th>Группа<th>Сумма';
 	} else $sm = $sm + floatval($row['summ']);
 	if (floatval($row['summ']) < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-	echo '<td>' . $row['name'] . '<td class="edit" align="right" onclick="money_table(2,' . $row['groups_id'] . ',\'' . $row['mo'] . '\')">' . $row['summ'];
+	echo '<td>' . $row['name'] . '<td class="edit" align="right" onclick="money_table(2, ' . $row['groups_id'] . ',\'' . $row['mo'] . '\')">' . $row['summ'];
 }
 if ($sm < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
 echo '<td>Итого<td align="right">' . $sm;

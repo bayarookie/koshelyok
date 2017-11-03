@@ -10,7 +10,12 @@ function id_close(id) {
 
 //get content
 function get_form(form_id, id, s) {
-	var data = (id == null) ? '' : "id=" + encodeURIComponent(id) + "&tbl=" + encodeURIComponent(s);
+	if (id == null) {
+		var data = "o=" + encodeURIComponent(document.getElementById("ordr").value);
+	} else {
+		var data = "o=" + encodeURIComponent(document.getElementById("ordr").value)
+			+ "&id=" + encodeURIComponent(id) + "&tbl=" + encodeURIComponent(s);
+	}
 	id_close(form_id);
 	var iDiv = document.createElement('div');
 	iDiv.id = form_id;
@@ -29,20 +34,37 @@ function get_form(form_id, id, s) {
 
 //money
 function money_table(fltr, id, s) {
+	var el_1 = document.getElementById("ordr");
+	if (el_1 == null) {
+		var ordr = 1;
+	} else {
+		var ordr = el_1.value;
+	}
 	if (fltr === 1) {
 		var data = "f=" + encodeURIComponent(fltr)
 			+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
 			+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
 			+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
 			+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
-			+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value);
+			+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
+			+ "&o=" + encodeURIComponent(ordr);
 	} else if (fltr === 2) {
 		var data = "f=" + encodeURIComponent(fltr)
 			+ "&f_groups_id=" + encodeURIComponent(id)
-			+ "&mo=" + encodeURIComponent(s);
+			+ "&mo=" + encodeURIComponent(s)
+			+ "&o=" + encodeURIComponent(ordr);
 	} else if (fltr === 3) {
 		var data = "f=" + encodeURIComponent(fltr)
-			+ "&f_goods_id=" + encodeURIComponent(id);
+			+ "&f_goods_id=" + encodeURIComponent(id)
+			+ "&o=" + encodeURIComponent(ordr);
+	} else if (fltr === 4) {
+		var data = "f=" + encodeURIComponent(1)
+			+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
+			+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
+			+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
+			+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
+			+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
+			+ "&o=" + encodeURIComponent(id);
 	} else return;
 	id_close('money_table');
 	var iDiv = document.createElement('div');
@@ -72,6 +94,7 @@ function money_to_db() {
 		+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
 		+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
 		+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
+		+ "&o=" + encodeURIComponent(document.getElementById("ordr").value);
 	id_close('money_form');
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'money_to_db.php', true);
@@ -133,6 +156,7 @@ function get_report(form_id) {
 	id_close('report');
 	id_close('report1');
 	id_close('report2');
+	id_close('report3');
 	var iDiv = document.createElement('div');
 	iDiv.id = form_id;
 	iDiv.className = 'hide';
@@ -156,15 +180,16 @@ function get_report(form_id) {
 	<li>
 		<a href="javascript:void(0)">Списки</a>
 		<div>
-			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'goods')">Категории</a>
-			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'groups')">Группы</a>
-			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'walls')">Кошельки</a>
+			<a href="javascript:void(0)" onclick="get_form('edit_table', -1,'goods')">Категории</a>
+			<a href="javascript:void(0)" onclick="get_form('edit_table', -1,'groups')">Группы</a>
+			<a href="javascript:void(0)" onclick="get_form('edit_table', -1,'walls')">Кошельки</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)">Отчёты</a>
 		<div>
 			<a href="javascript:void(0)" onclick="get_report('report')">Отчёт помесячно</a>
-			<a href="javascript:void(0)" onclick="get_report('report1')">Отчёт таблица</a>
+			<a href="javascript:void(0)" onclick="get_report('report1')">Отчёт таблица 1</a>
+			<a href="javascript:void(0)" onclick="get_report('report3')">Отчёт таблица 2</a>
 			<a href="javascript:void(0)" onclick="get_report('report2')">Отчёт средний</a>
 		</div>
 	<li>
