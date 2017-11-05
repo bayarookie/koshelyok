@@ -25,7 +25,7 @@ while ($row = $result->fetch_assoc()) {
 	echo '<td class="edit" onclick="get_form(\'edit_form\',' . $row['id'] . ',\'' . $tbl . '\')">Редактировать';
 	if ($tbl == 'goods') {
 		echo '<td>' . $row['name'];
-		echo '<td class="edit" onclick="money_table(3, ' . $row['id'] . ')" align="right">' . $row['cnt'];
+		echo '<td class="edit num" onclick="money_table(3, ' . $row['id'] . ')">' . $row['cnt'];
 		echo '<td>' . $row['groups_name'];
 	} else {
 		echo '<td>' . $row['name'];

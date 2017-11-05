@@ -44,12 +44,12 @@ function byMo($m) {
 }
 
 function byTr($c2, $date, $nm, $summ) {
-	global $c1, $mysqli, $w_id, $impo;
+	global $mysqli, $w_id, $impo;
 	if ($summ < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-	echo "<td align=right>" . $c2;
-	echo "<td>" . $date;
-	echo "<td>" . $nm;
-	echo "<td align=right>" . number_format($summ, 2, '.', ' ');
+	echo '<td class="num">' . $c2;
+	echo '<td>' . $date;
+	echo '<td>' . $nm;
+	echo '<td class="num">' . number_format($summ, 2, '.', ' ');
 	$g_id = -1;
 	$nm = $mysqli->real_escape_string($nm);
 	$result = byQu($mysqli, "SELECT id, name FROM goods WHERE name LIKE '$nm'");
@@ -71,19 +71,19 @@ function byTr($c2, $date, $nm, $summ) {
 			$name = "не найден";
 		}
 	}
-	echo "<td>" . $name;
+	echo '<td>' . $name;
 	$result = byQu($mysqli, "SELECT id FROM money
 	WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND goods_id=$g_id AND walls_id=$w_id");
 	if ($result->num_rows > 0 && $row = $result->fetch_row()) {
-		$c1++;
-		echo '<td class="edit" onclick="get_form(\'money_form\', ' . $row[0] . ')">Редактировать';
+		echo '<td class="edit" onclick="get_form(\'money_form\', ' . $row[0] . ')">Уже есть';
+	} else {
+		echo '<td>Новая тр';
+		$impo .= "INSERT INTO money (op_date, op_summ, goods_id, comment, walls_id)
+		VALUES (STR_TO_DATE('$date', '%Y-%m-%d'), $summ, $g_id, '', $w_id);\n";
 	}
-	$impo .= "INSERT INTO money (op_date, op_summ, goods_id, comment, walls_id)
-	VALUES (STR_TO_DATE('$date', '%Y-%m-%d'), $summ, $g_id, '', $w_id);\n";
 }
 
 
-$c1 = 0;
 $c2 = 0;
 $impo = '';
 
@@ -120,13 +120,13 @@ if ($fh = fopen($uploadfile,'r')) {
 } else {
 	echo 'Ошибка открытия файла: ' . $uploadfile . '<br>';
 }
-if ($c1 > 0) {
-	echo 'Есть похожие записи: ' . $c1 . ' из ' . $c2 . '<br>';
+if ($impo == '') {
+	echo 'Нечего импортировать<br>';
 } elseif ($mysqli->multi_query($impo)) {
 	echo 'Выписка успешно импортирована<br>';
 } else {
-	echo "Ошибка во время импортирования выписки:<pre>" . $mysqli->error . "</pre>";
-	echo "Запрос:<pre>$impo</pre>";
+	echo 'Ошибка во время импортирования выписки:<pre>' . $mysqli->error . '</pre>';
+	echo 'Запрос:<pre>$impo</pre>';
 }
-echo '<input type="button" value="Закрыть" onclick="id_close(\'import_form\')"></article>';
 ?>
+<input type="button" value="Закрыть" onclick="id_close('import_form')"></article>

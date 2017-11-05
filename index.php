@@ -187,10 +187,10 @@ function get_report(form_id) {
 	<li>
 		<a href="javascript:void(0)">Отчёты</a>
 		<div>
-			<a href="javascript:void(0)" onclick="get_report('report')">Отчёт помесячно</a>
-			<a href="javascript:void(0)" onclick="get_report('report1')">Отчёт таблица 1</a>
-			<a href="javascript:void(0)" onclick="get_report('report3')">Отчёт таблица 2</a>
-			<a href="javascript:void(0)" onclick="get_report('report2')">Отчёт средний</a>
+			<a href="javascript:void(0)" onclick="get_report('report')">Помесячно (месяца отдельно)</a>
+			<a href="javascript:void(0)" onclick="get_report('report1')">Помесячно (общая таблица 1)</a>
+			<a href="javascript:void(0)" onclick="get_report('report3')">Помесячно (общая таблица 2)</a>
+			<a href="javascript:void(0)" onclick="get_report('report2')">В среднем за месяц</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)">Служебные</a>

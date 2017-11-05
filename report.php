@@ -20,7 +20,7 @@ while ($row = $result->fetch_assoc()) {
 	if ($mo != $row['mo']) {
 		if ($mo != "") {
 			if ($sm < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-			echo '<td>Итого<td align="right">' . $sm;
+			echo '<td>Итого<td class="num">' . $sm;
 			echo '</table></figure>';
 		}
 		$mo = $row['mo'];
@@ -28,9 +28,9 @@ while ($row = $result->fetch_assoc()) {
 		echo '<figure class="report"><figcaption>' . $mo . '</figcaption><table><tr><th>Группа<th>Сумма';
 	} else $sm = $sm + floatval($row['summ']);
 	if (floatval($row['summ']) < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-	echo '<td>' . $row['name'] . '<td class="edit" align="right" onclick="money_table(2, ' . $row['groups_id'] . ',\'' . $row['mo'] . '\')">' . $row['summ'];
+	echo '<td>' . $row['name'] . '<td class="edit num" onclick="money_table(2, ' . $row['groups_id'] . ',\'' . $row['mo'] . '\')">' . $row['summ'];
 }
 if ($sm < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-echo '<td>Итого<td align="right">' . $sm;
+echo '<td>Итого<td class="num">' . $sm;
 ?>
 </table></figure></article>

@@ -128,7 +128,7 @@ $result = byQu($mysqli,
 		WHERE money.op_date<'$f_dtfr'$filter
 		GROUP BY walls_id");
 while ($row = $result->fetch_assoc()) {
-	echo '<tr><td>На начало<td>' . $f_dtfr . '<td align="right">' . $row['summ'] . '<td><td><td><td><td>' . $row['name'];
+	echo '<tr><td>На начало<td>' . $f_dtfr . '<td class="num">' . $row['summ'] . '<td><td><td><td><td>' . $row['name'];
 }
 
 //движение денег
@@ -145,10 +145,10 @@ $result = byQu($mysqli,
 while ($row = $result->fetch_assoc()) {
 	$summ = floatval($row['op_summ']);
 	if ($summ < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-	echo '<td class="edit" onclick="get_form(\'money_form\', ' . $o . ', ' . $row['id'] . ')">Редактировать';
+	echo '<td class="edit" onclick="get_form(\'money_form\', ' . $row['id'] . ')">Редактировать';
 	echo '<td>' . $row['op_date'];
-	echo '<td align="right">' . $row['summ1'];
-	echo '<td align="right">' . $row['summ2'];
+	echo '<td class="num">' . $row['summ1'];
+	echo '<td class="num">' . $row['summ2'];
 	echo '<td>' . $row['goods_name'];
 	echo '<td>' . $row['groups_name'];
 	echo '<td>' . $row['comment'];
@@ -165,7 +165,7 @@ $result = byQu($mysqli,
 		WHERE money.op_date>='$f_dtfr' and money.op_date<='$f_dtto'$filter
 		GROUP BY walls_id");
 while ($row = $result->fetch_assoc()) {
-	echo '<tr><td>Сумма<td><td align="right">' . $row['summ1'] . '<td align="right">' . $row['summ2'] . '<td><td><td><td>'. $row['name'];
+	echo '<tr><td>Сумма<td><td class="num">' . $row['summ1'] . '<td class="num">' . $row['summ2'] . '<td><td><td><td>'. $row['name'];
 }
 
 //итого движение денег
@@ -178,7 +178,7 @@ $result = byQu($mysqli,
 if ($row = $result->fetch_assoc()) {
 	$summ = floatval($row['summ']);
 	if ($summ < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-	echo '<td>Итого<td><td><td align="right">' . $row['summ'] . '<td><td><td><td>';
+	echo '<td>Итого<td><td><td class="num">' . $row['summ'] . '<td><td><td><td>';
 }
 
 if ($f_dtto != date('Y-m-d')) {
@@ -192,7 +192,7 @@ $result = byQu($mysqli,
 		WHERE money.op_date<='$f_dtto'$filter
 		GROUP BY walls_id");
 while ($row = $result->fetch_assoc()) {
-	echo '<tr><td>Остаток<td>' . $row['dt'] . '<td><td align="right">' . $row['summ'] . '<td><td><td><td>'. $row['name'];
+	echo '<tr><td>Остаток<td>' . $row['dt'] . '<td><td class="num">' . $row['summ'] . '<td><td><td><td>'. $row['name'];
 }}
 
 //остаток
@@ -205,7 +205,7 @@ $result = byQu($mysqli,
 		WHERE true$filter
 		GROUP BY walls_id");
 while ($row = $result->fetch_assoc()) {
-	echo '<tr><td>Остаток<td>' . $row['dt'] . '<td><td align="right">' . $row['summ'] . '<td><td><td><td>'. $row['name'];
+	echo '<tr><td>Остаток<td>' . $row['dt'] . '<td><td class="num">' . $row['summ'] . '<td><td><td><td>'. $row['name'];
 }
 echo '</table>';
 

@@ -47,7 +47,7 @@ echo '</select></p>';
 
 echo '<p>Комментарий<br>';
 echo '<textarea id="m_comment" cols="40" rows="3" maxlength="1000" placeholder="Комментарий">' . $komm . '</textarea></p>';
+echo '<p><input type="button" value="Сохранить" onclick="money_to_db()">';
 ?>
-<p><input type="button" value="Сохранить" onclick="money_to_db()">
 <input type="reset" value="Очистить">
 <input type="button" value="Закрыть" onclick="id_close('money_form')"></p></figure>

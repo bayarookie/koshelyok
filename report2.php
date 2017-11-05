@@ -21,9 +21,9 @@ $result = byQu($mysqli,
 while ($row = $result->fetch_assoc()) {
 	$sm = $sm + floatval($row['summ']);
 	if (floatval($row['summ']) < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-	echo '<td>' . $row['name'] . '<td align="right">' . $row['summ'];
+	echo '<td>' . $row['name'] . '<td class="num">' . number_format($row['summ'], 2, '.', '');
 }
 if ($sm < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-echo '<td>Итого<td align="right">' . $sm;
+echo '<td>Итого<td class="num">' . number_format($sm, 2, '.', '');
 ?>
 </table></figure></article>

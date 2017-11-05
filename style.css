@@ -58,6 +58,10 @@ input, select, .edit {
 	background: var(--bc);
 }
 
+.edit {
+	cursor: pointer;
+}
+
 input:focus, input:active, input:hover, .edit:hover {
 	color: var(--bc);
 	background: var(--fc);
@@ -107,4 +111,8 @@ figcaption {
 	display: inline-block;
 	min-width: 175px;
 	margin: 5px;
+}
+
+.num {
+	text-align: right;
 }
