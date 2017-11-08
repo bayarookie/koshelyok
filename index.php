@@ -1,8 +1,12 @@
 <?php include 'db.php';?>
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Кошелёк</title>
-<link rel="stylesheet" href="style.css">
+<link id="css" rel="stylesheet" href="css.php">
 <script type="text/javascript">
+function ch_css(id) {
+	document.getElementById('css').href='css.php?CSSID='+id;
+}
+
 function id_close(id) {
 	var iDiv = document.getElementById(id);
 	if (iDiv) {iDiv.parentNode.removeChild(iDiv);}
@@ -11,10 +15,9 @@ function id_close(id) {
 //get content
 function get_form(form_id, id, s) {
 	if (id == null) {
-		var data = "o=" + encodeURIComponent(document.getElementById("ordr").value);
+		var data = "";
 	} else {
-		var data = "o=" + encodeURIComponent(document.getElementById("ordr").value)
-			+ "&id=" + encodeURIComponent(id) + "&tbl=" + encodeURIComponent(s);
+		var data = "id=" + encodeURIComponent(id) + "&tbl=" + encodeURIComponent(s);
 	}
 	id_close(form_id);
 	var iDiv = document.createElement('div');
@@ -197,6 +200,12 @@ function get_report(form_id) {
 		<div>
 			<a href="javascript:void(0)" onclick="get_form('import_form')">Импорт</a>
 			<a href="backup.php">Резервное копирование</a>
+		</div>
+	<li>
+		<a href="javascript:void(0)">Оформление</a>
+		<div>
+			<a href="javascript:void(0)" onclick="ch_css(1)">Тёмный стиль</a>
+			<a href="javascript:void(0)" onclick="ch_css(2)">Светлый стиль</a>
 		</div>
 </menu>
 <section>

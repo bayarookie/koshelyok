@@ -1,0 +1,129 @@
+:root {
+	--mf: #222;
+	--mb: #eee;
+	--af: #0275d8;
+	--ab: #fff;
+	--rb1: #96e8e8;
+	--rb2: #b0caff;
+	--pl: #bbf5bb;
+	--mi: #fbc3c3;
+}
+
+body {
+	color: var(--mf);
+	background: var(--mb);
+}
+
+table, td {
+	border: 1px solid var(--mf);
+}
+
+menu {
+	list-style-type: none;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	background: var(--ab);
+	z-index: 2;
+}
+
+menu li {
+	display: inline-block;
+}
+
+menu li a {
+	display: inline-block;
+	padding: 15px 16px;
+	text-align: center;
+	text-decoration: none;
+	color: var(--af);
+}
+
+menu li div a {
+	display: block;
+	text-align: left;
+}
+
+menu li a:hover {
+	color: var(--ab);
+	background: var(--af);
+}
+
+menu li div {
+	display: none;
+	position: absolute;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+	background: var(--ab);
+}
+
+menu li:hover div {
+	display: block;
+}
+
+input, select, .edit {
+	border-color: var(--af);
+	color: var(--af);
+	background: var(--ab);
+}
+
+.edit {
+	cursor: pointer;
+}
+
+input:focus, input:active, input:hover, .edit:hover {
+	color: var(--ab);
+	background: var(--af);
+}
+
+section {
+	margin-top: 40px;
+}
+
+.hide {
+	position: fixed;
+	top: 48px;
+	left: 8px;
+	right: 8px;
+	bottom: 8px;
+	background: rgba(0,0,0,0.7);
+	overflow: auto;
+	z-index: 1;
+}
+
+article {
+	margin: auto;
+	padding: 5px;
+	background: var(--rb1);
+}
+
+figure {
+	margin: 20px auto;
+	min-width: 360px;
+	padding: 10px;
+	background: var(--rb2);
+}
+
+figcaption {
+	text-align: center;
+}
+
+.plus {
+	background: var(--pl);
+}
+
+.minus {
+	background: var(--mi);
+}
+
+.report {
+	display: inline-block;
+	min-width: 175px;
+	margin: 5px;
+}
+
+.num {
+	text-align: right;
+}

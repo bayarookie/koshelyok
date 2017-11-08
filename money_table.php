@@ -119,7 +119,21 @@ if ($o == 11) {
 }
 echo 'Кошелёк';
 
-//остаток на начало
+//по группам, категориям
+if ($o == 13) {
+	$order = "ORDER BY groups.name, goods.name";
+} elseif ($o == 14) {
+	$order = "ORDER BY groups.name DESC, goods.name DESC";
+}
+
+//по кошелькам, дате
+if ($o == 15) {
+	$order = "ORDER BY walls.name, money.op_date";
+} elseif ($o == 16) {
+	$order = "ORDER BY walls.name DESC, money.op_date DESC";
+}
+
+//таблица, остаток на начало
 $result = byQu($mysqli,
 	"SELECT SUM(op_summ) as summ, walls.name FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
@@ -275,6 +289,10 @@ echo '<option'; if (9 == $o) echo ' selected'; echo ' value="9">По комме�
 echo '<option'; if (10 == $o) echo ' selected'; echo ' value="10">По комментариям обратно</option>';
 echo '<option'; if (11 == $o) echo ' selected'; echo ' value="11">По кошелькам</option>';
 echo '<option'; if (12 == $o) echo ' selected'; echo ' value="12">По кошелькам обратно</option>';
+echo '<option'; if (13 == $o) echo ' selected'; echo ' value="13">По группам, категориям</option>';
+echo '<option'; if (14 == $o) echo ' selected'; echo ' value="14">По группам, категориям обратно</option>';
+echo '<option'; if (15 == $o) echo ' selected'; echo ' value="15">По кошелькам, дате</option>';
+echo '<option'; if (16 == $o) echo ' selected'; echo ' value="16">По кошелькам, дате обратно</option>';
 echo '</select></p>';
 
 ?>
