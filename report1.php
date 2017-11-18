@@ -1,12 +1,11 @@
 <?php
-include 'db.php';
 $f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
 $f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -6 month'));
 echo '<article><p>Отчёт помесячно
 с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '" autofocus>
 по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
 <input type="button" value="Отчёт" onclick="get_report(\'report1\')">
-<input type="button" value="Закрыть" onclick="id_close(\'report1\')"></p>';
+<input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<table><tr><th>Группа';
 $res0 = byQu($mysqli,
 	"SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, SUM(op_summ) as summ

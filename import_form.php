@@ -1,6 +1,5 @@
+<article><h1><a href="">Импорт</a></h1>
 <?php
-include 'db.php';
-echo '<article><h1><a href="">Импорт</a></h1>';
 $w_id = 1;
 echo '<p>Выберите кошелёк: <select size="1" id="i_id">';
 $result = byQu($mysqli, "SELECT id, name FROM walls");

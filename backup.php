@@ -1,5 +1,4 @@
 <?php
-include 'db.php';
 header('Content-type: text/plain; charset=utf-8');
 header('Content-Disposition: attachment; filename=' . DB_DATAB . '.sql');
 

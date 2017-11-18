@@ -1,8 +1,6 @@
 <?php
-include 'db.php';
-//$tbl = $_POST['tbl'] ?? 'goods';
 $tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : 'goods';
-$title = $tbl == 'goods' ? 'Категории' : ($tbl == 'groups' ? 'Группы' : 'Кошельки');
+$title = $tbl == 'goods' ? 'Конторы' : ($tbl == 'groups' ? 'Группы' : 'Кошельки');
 $e_id = -1;
 $name = '';
 $komm = '';

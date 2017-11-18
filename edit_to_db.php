@@ -1,5 +1,4 @@
 <?php
-include 'db.php';
 //редактирование или добавление категорий в БД
 $tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
 $e_id = isset($_POST['e_id']) ? intval($_POST['e_id']) : -1;

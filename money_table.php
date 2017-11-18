@@ -1,10 +1,9 @@
-<?php include 'db.php';?>
 <article><p>Операции
 <input type="button" value="Добавить" onclick="get_form('money_form', -1)">
 <input type="button" value="Закрыть" onclick="id_close('money_table')"></p>
 <?php
 
-//фильтр по дате за последний месяц или как, по категории, по группе
+//фильтры
 $f = isset($_POST['f']) ? intval($_POST['f']) : 1;
 if ($f == 1) {
 	$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
@@ -67,7 +66,7 @@ if ($o == 3) {
 }
 echo 'Сумма';
 
-//по категориям
+//по конторам
 echo '<th class="edit" onclick="money_table(4, ';
 if ($o == 5) {
 	$order = "ORDER BY goods.name";
@@ -78,7 +77,7 @@ if ($o == 5) {
 } else {
 	echo '5)">';
 }
-echo 'Категория';
+echo 'Контора';
 
 //по группам
 echo '<th class="edit" onclick="money_table(4, ';
@@ -119,7 +118,7 @@ if ($o == 11) {
 }
 echo 'Кошелёк';
 
-//по группам, категориям
+//по группам, конторам
 if ($o == 13) {
 	$order = "ORDER BY groups.name, goods.name";
 } elseif ($o == 14) {

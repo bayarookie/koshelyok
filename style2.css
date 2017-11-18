@@ -127,3 +127,27 @@ figcaption {
 .num {
 	text-align: right;
 }
+
+.login_form {
+	width: 360px;
+	padding: 8% 0 0;
+	margin: auto;
+}
+
+.login_form form {
+	position: relative;
+	background: var(--mb);
+	max-width: 360px;
+	padding: 45px;
+	text-align: center;
+}
+
+.login_form input {
+	outline: 0;
+	width: 100%;
+	border: 0;
+	margin: 0 0 15px;
+	padding: 15px;
+	box-sizing: border-box;
+	font-size: 14px;
+}

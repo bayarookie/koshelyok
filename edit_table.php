@@ -1,8 +1,6 @@
 <?php
-include 'db.php';
-//$tbl = $_POST['tbl'] ?? 'goods';
 $tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
-$title = $tbl == 'goods' ? 'Категории' : ($tbl == 'groups' ? 'Группы' : 'Кошельки');
+$title = $tbl == 'goods' ? 'Конторы' : ($tbl == 'groups' ? 'Группы' : 'Кошельки');
 echo '<article>
 <p>' . $title . '
 <input type="button" value="Добавить" onclick="get_form(\'edit_form\',-1,\'' . $tbl . '\')">
@@ -34,7 +32,7 @@ while ($row = $result->fetch_assoc()) {
 }
 echo '</table>
 <p>' . $title . '
-<input type="button" value="Добавить" onclick="get_form(\'edit_form\',-1,\'' . $tbl . '\')">
-<input type="button" value="Закрыть" onclick="id_close(\'edit_table\')"></p>
-</article>';
+<input type="button" value="Добавить" onclick="get_form(\'edit_form\',-1,\'' . $tbl . '\')">';
 ?>
+<input type="button" value="Закрыть" onclick="id_close('edit_table')"></p>
+</article>

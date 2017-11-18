@@ -1,7 +1,6 @@
+<article><h1><a href="">Импорт</a></h1>
+<input type="button" value="Закрыть" onclick="id_close('import_form')">
 <?php
-include 'db.php';
-echo '<article><h1><a href="">Импорт</a></h1>';
-echo '<input type="button" value="Закрыть" onclick="id_close(\'import_form\')">';
 $w_id = isset($_POST['w_id']) ? intval($_POST['w_id']) : 1; //1 = Сбербанк
 $uploadfile = '/tmp/' . basename($_FILES['bankstate']['name']);
 echo '<pre>';

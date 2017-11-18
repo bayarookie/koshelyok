@@ -1,5 +1,4 @@
 <?php
-include 'db.php';
 //редактирование или добавление записи в БД
 if (isset($_POST['m_id'])) {
 	$m_id = intval($_POST['m_id']);
