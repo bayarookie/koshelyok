@@ -4,12 +4,12 @@ session_start();
 if (isset($_POST['logout'])) {
 	$_SESSION['user_id'] = '';
 	session_destroy();
-	die('
+	die('<div class="hide">
 <div class="login_form"><form>
 	<input type="text" id="username" placeholder="имя">
 	<input type="password" id="password" placeholder="пароль">
 	<input type="button" value="Войти" onclick="login()">
-</form></div>');
+</form></div></div>');
 }
 
 include 'config.php';
@@ -39,9 +39,9 @@ if (isset($_POST['login'])) {
 	}
 }
 
-if (isset($_SESSION['user_id'])) {
+$frm = isset($_POST['frm']) ? $_POST['frm'] : '';
+if (($frm != '') && (isset($_SESSION['user_id']))) {
 	$u_id = $_SESSION['user_id'];
-	$frm = isset($_POST['frm']) ? $_POST['frm'] : 'money_table';
 	include $frm . '.php';
 }
 ?>

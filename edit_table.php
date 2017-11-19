@@ -17,7 +17,7 @@ if ($tbl == 'goods') {
 } else {
 	$result = byQu($mysqli, "SELECT * FROM $tbl");
 }
-echo '<th>Комментарий';
+echo '<th>Описание';
 while ($row = $result->fetch_assoc()) {
 	echo ' <tr>';
 	echo '<td class="edit" onclick="get_form(\'edit_form\',' . $row['id'] . ',\'' . $tbl . '\')">Редактировать';

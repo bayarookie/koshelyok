@@ -21,7 +21,8 @@ if ($f == 1) {
 	$f_walls_id = -1;
 } elseif ($f == 3) {
 	$f_dtto = date('Y-m-d');
-	$f_dtfr = date('Y-m-d', strtotime($f_dtto . ' -1 year'));
+	$result = byQu($mysqli, "SELECT MIN(op_date) FROM money");
+	if ($row = $result->fetch_row()) $f_dtfr = $row[0]; else $f_dtfr = '2015-01-01';
 	$f_goods_id = isset($_POST['f_goods_id']) ? intval($_POST['f_goods_id']) : -1;
 	$f_groups_id = -1;
 	$f_walls_id = -1;
@@ -103,7 +104,7 @@ if ($o == 9) {
 } else {
 	echo '9)">';
 }
-echo 'Комментарий';
+echo 'Описание';
 
 //по кошелькам
 echo '<th class="edit" onclick="money_table(4, ';
@@ -134,7 +135,7 @@ if ($o == 15) {
 
 //таблица, остаток на начало
 $result = byQu($mysqli,
-	"SELECT SUM(op_summ) as summ, walls.name FROM money
+	"SELECT SUM(op_summ) AS summ, walls.name FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		LEFT JOIN groups ON goods.groups_id=groups.id
 		LEFT JOIN walls ON money.walls_id=walls.id
@@ -146,9 +147,10 @@ while ($row = $result->fetch_assoc()) {
 
 //движение денег
 $result = byQu($mysqli,
-	"SELECT money.*,
+	"SELECT money.id, money.op_date, money.comment,
 		IF(money.op_summ>=0,money.op_summ,NULL) AS summ1, IF(money.op_summ<0,money.op_summ,NULL) AS summ2,
-		goods.name as goods_name, groups.name as groups_name, walls.name as walls_name
+		IF(goods.comment='',goods.name,goods.comment) AS goods_name,
+		groups.name AS groups_name, walls.name AS walls_name
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		LEFT JOIN groups ON goods.groups_id=groups.id
@@ -156,8 +158,7 @@ $result = byQu($mysqli,
 		WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'$filter
 		$order");
 while ($row = $result->fetch_assoc()) {
-	$summ = floatval($row['op_summ']);
-	if ($summ < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
+	if ($row['summ1'] == '') echo '<tr class="minus">'; else echo '<tr class="plus">';
 	echo '<td class="edit" onclick="get_form(\'money_form\', ' . $row['id'] . ')">Редактировать';
 	echo '<td>' . $row['op_date'];
 	echo '<td class="num">' . $row['summ1'];
@@ -170,7 +171,7 @@ while ($row = $result->fetch_assoc()) {
 
 //сумма движения денег
 $result = byQu($mysqli,
-	"SELECT SUM(if(op_summ>0,op_summ,0)) as summ1, SUM(if(op_summ<0,op_summ,0)) as summ2, walls.name
+	"SELECT SUM(if(op_summ>0,op_summ,0)) AS summ1, SUM(if(op_summ<0,op_summ,0)) AS summ2, walls.name
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		LEFT JOIN groups ON goods.groups_id=groups.id
@@ -183,7 +184,7 @@ while ($row = $result->fetch_assoc()) {
 
 //итого движение денег
 $result = byQu($mysqli,
-	"SELECT SUM(op_summ) as summ
+	"SELECT SUM(op_summ) AS summ
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		LEFT JOIN groups ON goods.groups_id=groups.id
@@ -197,7 +198,7 @@ if ($row = $result->fetch_assoc()) {
 if ($f_dtto != date('Y-m-d')) {
 //остаток на день
 $result = byQu($mysqli,
-	"SELECT SUM(op_summ) as summ, walls.name, MAX(op_date) as dt
+	"SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		LEFT JOIN groups ON goods.groups_id=groups.id
@@ -210,7 +211,7 @@ while ($row = $result->fetch_assoc()) {
 
 //остаток
 $result = byQu($mysqli,
-	"SELECT SUM(op_summ) as summ, walls.name, MAX(op_date) as dt
+	"SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		LEFT JOIN groups ON goods.groups_id=groups.id
@@ -235,7 +236,7 @@ echo '<option';
 if (-1 == $f_goods_id) echo ' selected';
 echo ' value="-1">Все</option>';
 $result = byQu($mysqli,
-	"SELECT goods.id, goods.name, groups.name as groups_name FROM goods
+	"SELECT goods.id, goods.name, groups.name AS groups_name FROM goods
 		LEFT JOIN groups ON goods.groups_id=groups.id
 		ORDER BY groups.name, goods.name");
 while ($row = $result->fetch_assoc()) {

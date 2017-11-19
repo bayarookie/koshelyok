@@ -97,7 +97,7 @@ function money_table(fltr, id, s) {
 			+ "&o=" + encodeURIComponent(ordr)
 			+ "&frm=money_table";
 	} else if (fltr === 4) {
-		var data = "f=" + encodeURIComponent(1)
+		var data = "f=1"
 			+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
 			+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
 			+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
@@ -106,7 +106,7 @@ function money_table(fltr, id, s) {
 			+ "&o=" + encodeURIComponent(id)
 			+ "&frm=money_table";
 	} else {
-		var data = "";
+		var data = "f=1&frm=money_table";
 	}
 	var iDiv = get_new_div('money_table');
 	var xhr = new XMLHttpRequest();
@@ -169,7 +169,7 @@ function edit_to_db(tbl) {
 //import from bankstate to db
 function import_to_db() {
 	var i_id = document.getElementById("i_id").value;
-	var i_fn = document.getElementById("i_file");
+	var i_fn = document.getElementById("bankstate");
 	if (i_fn.files.length === 0) {return;}
 	var data = new FormData();
 	data.append('i_id', i_id);

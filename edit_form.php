@@ -31,8 +31,8 @@ if ($tbl == 'goods') {
 } else {
 	echo '<input type="hidden" id="e_groups_id" value="-1">';
 }
-echo '<p>Комментарий<br>';
-echo '<textarea id="e_comment" cols="40" rows="3" maxlength="1000" placeholder="Комментарий">' . $komm . '</textarea></p>';
+echo '<p>Описание<br>';
+echo '<textarea id="e_comment" cols="40" rows="3" maxlength="1000" placeholder="Описание">' . $komm . '</textarea></p>';
 echo '<p><input type="button" value="Отправить" onclick="edit_to_db(\'' . $tbl . '\')">';
 ?>
 <input type="reset" value="Очистить">

@@ -44,8 +44,8 @@ while ($row = $result->fetch_assoc()) {
 }
 echo '</select></p>';
 
-echo '<p>Комментарий<br>';
-echo '<textarea id="m_comment" cols="40" rows="3" maxlength="1000" placeholder="Комментарий">' . $komm . '</textarea></p>';
+echo '<p>Описание<br>';
+echo '<textarea id="m_comment" cols="40" rows="3" maxlength="1000" placeholder="Описание">' . $komm . '</textarea></p>';
 ?>
 <p><input type="button" value="Сохранить" onclick="money_to_db()">
 <input type="reset" value="Очистить">
