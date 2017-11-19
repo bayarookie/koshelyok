@@ -33,4 +33,5 @@
 		<a href="javascript:void(0)" onclick="logout()">Выйти</a>
 </menu>
 <section>
+	<div class="hide" id="money_table"><?php include 'money_table.php' ?></div>
 </section>

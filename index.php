@@ -12,7 +12,6 @@ function login() {
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
 			document.body.innerHTML = xhr.responseText;
-			money_table(0);
 		}
 	}
 	xhr.send(data);
@@ -77,7 +76,7 @@ function money_table(fltr, id, s) {
 		var ordr = el_1.value;
 	}
 	if (fltr === 1) {
-		var data = "f=" + encodeURIComponent(fltr)
+		var data = "f=1"
 			+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
 			+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
 			+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
@@ -86,13 +85,13 @@ function money_table(fltr, id, s) {
 			+ "&o=" + encodeURIComponent(ordr)
 			+ "&frm=money_table";
 	} else if (fltr === 2) {
-		var data = "f=" + encodeURIComponent(fltr)
+		var data = "f=2"
 			+ "&f_groups_id=" + encodeURIComponent(id)
 			+ "&mo=" + encodeURIComponent(s)
 			+ "&o=" + encodeURIComponent(ordr)
 			+ "&frm=money_table";
 	} else if (fltr === 3) {
-		var data = "f=" + encodeURIComponent(fltr)
+		var data = "f=3"
 			+ "&f_goods_id=" + encodeURIComponent(id)
 			+ "&o=" + encodeURIComponent(ordr)
 			+ "&frm=money_table";

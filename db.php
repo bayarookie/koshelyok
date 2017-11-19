@@ -4,12 +4,8 @@ session_start();
 if (isset($_POST['logout'])) {
 	$_SESSION['user_id'] = '';
 	session_destroy();
-	die('<div class="hide">
-<div class="login_form"><form>
-	<input type="text" id="username" placeholder="имя">
-	<input type="password" id="password" placeholder="пароль">
-	<input type="button" value="Войти" onclick="login()">
-</form></div></div>');
+	include 'login.php';
+	die();
 }
 
 include 'config.php';
@@ -35,8 +31,10 @@ if (isset($_POST['login'])) {
 	if ($row = $result->fetch_row()) {
 		$_SESSION['user_id'] = $row[0];
 		include 'menu.php';
-		die();
+	} else {
+		include 'login.php';
 	}
+	die();
 }
 
 $frm = isset($_POST['frm']) ? $_POST['frm'] : '';

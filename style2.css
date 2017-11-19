@@ -151,3 +151,14 @@ figcaption {
 	box-sizing: border-box;
 	font-size: 14px;
 }
+
+#money_table table td:nth-child(1),
+#money_table table td:nth-child(3),
+#money_table table td:nth-child(4) {
+	text-align: right;
+}
+
+.filters, .filters td {
+	border: 0;
+	padding-top: 7px;
+}
