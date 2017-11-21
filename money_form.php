@@ -17,11 +17,11 @@ if ($m_id > -1) {
 }
 
 echo '<figure>';
-echo '<p>Выберите дату: <input type="date" id="m_op_date" placeholder="Дата" value="' . $date . '"></p>';
-echo '<p>Введите сумму: <input type="number" step="0.01" id="m_op_summ" placeholder="Сумма" value="' . $summ . '" autofocus>';
 echo '<input type="hidden" id="m_id" value="' . $m_id . '">';
+echo '<table class="form"><tr><td>Выберите дату:<td><input type="date" id="m_op_date" placeholder="Дата" value="' . $date . '">';
+echo '<tr><td>Введите сумму:<td><input type="number" step="0.01" id="m_op_summ" placeholder="Сумма" value="' . $summ . '">';
 
-echo '<p>Выберите контору: <select size="1" id="m_goods_id">';
+echo '<tr><td>Выберите контору:<td><select size="1" id="m_goods_id">';
 $result = byQu($mysqli,
 	"SELECT goods.id, goods.name, groups.name as groups_name FROM goods
 		LEFT JOIN groups ON goods.groups_id=groups.id
@@ -33,20 +33,19 @@ while ($row = $result->fetch_assoc()) {
 	if ($row['groups_name'] != '') echo $row['groups_name'] . ' - ';
 	echo $row['name'] . '</option>';
 }
-echo '</select></p>';
+echo '</select>';
 
-echo '<p>Выберите кошелёк: <select size="1" id="m_walls_id">';
+echo '<tr><td>Выберите кошелёк:<td><select size="1" id="m_walls_id">';
 $result = byQu($mysqli, "SELECT id, name FROM walls");
 while ($row = $result->fetch_assoc()) {
 	echo '<option';
 	if ($row['id'] == $w_id) {echo ' selected';}
 	echo ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
 }
-echo '</select></p>';
+echo '</select>';
 
-echo '<p>Описание<br>';
-echo '<textarea id="m_comment" cols="40" rows="3" maxlength="1000" placeholder="Описание">' . $komm . '</textarea></p>';
+echo '<tr><td><td><textarea id="m_comment" cols="40" rows="3" maxlength="1000" placeholder="Описание">' . $komm . '</textarea>';
 ?>
-<p><input type="button" value="Сохранить" onclick="money_to_db()">
+<tr><td><td><input type="button" value="Сохранить" onclick="money_to_db()">
 <input type="reset" value="Очистить">
-<input type="button" value="Закрыть" onclick="id_close('money_form')"></p></figure>
+<input type="button" value="Закрыть" onclick="id_close('money_form')"></table></figure>

@@ -12,7 +12,7 @@ echo '<figure class="report"><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '
 <table><tr><th>Группа<th>Контора<th>Сумма';
 $sm = 0; $sg = ''; $su = 0; 
 $result = byQu($mysqli,
-	"SELECT groups.name, goods.name as gnam, SUM(op_summ) as summ
+	"SELECT groups.name, IF(goods.comment='',goods.name,goods.comment) AS gnam, SUM(op_summ) as summ
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		LEFT JOIN groups ON goods.groups_id=groups.id

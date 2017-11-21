@@ -152,13 +152,13 @@ figcaption {
 	font-size: 14px;
 }
 
-#money_table table td:nth-child(1),
-#money_table table td:nth-child(3),
-#money_table table td:nth-child(4) {
+#money_table td:nth-child(3),
+#money_table td:nth-child(4),
+.form td:nth-child(1) {
 	text-align: right;
 }
 
-.filters, .filters td {
+.form, .form td {
 	border: 0;
 	padding-top: 7px;
 }

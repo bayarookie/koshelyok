@@ -7,13 +7,15 @@
 $f = isset($_POST['f']) ? intval($_POST['f']) : 1;
 if ($f == 1) {
 	$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
-	$f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -1 month'));
+	$result = byQu($mysqli, "SELECT MAX(op_date) FROM money");
+	if ($row = $result->fetch_row()) $f_dtfr = $row[0]; else $f_dtfr = date('Y-m-d');
+	$f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : (new DateTime($f_dtfr))->modify('first day of this month -1 month')->format('Y-m-d');
 	$f_goods_id = isset($_POST['f_goods_id']) ? intval($_POST['f_goods_id']) : -1;
 	$f_groups_id = isset($_POST['f_groups_id']) ? intval($_POST['f_groups_id']) : -1;
 	$f_walls_id = isset($_POST['f_walls_id']) ? intval($_POST['f_walls_id']) : -1;
 } elseif ($f == 2) {
 	if (isset($_POST['mo'])) {
-		$f_dtto = date('Y-m-d', strtotime($_POST['mo'] . '-01 +1 month -1 day'));
+		$f_dtto = date('Y-m-t', strtotime($_POST['mo'] . '-01'));
 		$f_dtfr = date('Y-m-d', strtotime($_POST['mo'] . '-01'));
 	}
 	$f_goods_id = -1;
@@ -165,7 +167,7 @@ while ($row = $result->fetch_assoc()) {
 	echo '<td>' . $row['summ2'];
 	echo '<td>' . $row['goods_name'];
 	echo '<td>' . $row['groups_name'];
-	echo '<td>' . $row['comment'];
+	echo '<td>' . mb_substr($row['comment'], 0, 18);
 	echo '<td>' . $row['walls_name'];
 }
 
@@ -224,7 +226,7 @@ while ($row = $result->fetch_assoc()) {
 echo '</table>';
 
 //фильтры
-echo '<table class="filters">';
+echo '<table class="form">';
 
 //фильтр по дате
 echo '<tr><td>Фильтр: с <td><input type="date" name="date_from" id="date_from" placeholder="гггг-мм-дд" value="' . $f_dtfr . '">';

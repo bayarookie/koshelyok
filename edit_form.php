@@ -15,9 +15,9 @@ if (isset($_POST['id'])) {
 	}
 }
 echo '<figure><figcaption>' . $title . '</figcaption><input type="hidden" id="e_id" value="' . $e_id . '">';
-echo '<p>Введите имя: <input type="text" id="e_name" placeholder="Наименование" value="' . $name . '" autofocus></p>';
+echo '<table class="form"><tr><td>Введите имя:<td><input type="text" id="e_name" placeholder="Наименование" value="' . $name . '">';
 if ($tbl == 'goods') {
-	echo '<p>Выберите группу: <select size="1" id="e_groups_id">';
+	echo '<tr><td>Выберите группу:<td><select size="1" id="e_groups_id">';
 	echo '<option';
 	if (-1 == $r_id) echo ' selected';
 	echo ' value="-1">без группы</option>';
@@ -27,13 +27,12 @@ if ($tbl == 'goods') {
 		if ($row['id'] == $r_id) echo ' selected';
 		echo ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
 	}
-	echo '</select></p>';
+	echo '</select>';
 } else {
 	echo '<input type="hidden" id="e_groups_id" value="-1">';
 }
-echo '<p>Описание<br>';
-echo '<textarea id="e_comment" cols="40" rows="3" maxlength="1000" placeholder="Описание">' . $komm . '</textarea></p>';
-echo '<p><input type="button" value="Отправить" onclick="edit_to_db(\'' . $tbl . '\')">';
+echo '<tr><td><td><textarea id="e_comment" cols="40" rows="3" maxlength="1000" placeholder="Описание">' . $komm . '</textarea></p>';
+echo '<tr><td><td><input type="button" value="Отправить" onclick="edit_to_db(\'' . $tbl . '\')">';
 ?>
 <input type="reset" value="Очистить">
-<input type="button" value="Закрыть" onclick="id_close('edit_form')"></p></figure>
+<input type="button" value="Закрыть" onclick="id_close('edit_form')"></table></figure>

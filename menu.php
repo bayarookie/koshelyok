@@ -6,6 +6,7 @@
 			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'goods')">Конторы</a>
 			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'groups')">Группы</a>
 			<a href="javascript:void(0)" onclick="get_form('edit_table',-1,'walls')">Кошельки</a>
+			<a href="javascript:void(0)" onclick="get_form('users_table')">Пользователи</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)">Отчёты</a>

@@ -62,6 +62,14 @@ function get_form(form_id, id, s) {
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
 			iDiv.innerHTML = xhr.responseText;
+			var el = document.getElementById("e_name");
+			if (el == null) {
+				var el = document.getElementById("m_op_summ");
+			}
+			if (el != null) {
+				el.focus();
+				el.select();
+			}
 		}
 	}
 	xhr.send(data);
