@@ -39,7 +39,10 @@ if (isset($_POST['login'])) {
 
 $frm = isset($_POST['frm']) ? $_POST['frm'] : '';
 if (($frm != '') && (isset($_SESSION['user_id']))) {
-	$u_id = $_SESSION['user_id'];
+	$user_id = $_SESSION['user_id'];
 	include $frm . '.php';
+} else {
+	echo '<article>Сессия окончена или что?<pre>'.$frm."\n".print_r($_SESSION).'</pre>
+<input type="button" value="Закрыть" onclick="logout()"></article>';
 }
 ?>

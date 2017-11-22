@@ -101,7 +101,7 @@ article {
 
 figure {
 	margin: 20px auto;
-	min-width: 360px;
+	width: 500px;
 	padding: 10px;
 	background: var(--rb2);
 }
@@ -124,6 +124,8 @@ figcaption {
 	margin: 5px;
 }
 
+#money_table td:nth-child(3),
+#money_table td:nth-child(4),
 .num {
 	text-align: right;
 }
@@ -152,8 +154,6 @@ figcaption {
 	font-size: 14px;
 }
 
-#money_table td:nth-child(3),
-#money_table td:nth-child(4),
 .form td:nth-child(1) {
 	text-align: right;
 }
