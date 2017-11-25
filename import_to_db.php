@@ -74,7 +74,7 @@ function byTr($c2, $date, $nm, $summ) {
 	$result = byQu($mysqli, "SELECT id FROM money
 	WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND goods_id=$g_id AND walls_id=$w_id");
 	if ($result->num_rows > 0 && $row = $result->fetch_row()) {
-		echo '<td class="edit" onclick="get_form(\'money_form\', ' . $row[0] . ')">Уже есть';
+		echo '<td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'money\')">Уже есть';
 	} else {
 		echo '<td>Новая тр';
 		$impo .= "INSERT INTO money (op_date, op_summ, goods_id, comment, walls_id)
