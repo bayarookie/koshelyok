@@ -141,10 +141,11 @@ figcaption {
 	background: var(--mb);
 	max-width: 360px;
 	padding: 45px;
-	text-align: center;
 }
 
-.login_form input {
+.login_form input[type=text],
+.login_form input[type=password],
+.login_form input[type=button] {
 	outline: 0;
 	width: 100%;
 	border: 0;

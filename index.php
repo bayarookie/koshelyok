@@ -2,10 +2,7 @@
 <html><head><meta charset="utf-8"><title>Кошелёк</title>
 <link id="css" rel="stylesheet" href="css.php">
 <script type="text/javascript">
-function login() {
-	var data = "login=1"
-	+ "&username=" + encodeURIComponent(document.getElementById("username").value)
-	+ "&password=" + encodeURIComponent(document.getElementById("password").value);
+function ajaxsend(data) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -17,17 +14,21 @@ function login() {
 	xhr.send(data);
 }
 
+function login(mode) {
+	if (mode == 0) {
+		var data = "login=0"
+	} else {
+		var data = "login=1"
+		+ "&username=" + encodeURIComponent(document.getElementById("username").value)
+		+ "&password=" + encodeURIComponent(document.getElementById("password").value)
+		+ "&remember=" + encodeURIComponent(document.getElementById("remember").checked);
+	}
+	ajaxsend(data);
+}
+
 function logout() {
 	var data = "logout=1";
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'db.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if ((xhr.readyState == 4) && (xhr.status == 200)) {
-			document.body.innerHTML = xhr.responseText;
-		}
-	}
-	xhr.send(data);
+	ajaxsend(data);
 }
 
 function ch_css(id) {
@@ -63,7 +64,7 @@ function get_form(form_id, id, s) {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
 			iDiv.innerHTML = xhr.responseText;
 			var el = document.getElementById("e_name");
-			if (el == null) var el = document.getElementById("m_op_summ");
+			if (el == null) var el = document.getElementById("e_op_summ");
 			if (el == null) var el = iDiv.getElementsByTagName("input")[1];
 			if (el != null) {
 				el.focus();
@@ -82,6 +83,10 @@ function money_table(fltr, id, s) {
 	} else {
 		var ordr = el_1.value;
 	}
+	if (fltr == 4) {
+		fltr = 1;
+		ordr = id;
+	}
 	if (fltr === 1) {
 		var data = "f=1"
 		+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
@@ -91,25 +96,16 @@ function money_table(fltr, id, s) {
 		+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
 		+ "&o=" + encodeURIComponent(ordr)
 		+ "&frm=money_table";
-	} else if (fltr === 2) {
+	} else if (fltr == 2) {
 		var data = "f=2"
 		+ "&f_groups_id=" + encodeURIComponent(id)
 		+ "&mo=" + encodeURIComponent(s)
 		+ "&o=" + encodeURIComponent(ordr)
 		+ "&frm=money_table";
-	} else if (fltr === 3) {
+	} else if (fltr == 3) {
 		var data = "f=3"
 		+ "&f_goods_id=" + encodeURIComponent(id)
 		+ "&o=" + encodeURIComponent(ordr)
-		+ "&frm=money_table";
-	} else if (fltr === 4) {
-		var data = "f=1"
-		+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
-		+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
-		+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
-		+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
-		+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
-		+ "&o=" + encodeURIComponent(id)
 		+ "&frm=money_table";
 	} else {
 		var data = "f=1&frm=money_table";
@@ -125,52 +121,30 @@ function money_table(fltr, id, s) {
 	}
 	xhr.send(data);
 }
-//money save changes to db
-function money_to_db() {
-	var data = "m_id=" + encodeURIComponent(document.getElementById("m_id").value)
-	+ "&m_op_date=" + encodeURIComponent(document.getElementById("m_op_date").value)
-	+ "&m_op_summ=" + encodeURIComponent(document.getElementById("m_op_summ").value)
-	+ "&m_goods_id=" + encodeURIComponent(document.getElementById("m_goods_id").value)
-	+ "&m_comment=" + encodeURIComponent(document.getElementById("m_comment").value)
-	+ "&m_walls_id=" + encodeURIComponent(document.getElementById("m_walls_id").value)
-	+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
-	+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
-	+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
-	+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
-	+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
-	+ "&o=" + encodeURIComponent(document.getElementById("ordr").value)
-	+ "&frm=money_to_db";
-	id_close('money_form');
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'db.php', true);
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xhr.onreadystatechange = function() {
-		if ((xhr.readyState == 4) && (xhr.status == 200)) {
-			document.getElementById("money_table").innerHTML = xhr.responseText;
-		}
-	}
-	xhr.send(data);
-}
 
 //save changes to db
 function edit_to_db(tbl) {
-	var data = "tbl=" + encodeURIComponent(tbl)
-	+ "&e_id=" + encodeURIComponent(document.getElementById("e_id").value)
-	+ "&frm=edit_to_db";
-	var elem = document.querySelectorAll("#edit_form table input[type=text]");
+	var data = "tbl=" + encodeURIComponent(tbl) + "&frm=edit_to_db";
+	var elem = document.querySelectorAll("#edit_form input[type=hidden], #edit_form input[type=text], #edit_form input[type=date], #edit_form input[type=number], #edit_form input[type=password], #edit_form select");
 	for (var i = 0; i < elem.length; i++) {
 		var input = elem[i];
 		data += "&" + input.id + "=" + encodeURIComponent(input.value);
 	}
-	var grup = document.getElementById("e_groups_id");
-	if (grup != null) data += "&e_groups_id=" + encodeURIComponent(grup.value);
+	if (tbl == "money")
+	data += "&from=" + encodeURIComponent(document.getElementById("date_from").value)
+	+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
+	+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
+	+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
+	+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
+	+ "&o=" + encodeURIComponent(document.getElementById("ordr").value);
 	id_close("edit_form");
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "db.php", true);
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
-			document.getElementById("edit_table").innerHTML = xhr.responseText;
+			if (tbl == "money") document.getElementById("money_table").innerHTML = xhr.responseText;
+			else document.getElementById("edit_table").innerHTML = xhr.responseText;
 		}
 	}
 	xhr.send(data);
@@ -216,7 +190,7 @@ function get_report(form_id) {
 	xhr.send(data);
 }
 
-window.onload = logout();
+window.onload = login(0);
 </script>
 </head>
 <body>

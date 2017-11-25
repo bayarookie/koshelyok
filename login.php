@@ -1,7 +1,11 @@
 <section>
 <div class="hide">
 <div class="login_form"><form>
-	<input type="text" id="username" placeholder="имя">
-	<input type="password" id="password" placeholder="пароль">
-	<input type="button" value="Войти" onclick="login()">
+	<div class='error_msg'></div>
+	<label>Имя пользователя  :</label><br>
+	<input type="text" id="username" placeholder="имя" value="<?php if ($reme == 'true') echo $user ?>"><br><br>
+	<label>Пароль  :</label><br>
+	<input type="password" id="password" placeholder="пароль" value="<?php if ($reme == 'true') echo $pass ?>"><br><br>
+	<input type="checkbox" id="remember"<?php if ($reme == 'true') echo ' checked' ?>> Запомнить меня<br><br>
+	<input type="button" value="Войти" onclick="login(1)">
 </form></div></div></section>
