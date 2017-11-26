@@ -52,11 +52,11 @@ if ($user != '') {
 			setcookie("user", '', time()-60);
 			setcookie("pass", '', time()-60);
 		}
-		if ($logn) {
+		if (isset($_POST['load'])) {
 			include 'menu.php';
 			die();
 		}
-	}
+	} else $user_id = -1;
 }
 
 if ($user_id > 0) {

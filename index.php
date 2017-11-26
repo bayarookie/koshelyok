@@ -14,6 +14,11 @@ function ajaxsend(data) {
 	xhr.send(data);
 }
 
+function load() {
+	var data = "load=1";
+	ajaxsend(data);
+}
+
 function login() {
 	var data = "login=1";
 	var el_1 = document.getElementById("username");
@@ -206,7 +211,7 @@ function get_report(form_id) {
 	xhr.send(data);
 }
 
-window.onload = login();
+window.onload = load();
 </script>
 </head>
 <body>
