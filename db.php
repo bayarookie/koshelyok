@@ -34,8 +34,7 @@ $mysqli->set_charset(DB_CHARS);
 $user = isset($_COOKIE['user']) ? $mysqli->real_escape_string($_COOKIE['user']) : '';
 $pass = isset($_COOKIE['pass']) ? $mysqli->real_escape_string($_COOKIE['pass']) : '';
 $reme = ($user != '') ? 'true' : 'false';
-$logn = isset($_POST['login']) ? true : false;
-if ($logn) {
+if (isset($_POST['login'])) {
 	$user = isset($_POST['username']) ? $mysqli->real_escape_string($_POST['username']) : '';
 	$pass = isset($_POST['password']) ? $mysqli->real_escape_string($_POST['password']) : '';
 	$reme = isset($_POST['remember']) ? $_POST['remember'] : 'false';
@@ -52,14 +51,20 @@ if ($user != '') {
 			setcookie("user", '', time()-60);
 			setcookie("pass", '', time()-60);
 		}
-		if (isset($_POST['load'])) {
-			include 'menu.php';
-			die();
-		}
 	} else $user_id = -1;
 }
-
+if (false) {
+echo '<pre>';
+echo '$_POST=';
+print_r($_POST);
+echo '$_COOKIE=';
+print_r($_COOKIE);
+echo '$_SESSION=';
+print_r($_SESSION);
+echo '</pre>';
+}
 if ($user_id > 0) {
+	if (isset($_POST['load']) || isset($_POST['login'])) include 'menu.php';
 	$frm = isset($_POST['frm']) ? $_POST['frm'] : '';
 	if ($frm != '') include $frm . '.php';
 } else {
