@@ -14,15 +14,14 @@ function ajaxsend(data) {
 	xhr.send(data);
 }
 
-function login(mode) {
-	if (mode == 0) {
-		var data = "login=0"
-	} else {
-		var data = "login=1"
-		+ "&username=" + encodeURIComponent(document.getElementById("username").value)
-		+ "&password=" + encodeURIComponent(document.getElementById("password").value)
-		+ "&remember=" + encodeURIComponent(document.getElementById("remember").checked);
-	}
+function login() {
+	var data = "login=1";
+	var el_1 = document.getElementById("username");
+	if (el_1 != null) data += "&username=" + encodeURIComponent(el_1.value);
+	var el_2 = document.getElementById("password");
+	if (el_2 != null) data += "&password=" + encodeURIComponent(el_2.value);
+	var el_3 = document.getElementById("remember");
+	if (el_3 != null) data += "&remember=" + encodeURIComponent(el_3.checked);
 	ajaxsend(data);
 }
 
@@ -150,20 +149,37 @@ function edit_to_db(tbl) {
 	xhr.send(data);
 }
 
-//import from bankstate to db
-function import_to_db() {
+//import from bankstate
+function import_form2() {
 	var i_id = document.getElementById("i_id").value;
 	var i_fn = document.getElementById("bankstate");
 	if (i_fn.files.length === 0) {return;}
-	var data = new FormData();
-	data.append('i_id', i_id);
-	data.append('bankstate', i_fn.files[0]);
-	data.append('frm', 'import_to_db');
+	var fdat = new FormData();
+	fdat.append('i_id', i_id);
+	fdat.append('bankstate', i_fn.files[0]);
+	fdat.append('frm', 'import_form2');
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'db.php', true);
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
-			document.getElementById("import_form").innerHTML = xhr.responseText;
+			document.getElementById("import_form2").innerHTML = xhr.responseText;
+		}
+	}
+	xhr.send(fdat);
+}
+
+//save bankstate to db
+function import_to_db() {
+	var data = "frm=" + encodeURIComponent("import_to_db");
+	var elem = document.querySelectorAll("#import_form2 input:checked");
+	for (var i = 0; i < elem.length; i++)
+		data += "&imp_" + i + "=" + encodeURIComponent(elem[i].value);
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', 'db.php', true);
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	xhr.onreadystatechange = function() {
+		if ((xhr.readyState == 4) && (xhr.status == 200)) {
+			document.getElementById("import_form2").innerHTML = xhr.responseText;
 		}
 	}
 	xhr.send(data);
@@ -190,7 +206,7 @@ function get_report(form_id) {
 	xhr.send(data);
 }
 
-window.onload = login(0);
+window.onload = login();
 </script>
 </head>
 <body>
