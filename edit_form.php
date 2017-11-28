@@ -22,7 +22,7 @@ if ($tbl == 'goods') {
 	$title = 'Транзакция';
 	$td = array('id', 'Дата', 'Сумма', 'Контора', 'Кошелёк', 'Пользователь', 'Описание');
 	$ids = array('e_id', 'e_op_date', 'e_op_summ', 'e_goods_id', 'e_walls_id', 'e_users_id', 'e_comment');
-	$row = array(-1, date('Y-m-d'), 0, 0, 0, 0, '');
+	$row = array(-1, date('Y-m-d'), 0, 0, 0, $user_id, '');
 }
 if ($e_id > -1) {
 	$result = byQu($mysqli, "SELECT * FROM $tbl WHERE id=$e_id");
@@ -47,6 +47,6 @@ for ($i = 1; $i < count($row); $i++) {
 		echo '<tr><td>' . $td[$i] . '<td><input type="text" id="' . $ids[$i] . '" value="' . $row[$i] . '" size="40">';
 	}
 }
-echo '<tr><td><td><input type="button" value="Отправить" onclick="edit_to_db(\'' . $tbl . '\')">
-<input type="button" value="Закрыть" onclick="id_close(\'edit_form\')"></table></figure>';
+echo '<tr><td><td><input type="button" value="Сохранить" onclick="edit_to_db(\'' . $tbl . '\')">
+<input type="button" value="Отменить" onclick="id_close(\'edit_form\')"></table></figure>';
 ?>

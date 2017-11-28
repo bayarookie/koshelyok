@@ -11,6 +11,7 @@ if (isset($_POST['logout'])) {
 	$reme = ($user != '') ? 'true' : 'false';
 	setcookie("user", '', time()-60);
 	setcookie("pass", '', time()-60);
+	$errm = 'Вышел? Можешь зайти обратно.';
 	include 'login.php';
 	die();
 }
@@ -53,21 +54,12 @@ if ($user != '') {
 		}
 	} else $user_id = -1;
 }
-if (false) {
-echo '<pre>';
-echo '$_POST=';
-print_r($_POST);
-echo '$_COOKIE=';
-print_r($_COOKIE);
-echo '$_SESSION=';
-print_r($_SESSION);
-echo '</pre>';
-}
 if ($user_id > 0) {
 	if (isset($_POST['load']) || isset($_POST['login'])) include 'menu.php';
 	$frm = isset($_POST['frm']) ? $_POST['frm'] : '';
 	if ($frm != '') include $frm . '.php';
 } else {
+	$errm = 'Имя или пароль не того';
 	include 'login.php';
 }
 ?>

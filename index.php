@@ -22,11 +22,11 @@ function load() {
 function login() {
 	var data = "login=1";
 	var el_1 = document.getElementById("username");
-	if (el_1 != null) data += "&username=" + encodeURIComponent(el_1.value);
-	var el_2 = document.getElementById("password");
-	if (el_2 != null) data += "&password=" + encodeURIComponent(el_2.value);
-	var el_3 = document.getElementById("remember");
-	if (el_3 != null) data += "&remember=" + encodeURIComponent(el_3.checked);
+	if (el_1) {
+		data += "&username=" + encodeURIComponent(el_1.value);
+		data += "&password=" + encodeURIComponent(document.getElementById("password").value);
+		data += "&remember=" + document.getElementById("remember").checked;
+	}
 	ajaxsend(data);
 }
 
@@ -41,7 +41,7 @@ function ch_css(id) {
 
 function id_close(id) {
 	var iDiv = document.getElementById(id);
-	if (iDiv) {iDiv.parentNode.removeChild(iDiv);}
+	if (iDiv) iDiv.parentNode.removeChild(iDiv);
 }
 
 function get_new_div(id) {
@@ -56,9 +56,9 @@ function get_new_div(id) {
 //get content
 function get_form(form_id, id, s) {
 	if (id == null) {
-		var data = "frm=" + encodeURIComponent(form_id);
+		var data = "frm=" + form_id;
 	} else {
-		var data = "frm=" + encodeURIComponent(form_id) + "&id=" + encodeURIComponent(id) + "&tbl=" + encodeURIComponent(s);
+		var data = "frm=" + form_id + "&id=" + id + "&tbl=" + s;
 	}
 	var iDiv = get_new_div(form_id);
 	var xhr = new XMLHttpRequest();
@@ -95,22 +95,16 @@ function money_table(fltr, id, s) {
 		var data = "f=1"
 		+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
 		+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
-		+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
-		+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
-		+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
-		+ "&o=" + encodeURIComponent(ordr)
+		+ "&f_goods_id=" + document.getElementById("f_goods_id").value
+		+ "&f_groups_id=" + document.getElementById("f_groups_id").value
+		+ "&f_walls_id=" + document.getElementById("f_walls_id").value
+		+ "&f_users_id=" + document.getElementById("f_users_id").value
+		+ "&o=" + ordr
 		+ "&frm=money_table";
 	} else if (fltr == 2) {
-		var data = "f=2"
-		+ "&f_groups_id=" + encodeURIComponent(id)
-		+ "&mo=" + encodeURIComponent(s)
-		+ "&o=" + encodeURIComponent(ordr)
-		+ "&frm=money_table";
+		var data = "f=2&f_groups_id=" + id + "&mo=" + s + "&o=" + ordr + "&frm=money_table";
 	} else if (fltr == 3) {
-		var data = "f=3"
-		+ "&f_goods_id=" + encodeURIComponent(id)
-		+ "&o=" + encodeURIComponent(ordr)
-		+ "&frm=money_table";
+		var data = "f=3&f_goods_id=" + id + "&o=" + ordr + "&frm=money_table";
 	} else {
 		var data = "f=1&frm=money_table";
 	}
@@ -137,10 +131,10 @@ function edit_to_db(tbl) {
 	if (tbl == "money")
 	data += "&from=" + encodeURIComponent(document.getElementById("date_from").value)
 	+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
-	+ "&f_goods_id=" + encodeURIComponent(document.getElementById("f_goods_id").value)
-	+ "&f_groups_id=" + encodeURIComponent(document.getElementById("f_groups_id").value)
-	+ "&f_walls_id=" + encodeURIComponent(document.getElementById("f_walls_id").value)
-	+ "&o=" + encodeURIComponent(document.getElementById("ordr").value);
+	+ "&f_goods_id=" + document.getElementById("f_goods_id").value
+	+ "&f_groups_id=" + document.getElementById("f_groups_id").value
+	+ "&f_walls_id=" + document.getElementById("f_walls_id").value
+	+ "&o=" + document.getElementById("ordr").value;
 	id_close("edit_form");
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "db.php", true);
@@ -175,7 +169,7 @@ function import_form2() {
 
 //save bankstate to db
 function import_to_db() {
-	var data = "frm=" + encodeURIComponent("import_to_db");
+	var data = "frm=import_to_db";
 	var elem = document.querySelectorAll("#import_form2 input:checked");
 	for (var i = 0; i < elem.length; i++)
 		data += "&imp_" + i + "=" + encodeURIComponent(elem[i].value);
@@ -195,9 +189,9 @@ function get_report(form_id) {
 	var el_1 = document.getElementById("p_date_from");
 	var el_2 = document.getElementById("p_date_to");
 	if ((el_1 == null) || (el_2 == null)) {
-		var data = "frm=" + encodeURIComponent(form_id);
+		var data = "frm=" + form_id;
 	} else {
-		var data = "frm=" + encodeURIComponent(form_id) + "&from=" + encodeURIComponent(el_1.value) + "&to=" + encodeURIComponent(el_2.value);
+		var data = "frm=" + form_id + "&from=" + encodeURIComponent(el_1.value) + "&to=" + encodeURIComponent(el_2.value);
 	}
 	var iDiv = get_new_div('report');
 	var xhr = new XMLHttpRequest();
