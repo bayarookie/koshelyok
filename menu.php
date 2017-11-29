@@ -1,4 +1,4 @@
-<menu>
+<nav>
 	<li><a href="javascript:void(0)" onclick="money_table(0)">Операции</a>
 	<li>
 		<a href="javascript:void(0)">Списки</a>
@@ -29,10 +29,11 @@
 		<div>
 			<a href="javascript:void(0)" onclick="ch_css(1)">Тёмный стиль</a>
 			<a href="javascript:void(0)" onclick="ch_css(2)">Светлый стиль</a>
+			<a href="javascript:void(0)" onclick="ch_css(3)">Третий стиль</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)" onclick="logout()">Выйти</a>
-</menu>
-<section>
-	<div class="hide" id="money_table"><?php include 'money_table.php' ?></div>
-</section>
+</nav>
+<main>
+	<section id="money_table"><?php include 'money_table.php' ?></section>
+</main>

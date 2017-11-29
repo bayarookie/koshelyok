@@ -1,12 +1,12 @@
 :root {
-	--mf: #eee;
-	--mb: #111;
-	--af: #81c9ff;
-	--ab: #333;
-	--rb1: #112222;
-	--rb2: #2c3444;
-	--pl: #112211;
-	--mi: #221111;
+	--mf: #000;
+	--mb: #ffa;
+	--af: #0065bb;
+	--ab: #f1ffc2;
+	--rb1: #fff;
+	--rb2: #b0caff;
+	--pl: #ccf3cc;
+	--mi: #f9dada;
 }
 
 body {
@@ -169,3 +169,4 @@ input:focus, input:active, input:hover, .edit:hover {
 	min-width: 175px;
 	margin: 5px;
 }
+

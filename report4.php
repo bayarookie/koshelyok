@@ -8,7 +8,7 @@ echo '<article><p>Отчёт по группам
 по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
 <input type="button" value="Отчёт" onclick="get_report(\'report4\')"> 
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
-echo '<figure class="report"><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption>
+echo '<figure><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption>
 <table><tr><th>Группа<th>Сумма';
 $sm = 0;
 $result = byQu($mysqli,

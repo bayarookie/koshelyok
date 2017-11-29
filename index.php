@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Кошелёк</title>
 <link id="css" rel="stylesheet" href="css.php">
-<script type="text/javascript">
+<script>
 function ajaxsend(data) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'db.php', true);
@@ -40,17 +40,16 @@ function ch_css(id) {
 }
 
 function id_close(id) {
-	var iDiv = document.getElementById(id);
-	if (iDiv) iDiv.parentNode.removeChild(iDiv);
+	var sect = document.getElementById(id);
+	if (sect) sect.parentNode.removeChild(sect);
 }
 
-function get_new_div(id) {
+function get_new_sect(id) {
 	id_close(id);
-	var iDiv = document.createElement('div');
-	iDiv.id = id;
-	iDiv.className = 'hide';
-	document.getElementsByTagName('section')[0].appendChild(iDiv);
-	return iDiv;
+	var sect = document.createElement('section');
+	sect.id = id;
+	document.getElementsByTagName('main')[0].appendChild(sect);
+	return sect;
 }
 
 //get content
@@ -60,16 +59,16 @@ function get_form(form_id, id, s) {
 	} else {
 		var data = "frm=" + form_id + "&id=" + id + "&tbl=" + s;
 	}
-	var iDiv = get_new_div(form_id);
+	var sect = get_new_sect(form_id);
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
-			iDiv.innerHTML = xhr.responseText;
+			sect.innerHTML = xhr.responseText;
 			var el = document.getElementById("e_name");
 			if (el == null) var el = document.getElementById("e_op_summ");
-			if (el == null) var el = iDiv.getElementsByTagName("input")[1];
+			if (el == null) var el = sect.getElementsByTagName("input")[1];
 			if (el != null) {
 				el.focus();
 				el.select();
@@ -108,13 +107,13 @@ function money_table(fltr, id, s) {
 	} else {
 		var data = "f=1&frm=money_table";
 	}
-	var iDiv = get_new_div('money_table');
+	var sect = get_new_sect('money_table');
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
-			iDiv.innerHTML = xhr.responseText;
+			sect.innerHTML = xhr.responseText;
 		}
 	}
 	xhr.send(data);
@@ -193,13 +192,13 @@ function get_report(form_id) {
 	} else {
 		var data = "frm=" + form_id + "&from=" + encodeURIComponent(el_1.value) + "&to=" + encodeURIComponent(el_2.value);
 	}
-	var iDiv = get_new_div('report');
+	var sect = get_new_sect('report');
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'db.php', true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
-			iDiv.innerHTML = xhr.responseText;
+			sect.innerHTML = xhr.responseText;
 		}
 	}
 	xhr.send(data);
@@ -207,6 +206,5 @@ function get_report(form_id) {
 
 window.onload = load();
 </script>
-</head>
-<body>
+</head><body>
 </body></html>

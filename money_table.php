@@ -236,10 +236,10 @@ while ($row = $result->fetch_assoc()) {
 	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
 	echo '<td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
 }
-echo '</table>';
+echo '</table></article>';
 
 //фильтры
-echo '<table class="form">';
+echo '<article><table class="form">';
 
 //фильтр по дате
 echo '<tr><td>Фильтр: с <td><input type="date" id="date_from" value="' . $f_dtfr . '">';

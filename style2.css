@@ -14,11 +14,7 @@ body {
 	background: var(--mb);
 }
 
-table, td {
-	border: 1px solid var(--mf);
-}
-
-menu {
+nav {
 	list-style-type: none;
 	position: fixed;
 	top: 0;
@@ -29,11 +25,11 @@ menu {
 	z-index: 2;
 }
 
-menu li {
+nav li {
 	display: inline-block;
 }
 
-menu li a {
+nav li a {
 	display: inline-block;
 	padding: 15px 16px;
 	text-align: center;
@@ -41,17 +37,12 @@ menu li a {
 	color: var(--af);
 }
 
-menu li div a {
-	display: block;
-	text-align: left;
-}
-
-menu li a:hover {
+nav li a:hover {
 	color: var(--ab);
 	background: var(--af);
 }
 
-menu li div {
+nav li div {
 	display: none;
 	position: absolute;
 	min-width: 160px;
@@ -59,30 +50,20 @@ menu li div {
 	background: var(--ab);
 }
 
-menu li:hover div {
+nav li:hover div {
 	display: block;
 }
 
-input, select, .edit {
-	border-color: var(--af);
-	color: var(--af);
-	background: var(--ab);
+nav li div a {
+	display: block;
+	text-align: left;
 }
 
-.edit {
-	cursor: pointer;
-}
-
-input:focus, input:active, input:hover, .edit:hover {
-	color: var(--ab);
-	background: var(--af);
-}
-
-section {
+main {
 	margin-top: 40px;
 }
 
-.hide {
+section {
 	position: fixed;
 	top: 48px;
 	left: 8px;
@@ -94,14 +75,12 @@ section {
 }
 
 article {
-	margin: auto;
 	padding: 5px;
 	background: var(--rb1);
 }
 
 figure {
 	margin: 20px auto;
-	width: 500px;
 	padding: 10px;
 	background: var(--rb2);
 }
@@ -110,18 +89,27 @@ figcaption {
 	text-align: center;
 }
 
+table, td {
+	border: 1px solid var(--mf);
+}
+
+input, select, .edit {
+	border-color: var(--af);
+	color: var(--af);
+	background: var(--ab);
+}
+
+input:focus, input:active, input:hover, .edit:hover {
+	color: var(--ab);
+	background: var(--af);
+}
+
 .plus {
 	background: var(--pl);
 }
 
 .minus {
 	background: var(--mi);
-}
-
-.report {
-	display: inline-block;
-	min-width: 175px;
-	margin: 5px;
 }
 
 .money_table td:nth-child(2),
@@ -137,7 +125,6 @@ figcaption {
 
 .login_form {
 	width: 360px;
-	padding: 8% 0 0;
 	margin: auto;
 }
 
@@ -160,11 +147,25 @@ figcaption {
 	font-size: 14px;
 }
 
+.form, .form td {
+	border: 0;
+	padding-top: 7px;
+}
+
 .form td:nth-child(1) {
 	text-align: right;
 }
 
-.form, .form td {
-	border: 0;
-	padding-top: 7px;
+.edit {
+	cursor: pointer;
+}
+
+#edit_form figure {
+	width: 500px;
+}
+
+#report figure {
+	display: inline-block;
+	min-width: 175px;
+	margin: 5px;
 }
