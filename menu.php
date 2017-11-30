@@ -17,6 +17,7 @@
 			<a href="javascript:void(0)" onclick="get_report('report2')">В среднем за месяц</a>
 			<a href="javascript:void(0)" onclick="get_report('report4')">По группам</a>
 			<a href="javascript:void(0)" onclick="get_report('report5')">По конторам</a>
+			<a href="javascript:void(0)" onclick="get_report('report6')">По пользователям</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)">Служебные</a>

@@ -90,22 +90,23 @@ function money_table(fltr, id, s) {
 		fltr = 1;
 		ordr = id;
 	}
+	var data = "frm=money_table&o=" + ordr;
 	if (fltr === 1) {
-		var data = "f=1"
+		data += "&f=1"
 		+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
 		+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
 		+ "&f_goods_id=" + document.getElementById("f_goods_id").value
 		+ "&f_groups_id=" + document.getElementById("f_groups_id").value
 		+ "&f_walls_id=" + document.getElementById("f_walls_id").value
-		+ "&f_users_id=" + document.getElementById("f_users_id").value
-		+ "&o=" + ordr
-		+ "&frm=money_table";
+		+ "&f_users_id=" + document.getElementById("f_users_id").value;
 	} else if (fltr == 2) {
-		var data = "f=2&f_groups_id=" + id + "&mo=" + s + "&o=" + ordr + "&frm=money_table";
+		data += "&f=2&f_groups_id=" + id + "&mo=" + s;
 	} else if (fltr == 3) {
-		var data = "f=3&f_goods_id=" + id + "&o=" + ordr + "&frm=money_table";
+		data += "&f=3&f_goods_id=" + id;
+	} else if (fltr == 6) {
+		data += "&f=3&f_groups_id=" + id + "&f_users_id=" + s;
 	} else {
-		var data = "f=1&frm=money_table";
+		data += "&f=1";
 	}
 	var sect = get_new_sect('money_table');
 	var xhr = new XMLHttpRequest();
@@ -133,6 +134,7 @@ function edit_to_db(tbl) {
 	+ "&f_goods_id=" + document.getElementById("f_goods_id").value
 	+ "&f_groups_id=" + document.getElementById("f_groups_id").value
 	+ "&f_walls_id=" + document.getElementById("f_walls_id").value
+	+ "&f_users_id=" + document.getElementById("f_users_id").value
 	+ "&o=" + document.getElementById("ordr").value;
 	id_close("edit_form");
 	var xhr = new XMLHttpRequest();
