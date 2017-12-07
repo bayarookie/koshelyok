@@ -33,22 +33,21 @@ while ($row1 = $res1->fetch_assoc()) {
 			WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
 			AND groups_id=" . $row1['groups_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc()) {
-			echo '<td class="edit num"';
-			echo ' onclick="money_table(2, ' . $row1['groups_id'] . ',\'' . $row0['mo'] . '\')">';
+			echo '<td class="edit num" onclick="money_table(2,' . $row1['groups_id'] . ',\'' . $row0['mo'] . '\')">';
 			echo $row2['summ'] ?: '0.00';
 		}
 	}
-	if (floatval($row1['summ']) < 0) echo '<td class="minus num">'; else echo '<td class="plus num">';
+	echo (floatval($row1['summ']) < 0) ? '<td class="minus num">' : '<td class="plus num">';
 	echo $row1['summ'];
 	$sm = $sm + floatval($row1['summ']);
 }
 echo '<tr><td>Итого';
 $res0->data_seek(0);
 while ($row0 = $res0->fetch_assoc()) {
-	if (floatval($row0['summ']) < 0) echo '<td class="minus num">'; else echo '<td class="plus num">';
+	echo (floatval($row0['summ']) < 0) ? '<td class="minus num">' : '<td class="plus num">';
 	echo $row0['summ'];
 }
-if ($sm < 0) echo '<td class="minus num">'; else echo '<td class="plus num">';
+echo ($sm < 0) ? '<td class="minus num">' : '<td class="plus num">';
 echo number_format($sm, 2, '.', '');
 ?>
 </table></article>

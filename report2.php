@@ -1,28 +1,52 @@
 <?php
 $f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
 $f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -6 month'));
-echo '<article><p>Отчёт средний
+echo '<article><p>Отчёт помесячно
 с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '" autofocus>
 по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
-<input type="button" value="Отчёт" onclick="get_report(\'report2\')"> 
+<input type="button" value="Отчёт" onclick="get_report(\'report2\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
-echo '<figure><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption><table><tr><th>Группа<th>Сумма';
+echo '<table><tr><th>Месяц';
+$res0 = byQu($mysqli, "SELECT goods.groups_id, groups.name, SUM(op_summ) as summ
+	FROM money
+	LEFT JOIN goods ON money.goods_id=goods.id
+	LEFT JOIN groups ON goods.groups_id=groups.id
+	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
+	GROUP BY goods.groups_id  ORDER BY groups.name");
+while ($row0 = $res0->fetch_assoc())
+	echo '<th>' . $row0['name'];
+echo '<th>Сумма';
+$gr = "";
 $sm = 0;
-$result = byQu($mysqli,
-	"SELECT id, name, AVG(summ) AS summ
-		FROM (SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, groups.id, groups.name, SUM(op_summ) as summ
-		FROM money
-		LEFT JOIN goods ON money.goods_id=goods.id
-		LEFT JOIN groups ON goods.groups_id=groups.id
-		WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
-		GROUP BY mo, groups.id ORDER BY mo, groups.name) AS a
-		GROUP BY id");
-while ($row = $result->fetch_assoc()) {
-	$sm = $sm + floatval($row['summ']);
-	if (floatval($row['summ']) < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-	echo '<td>' . $row['name'] . '<td class="num">' . number_format($row['summ'], 2, '.', '');
+$res1 = byQu($mysqli, "SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, SUM(op_summ) as summ
+	FROM money
+	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
+	GROUP BY mo");
+while ($row1 = $res1->fetch_assoc()) {
+	echo '<tr><td>' . $row1['mo'];
+	$res0->data_seek(0);
+	while ($row0 = $res0->fetch_assoc()) {
+		$res2 = byQu($mysqli, "SELECT SUM(op_summ) as summ
+			FROM money
+			LEFT JOIN goods ON money.goods_id=goods.id
+			WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
+			AND groups_id=" . $row0['groups_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
+		if ($row2 = $res2->fetch_assoc()) {
+			echo '<td class="edit num" onclick="money_table(2, ' . $row0['groups_id'] . ',\'' . $row1['mo'] . '\')">';
+			echo $row2['summ'] ?: '0.00';
+		}
+	}
+	echo (floatval($row1['summ']) < 0) ? '<td class="minus num">' : '<td class="plus num">';
+	echo $row1['summ'];
+	$sm = $sm + floatval($row1['summ']);
 }
-if ($sm < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
-echo '<td>Итого<td class="num">' . number_format($sm, 2, '.', '');
+echo '<tr><td>Итого';
+$res0->data_seek(0);
+while ($row0 = $res0->fetch_assoc()) {
+	echo (floatval($row0['summ']) < 0) ? '<td class="minus num">' : '<td class="plus num">';
+	echo $row0['summ'];
+}
+echo ($sm < 0) ? '<td class="minus num">' : '<td class="plus num">';
+echo number_format($sm, 2, '.', '');
 ?>
-</table></figure></article>
+</table></article>

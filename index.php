@@ -54,11 +54,8 @@ function get_new_sect(id) {
 
 //get content
 function get_form(form_id, id, s) {
-	if (id == null) {
-		var data = "frm=" + form_id;
-	} else {
-		var data = "frm=" + form_id + "&id=" + id + "&tbl=" + s;
-	}
+	var data = "frm=" + form_id;
+	if (id != null) data += "&id=" + id + "&tbl=" + s;
 	var sect = get_new_sect(form_id);
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'db.php', true);
@@ -80,29 +77,20 @@ function get_form(form_id, id, s) {
 
 //money
 function money_table(fltr, id, s) {
-	var el_1 = document.getElementById("ordr");
-	if (el_1 == null) {
-		var ordr = 1;
-	} else {
-		var ordr = el_1.value;
-	}
-	if (fltr == 4) {
-		fltr = 1;
-		ordr = id;
-	}
-	var data = "frm=money_table&o=" + ordr;
+	var el_1 = document.getElementById("o");
+	if (fltr == 0) {fltr = 1; if (el_1) el_1.value = id;}
+	if (el_1) var o = el_1.value; else var o = 1;
+	var data = "frm=money_table&o=" + o;
 	if (fltr === 1) {
-		data += "&f=1"
-		+ "&from=" + encodeURIComponent(document.getElementById("date_from").value)
-		+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
-		+ "&f_goods_id=" + document.getElementById("f_goods_id").value
-		+ "&f_groups_id=" + document.getElementById("f_groups_id").value
-		+ "&f_walls_id=" + document.getElementById("f_walls_id").value
-		+ "&f_users_id=" + document.getElementById("f_users_id").value;
+		data += "&f=1";
+		var elem = document.querySelectorAll("#money_table input[type=date], #money_table select");
+		for (var i = 0; i < elem.length; i++) data += "&" + elem[i].id + "=" + encodeURIComponent(elem[i].value);
 	} else if (fltr == 2) {
 		data += "&f=2&f_groups_id=" + id + "&mo=" + s;
-	} else if (fltr == 3) {
+	} else if ([3,5].includes(fltr)) {
 		data += "&f=3&f_goods_id=" + id;
+	} else if (fltr == 4) {
+		data += "&f=3&f_groups_id=" + id;
 	} else if (fltr == 6) {
 		data += "&f=3&f_groups_id=" + id + "&f_users_id=" + s;
 	} else {
@@ -122,20 +110,13 @@ function money_table(fltr, id, s) {
 
 //save changes to db
 function edit_to_db(tbl) {
-	var data = "tbl=" + encodeURIComponent(tbl) + "&frm=edit_to_db";
+	var data = "frm=edit_to_db&tbl=" + encodeURIComponent(tbl);
 	var elem = document.querySelectorAll("#edit_form input[type=hidden], #edit_form input[type=text], #edit_form input[type=date], #edit_form input[type=number], #edit_form input[type=password], #edit_form select");
-	for (var i = 0; i < elem.length; i++) {
-		var input = elem[i];
-		data += "&" + input.id + "=" + encodeURIComponent(input.value);
+	for (var i = 0; i < elem.length; i++) data += "&" + elem[i].id + "=" + encodeURIComponent(elem[i].value);
+	if (tbl == "money") {
+		var elem = document.querySelectorAll("#money_table input[type=date], #money_table select");
+		for (var i = 0; i < elem.length; i++) data += "&" + elem[i].id + "=" + encodeURIComponent(elem[i].value);
 	}
-	if (tbl == "money")
-	data += "&from=" + encodeURIComponent(document.getElementById("date_from").value)
-	+ "&to=" + encodeURIComponent(document.getElementById("date_to").value)
-	+ "&f_goods_id=" + document.getElementById("f_goods_id").value
-	+ "&f_groups_id=" + document.getElementById("f_groups_id").value
-	+ "&f_walls_id=" + document.getElementById("f_walls_id").value
-	+ "&f_users_id=" + document.getElementById("f_users_id").value
-	+ "&o=" + document.getElementById("ordr").value;
 	id_close("edit_form");
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "db.php", true);
@@ -187,13 +168,11 @@ function import_to_db() {
 
 //get report
 function get_report(form_id) {
+	var data = "frm=" + form_id;
 	var el_1 = document.getElementById("p_date_from");
 	var el_2 = document.getElementById("p_date_to");
-	if ((el_1 == null) || (el_2 == null)) {
-		var data = "frm=" + form_id;
-	} else {
-		var data = "frm=" + form_id + "&from=" + encodeURIComponent(el_1.value) + "&to=" + encodeURIComponent(el_2.value);
-	}
+	if (el_1) data += "&from=" + encodeURIComponent(el_1.value);
+	if (el_2) data += "&to=" + encodeURIComponent(el_2.value);
 	var sect = get_new_sect('report');
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'db.php', true);

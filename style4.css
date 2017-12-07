@@ -1,0 +1,195 @@
+:root {
+	--mf: #fff;
+	--mb: #222;
+	--af: #aaf;
+	--ab: #111;
+	--rb1: #000;
+	--rb2: #111;
+	--pl: #afa;
+	--mi: #f66;
+}
+
+body {
+	color: var(--mf);
+	background: var(--mb);
+}
+
+nav {
+	list-style-type: none;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	background: var(--ab);
+	z-index: 2;
+}
+
+nav li {
+	display: inline-block;
+}
+
+nav li a {
+	display: inline-block;
+	padding: 15px 16px;
+	text-align: center;
+	text-decoration: none;
+	color: var(--af);
+	transition-duration: 0.4s;
+}
+
+nav li a:hover {
+	color: var(--ab);
+	background: var(--af);
+}
+
+nav li a:active {
+	color: var(--mf);
+	background: var(--mb);
+}
+
+nav li div {
+	display: none;
+	position: absolute;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+	background: var(--ab);
+}
+
+nav li:hover div {
+	display: block;
+}
+
+nav li div a {
+	display: block;
+	text-align: left;
+}
+
+main {
+	margin-top: 40px;
+}
+
+section {
+	position: fixed;
+	top: 48px;
+	left: 8px;
+	right: 8px;
+	bottom: 8px;
+	background: rgba(0,0,0,0.7);
+	overflow: auto;
+	z-index: 1;
+}
+
+article {
+	padding: 5px;
+	background: var(--rb1);
+}
+
+figure {
+	margin: 20px auto;
+	padding: 10px;
+	background: var(--rb2);
+}
+
+figcaption {
+	text-align: center;
+}
+
+table {
+	border: 4px double var(--mf);
+	border-collapse: collapse;
+}
+
+td {
+	border: 1px solid var(--mf);
+}
+
+input, select, .edit {
+	border-color: var(--af);
+	color: var(--af);
+	background: var(--ab);
+	transition-duration: 0.4s;
+}
+
+input, select {
+	width: 100%;
+	margin: 0 0 5px;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+input[type=date] {
+	width: 160px;
+}
+
+input[type=button] {
+	width: 120px;
+}
+
+input[type=checkbox] {
+	width: 13px;
+}
+
+input:focus, input:hover, select:focus, select:hover, .edit:hover {
+	color: var(--ab);
+	background: var(--af);
+}
+
+input:active, select:active, .edit:active {
+	color: var(--mf);
+	background: var(--mb);
+}
+
+.plus {
+	color: var(--pl);
+}
+
+.minus {
+	color: var(--mi);
+}
+
+.money_table td:nth-child(2),
+.money_table td:nth-child(8) {
+	width: 80px;
+}
+
+.money_table td:nth-child(3),
+.money_table td:nth-child(4),
+.num {
+	text-align: right;
+}
+
+.login_form {
+	width: 360px;
+	margin: auto;
+}
+
+.login_form form {
+	position: relative;
+	background: var(--mb);
+	max-width: 360px;
+	padding: 45px;
+}
+
+.form, .form td {
+	border: 0;
+	padding-top: 7px;
+}
+
+.form td:nth-child(1) {
+	text-align: right;
+}
+
+.edit {
+	cursor: pointer;
+}
+
+#edit_form figure {
+	width: 512px;
+}
+
+#report figure {
+	display: inline-block;
+	min-width: 175px;
+	margin: 5px;
+}

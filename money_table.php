@@ -32,126 +32,114 @@ if ($f_walls_id > -1) $filter .= " AND walls_id=" . $f_walls_id;
 if ($f_users_id > -1) $filter .= " AND users_id=" . $f_users_id;
 
 //сортировка
-echo '<table class="money_table"><tr><th class="edit" onclick="money_table(4,0)">';
+echo '<table class="money_table"><tr><th class="edit" onclick="money_table(0,0)">';
 $order = "";
 $o = isset($_POST['o']) ? intval($_POST['o']) : 1;
 
 //по дате
-echo '<th class="edit" onclick="money_table(4,';
+echo '<th class="edit" onclick="money_table(0,';
 if ($o == 1) {
 	$order = "ORDER BY money.op_date";
 	echo '2)">↑';
 } elseif ($o == 2) {
 	$order = "ORDER BY money.op_date DESC";
 	echo '1)">↓';
-} else {
+} else
 	echo '1)">';
-}
 echo 'Дата';
 
 //по сумме
-echo '<th class="edit" colspan="2" onclick="money_table(4,';
+echo '<th class="edit" colspan="2" onclick="money_table(0,';
 if ($o == 3) {
 	$order = "ORDER BY money.op_summ";
 	echo '4)">↑';
 } elseif ($o == 4) {
 	$order = "ORDER BY money.op_summ DESC";
 	echo '3)">↓';
-} else {
+} else
 	echo '4)">';
-}
 echo 'Сумма';
 
 //по конторам
-echo '<th class="edit" onclick="money_table(4,';
+echo '<th class="edit" onclick="money_table(0,';
 if ($o == 5) {
-	$order = "ORDER BY goods.name";
+	$order = "ORDER BY goods_name";
 	echo '6)">↑';
 } elseif ($o == 6) {
-	$order = "ORDER BY goods.name DESC";
+	$order = "ORDER BY goods_name DESC";
 	echo '5)">↓';
-} else {
+} else
 	echo '5)">';
-}
 echo 'Контора';
 
 //по группам
-echo '<th class="edit" onclick="money_table(4,';
+echo '<th class="edit" onclick="money_table(0,';
 if ($o == 7) {
 	$order = "ORDER BY groups.name";
 	echo '8)">↑';
 } elseif ($o == 8) {
 	$order = "ORDER BY groups.name DESC";
 	echo '7)">↓';
-} else {
+} else
 	echo '7)">';
-}
 echo 'Группа';
 
 //по комментам
-echo '<th class="edit" onclick="money_table(4,';
+echo '<th class="edit" onclick="money_table(0,';
 if ($o == 9) {
 	$order = "ORDER BY money.comment";
 	echo '10)">↑';
 } elseif ($o == 10) {
 	$order = "ORDER BY money.comment DESC";
 	echo '9)">↓';
-} else {
+} else
 	echo '9)">';
-}
 echo 'Описание';
 
 //по кошелькам
-echo '<th class="edit" onclick="money_table(4,';
+echo '<th class="edit" onclick="money_table(0,';
 if ($o == 11) {
 	$order = "ORDER BY walls.name";
 	echo '12)">↑';
 } elseif ($o == 12) {
 	$order = "ORDER BY walls.name DESC";
 	echo '11)">↓';
-} else {
+} else
 	echo '11)">';
-}
 echo 'Кошелёк';
 
 //по пользователям
-echo '<th class="edit" onclick="money_table(4,';
+echo '<th class="edit" onclick="money_table(0,';
 if ($o == 13) {
 	$order = "ORDER BY users.name";
 	echo '14)">↑';
 } elseif ($o == 14) {
 	$order = "ORDER BY users.name DESC";
 	echo '13)">↓';
-} else {
+} else
 	echo '13)">';
-}
 echo 'Юзер';
 
 //по группам, конторам
-if ($o == 15) {
-	$order = "ORDER BY groups.name, goods.name";
-} elseif ($o == 16) {
-	$order = "ORDER BY groups.name DESC, goods.name DESC";
-}
+if ($o == 15)
+	$order = "ORDER BY groups.name, goods_name";
+elseif ($o == 16)
+	$order = "ORDER BY groups.name DESC, goods_name DESC";
 
 //по кошелькам, дате
-if ($o == 17) {
+if ($o == 17)
 	$order = "ORDER BY walls.name, money.op_date";
-} elseif ($o == 18) {
+elseif ($o == 18)
 	$order = "ORDER BY walls.name DESC, money.op_date DESC";
-}
 
 //таблица, остаток на начало
 $result = byQu($mysqli, "SELECT SUM(op_summ) AS summ, walls.name FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
-	LEFT JOIN groups ON goods.groups_id=groups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
-	LEFT JOIN users ON money.users_id=users.id
 	WHERE money.op_date<'$f_dtfr'$filter
 	GROUP BY walls_id");
-while ($row = $result->fetch_assoc()) {
+while ($row = $result->fetch_assoc())
 	echo '<tr><td>На начало<td>' . $f_dtfr . '<td>' . $row['summ'] . '<td><td><td><td><td>' . $row['name'] . '<td>';
-}
 
 //движение денег
 $res2 = byQu($mysqli, "SELECT money.id, money.op_date, money.comment,
@@ -171,7 +159,7 @@ while ($ro2 = $res2->fetch_assoc()) {
 	echo '<td>' . $ro2['op_date'];
 	echo '<td>' . $ro2['summ1'];
 	echo '<td>' . $ro2['summ2'];
-	echo '<td>' . $ro2['goods_name'];
+	echo '<td>' . mb_substr($ro2['goods_name'], 0, 18);
 	echo '<td>' . $ro2['groups_name'];
 	echo '<td>' . mb_substr($ro2['comment'], 0, 18);
 	echo '<td>' . $ro2['walls_name'];
@@ -182,20 +170,16 @@ while ($ro2 = $res2->fetch_assoc()) {
 $result = byQu($mysqli, "SELECT SUM(if(op_summ>0,op_summ,0)) AS summ1, SUM(if(op_summ<0,op_summ,0)) AS summ2, walls.name
 	FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
-	LEFT JOIN groups ON goods.groups_id=groups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
-	LEFT JOIN users ON money.users_id=users.id
 	WHERE money.op_date>='$f_dtfr' and money.op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
-while ($row = $result->fetch_assoc()) {
+while ($row = $result->fetch_assoc())
 	echo '<tr><td>Сумма<td><td class="plus">' . $row['summ1'] . '<td class="minus">' . $row['summ2'] . '<td><td><td><td>' . $row['name'] . '<td>';
-}
 
 //итого движение денег
 $result = byQu($mysqli, "SELECT SUM(op_summ) AS summ
 	FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
-	LEFT JOIN groups ON goods.groups_id=groups.id
 	WHERE money.op_date>='$f_dtfr' and money.op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc()) {
 	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
@@ -207,9 +191,7 @@ if ($f_dtto < date('Y-m-d')) {
 $result = byQu($mysqli, "SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
-	LEFT JOIN groups ON goods.groups_id=groups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
-	LEFT JOIN users ON money.users_id=users.id
 	WHERE money.op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
 while ($row = $result->fetch_assoc()) {
@@ -221,9 +203,7 @@ while ($row = $result->fetch_assoc()) {
 $result = byQu($mysqli, "SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
-	LEFT JOIN groups ON goods.groups_id=groups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
-	LEFT JOIN users ON money.users_id=users.id
 	WHERE true$filter
 	GROUP BY walls_id");
 while ($row = $result->fetch_assoc()) {
@@ -236,46 +216,23 @@ echo '</table></article>';
 echo '<article><table class="form">';
 
 //фильтр по дате
-echo '<tr><td>Фильтр: с <td><input type="date" id="date_from" value="' . $f_dtfr . '">';
-echo ' по <input type="date" id="date_to" value="' . $f_dtto . '">';
+echo '<tr><td>Фильтр: с <td><input type="date" id="from" value="' . $f_dtfr . '">';
+echo ' по <input type="date" id="to" value="' . $f_dtto . '">';
 
 //фильтр по конторе
-echo '<tr><td>контора:<td><select size="1" id="f_goods_id">';
-echo '<option' . ((-1 == $f_goods_id) ? ' selected' : '') . ' value="-1">Все</option>';
-$result = byQu($mysqli, "SELECT goods.id, CONCAT(groups.name,' - ',IF(goods.comment='',goods.name,goods.comment)) AS name
-	FROM goods
-	LEFT JOIN groups ON goods.groups_id=groups.id
-	ORDER BY name");
-while ($row = $result->fetch_assoc())
-	echo '<option' . (($row['id'] == $f_goods_id) ? ' selected' : '') . ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
-echo '</select>';
+bySe($mysqli, 'контора:', 'f_goods_id', 'goods', $f_goods_id, 'Все');
 
 //фильтр по группе
-echo '<tr><td>группа:<td><select size="1" id="f_groups_id">';
-echo '<option' . ((-1 == $f_groups_id) ? ' selected' : '') . ' value="-1">Все</option>';
-$result = byQu($mysqli, "SELECT id, name FROM groups ORDER BY name");
-while ($row = $result->fetch_assoc())
-	echo '<option' . (($row['id'] == $f_groups_id) ? ' selected' : '') . ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
-echo '</select>';
+bySe($mysqli, 'группа:', 'f_groups_id', 'groups', $f_groups_id, 'Все');
 
 //фильтр по кошельку
-echo '<tr><td>кошелёк:<td><select size="1" id="f_walls_id">';
-echo '<option' . ((-1 == $f_walls_id) ? ' selected' : '') . ' value="-1">Все</option>';
-$result = byQu($mysqli, "SELECT id, name FROM walls");
-while ($row = $result->fetch_assoc())
-	echo '<option' . (($row['id'] == $f_walls_id) ? ' selected' : '') . ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
-echo '</select>';
+bySe($mysqli, 'кошелёк:', 'f_walls_id', 'walls', $f_walls_id, 'Все');
 
 //фильтр по пользователю
-echo '<tr><td>пользователь:<td><select size="1" id="f_users_id">';
-echo '<option' . ((-1 == $f_users_id) ? ' selected' : '') . ' value="-1">Все</option>';
-$result = byQu($mysqli, "SELECT id, name FROM users");
-while ($row = $result->fetch_assoc())
-	echo '<option' . (($row['id'] == $f_users_id) ? ' selected' : '') . ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
-echo '</select>';
+bySe($mysqli, 'пользователь:', 'f_users_id', 'users', $f_users_id, 'Все');
 
 //сортировка
-echo '<tr><td>Cортировка:<td><select size="1" id="ordr">';
+echo '<tr><td>Cортировка:<td><select size="1" id="o">';
 echo '<option'; if (0 == $o) echo ' selected'; echo ' value="0">Без сортировки</option>';
 echo '<option'; if (1 == $o) echo ' selected'; echo ' value="1">По дате</option>';
 echo '<option'; if (2 == $o) echo ' selected'; echo ' value="2">По дате обратно</option>';

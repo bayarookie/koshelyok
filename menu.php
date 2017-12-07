@@ -1,5 +1,5 @@
 <nav>
-	<li><a href="javascript:void(0)" onclick="money_table(0)">Операции</a>
+	<li><a href="javascript:void(0)" onclick="money_table(-1)">Операции</a>
 	<li>
 		<a href="javascript:void(0)">Списки</a>
 		<div>
@@ -13,8 +13,8 @@
 		<div>
 			<a href="javascript:void(0)" onclick="get_report('report')">Помесячно (месяца отдельно)</a>
 			<a href="javascript:void(0)" onclick="get_report('report1')">Помесячно (общая таблица 1)</a>
-			<a href="javascript:void(0)" onclick="get_report('report3')">Помесячно (общая таблица 2)</a>
-			<a href="javascript:void(0)" onclick="get_report('report2')">В среднем за месяц</a>
+			<a href="javascript:void(0)" onclick="get_report('report2')">Помесячно (общая таблица 2)</a>
+			<a href="javascript:void(0)" onclick="get_report('report3')">В среднем за месяц</a>
 			<a href="javascript:void(0)" onclick="get_report('report4')">По группам</a>
 			<a href="javascript:void(0)" onclick="get_report('report5')">По конторам</a>
 			<a href="javascript:void(0)" onclick="get_report('report6')">По пользователям</a>
@@ -31,6 +31,7 @@
 			<a href="javascript:void(0)" onclick="ch_css(1)">Тёмный стиль</a>
 			<a href="javascript:void(0)" onclick="ch_css(2)">Светлый стиль</a>
 			<a href="javascript:void(0)" onclick="ch_css(3)">Третий стиль</a>
+			<a href="javascript:void(0)" onclick="ch_css(4)">Ещё один стиль</a>
 		</div>
 	<li>
 		<a href="javascript:void(0)" onclick="logout()">Выйти</a>

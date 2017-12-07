@@ -43,17 +43,17 @@ while ($row1 = $res1->fetch_assoc()) {
 			echo $row2['summ'] ?: '0.00';
 		}
 	}
-	if (floatval($row1['summ']) < 0) echo '<td class="minus num">'; else echo '<td class="plus num">';
+	echo (floatval($row1['summ']) < 0) ? '<td class="minus num">' : '<td class="plus num">';
 	echo $row1['summ'];
 	$sm = $sm + floatval($row1['summ']);
 }
 echo '<tr><td>Итого';
 $res0->data_seek(0);
 while ($row0 = $res0->fetch_assoc()) {
-	if (floatval($row0['summ']) < 0) echo '<td class="minus num">'; else echo '<td class="plus num">';
+	echo (floatval($row0['summ']) < 0) ? '<td class="minus num">' : '<td class="plus num">';
 	echo $row0['summ'];
 }
-if ($sm < 0) echo '<td class="minus num">'; else echo '<td class="plus num">';
+echo ($sm < 0) ? '<td class="minus num">' : '<td class="plus num">';
 echo number_format($sm, 2, '.', '');
 ?>
 </table></article>

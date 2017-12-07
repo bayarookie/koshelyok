@@ -62,7 +62,7 @@ function byTr($c2, $date, $nm, $summ) {
 		$chkd = ' checked';
 		$trnz = '<td>Новая тр';
 	}
-	$arr = $date . "," . $summ . "," . intval($g_id) . "," . $w_id;
+	$arr = $date . ";" . $summ . ";" . intval($g_id) . ";" . $w_id;
 	echo '<td><input type="checkbox" id="imp_' . $c2 . '" value="' . $arr . '"' . $chkd . '>';
 	echo '<td class="num">' . $c2;
 	echo '<td>' . $date;

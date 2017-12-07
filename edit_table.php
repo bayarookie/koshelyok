@@ -31,10 +31,9 @@ while ($row = $result->fetch_row()) {
 	echo '<tr><td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'' . $tbl . '\')">Редактировать';
 	for ($i = 1; $i < count($row); $i++) {
 		if (($i == 4) && ($tbl == 'goods')) {
-			if (intval($row[$i]) > 0)
-				echo '<td class="edit num" onclick="money_table(3,' . $row[0] . ')">' . $row[$i];
-			else
-				echo '<td class="num">' . $row[$i];
+			echo '<td class="num' . ((intval($row[$i]) > 0) ? ' edit" onclick="money_table(3,' . $row[0] . ')' : '') . '">' . $row[$i];
+		} elseif (($i == 2) && ($tbl == 'users')) {
+			echo '<td>*******';
 		} else echo '<td>' . $row[$i];
 	}
 }
