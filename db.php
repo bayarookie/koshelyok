@@ -37,6 +37,10 @@ function bySe($mysqli, $txt, $idn, $tbl, $id, $all) {
 	echo '</select>';
 }
 
+function byCo() {
+	return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+}
+
 //подключение к базе
 $mysqli = new mysqli(DB_ADRES, DB_LOGIN, DB_PASSW, DB_DATAB);
 if ($mysqli->connect_errno) {

@@ -11,9 +11,8 @@
 	<li>
 		<a href="javascript:void(0)">Отчёты</a>
 		<div>
-			<a href="javascript:void(0)" onclick="get_report('report')">Помесячно (месяца отдельно)</a>
-			<a href="javascript:void(0)" onclick="get_report('report1')">Помесячно (общая таблица 1)</a>
-			<a href="javascript:void(0)" onclick="get_report('report2')">Помесячно (общая таблица 2)</a>
+			<a href="javascript:void(0)" onclick="get_report('report1')">Помесячно (таблица 1)</a>
+			<a href="javascript:void(0)" onclick="get_report('report2')">Помесячно (таблица 2)</a>
 			<a href="javascript:void(0)" onclick="get_report('report3')">В среднем за месяц</a>
 			<a href="javascript:void(0)" onclick="get_report('report4')">По группам</a>
 			<a href="javascript:void(0)" onclick="get_report('report5')">По конторам</a>

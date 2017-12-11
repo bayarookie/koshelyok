@@ -1,28 +1,36 @@
 <?php
-$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
+$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -1 day'));
 $f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -6 month'));
-echo '<article><p>Отчёт средний
-с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '" autofocus>
+$d1 = strtotime($f_dtfr);
+$d2 = strtotime($f_dtto . ' +1 day');
+$d = 0;
+while (($d1 = strtotime(' +1 month', $d1)) <= $d2) $d++;
+echo '<article><p>Отчёт №3, в среднем
+с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
 по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
 <input type="button" value="Отчёт" onclick="get_report(\'report3\')"> 
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
-echo '<figure><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption><table><tr><th>Группа<th>Сумма';
+echo '<figure><figcaption>месяцев = ' . $d . '</figcaption><table><tr><th>Группа<th>Сумма';
 $sm = 0;
-$result = byQu($mysqli,
-	"SELECT id, name, AVG(summ) AS summ
-		FROM (SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, groups.id, groups.name, SUM(op_summ) as summ
+$res0 = byQu($mysqli, "SELECT groups_id, groups.name, SUM(op_summ) AS summ
+	FROM money
+	LEFT JOIN goods ON money.goods_id=goods.id
+	LEFT JOIN groups ON goods.groups_id=groups.id
+	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
+	GROUP BY groups_id
+	ORDER by summ DESC");
+while ($row0 = $res0->fetch_assoc()) {
+	$res1 = byQu($mysqli, "SELECT SUM(op_summ) as summ
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
-		LEFT JOIN groups ON goods.groups_id=groups.id
-		WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
-		GROUP BY mo, groups.id ORDER BY mo, groups.name) AS a
-		GROUP BY id");
-while ($row = $result->fetch_assoc()) {
-	$sm = $sm + floatval($row['summ']);
-	echo (floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">';
-	echo '<td>' . $row['name'] . '<td class="num">' . number_format($row['summ'], 2, '.', '');
+		WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto' AND groups_id=" . $row0['groups_id']);
+	if ($row1 = $res1->fetch_assoc()) {
+		$s = floatval($row1['summ'])/$d;
+		$sm = $sm + $s;
+	}
+	echo '<tr class="' . (($s < 0) ? 'minus' : 'plus') . '">';
+	echo '<td>' . $row0['name'] . '<td class="num">' . number_format($s, 2, '.', '');
 }
-echo ($sm < 0) ? '<tr class="minus">' : '<tr class="plus">';
-echo '<td>Итого<td class="num">' . number_format($sm, 2, '.', '');
+echo '<tr><td>Итого<td class="' . (($sm < 0) ? 'minus' : 'plus') . ' num">' . number_format($sm, 2, '.', '');
 ?>
 </table></figure></article>
