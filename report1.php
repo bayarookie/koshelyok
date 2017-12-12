@@ -19,7 +19,8 @@ $res1 = byQu($mysqli, "SELECT goods.groups_id, groups.name, SUM(op_summ) as summ
 	LEFT JOIN goods ON money.goods_id=goods.id
 	LEFT JOIN groups ON goods.groups_id=groups.id
 	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
-	GROUP BY goods.groups_id  ORDER BY groups.name");
+	GROUP BY goods.groups_id
+	ORDER BY summ DESC");
 while ($row1 = $res1->fetch_assoc()) {
 	echo '<tr><td>' . $row1['name'];
 	$res0->data_seek(0);
@@ -33,7 +34,7 @@ while ($row1 = $res1->fetch_assoc()) {
 			if ($row2['summ'] == '')
 				echo '<td class="num">0.00';
 			else
-				echo '<td class="edit num" onclick="money_table(2,' . $row1['groups_id'] . ',\'' . $row0['mo'] . '\')">' . $row2['summ'];
+				echo '<td class="edit num" onclick="get_form(\'money_table\',0,\'money&f_groups_id=' . $row1['groups_id'] . '&mo=' . $row0['mo'] . '\')">' . $row2['summ'];
 	}
 	echo '<td class="' . ((floatval($row1['summ']) < 0) ? 'minus' : 'plus') . ' num">' . $row1['summ'];
 	$sm = $sm + floatval($row1['summ']);

@@ -1,10 +1,10 @@
 <?php
 $f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
 $result = byQu($mysqli, "SELECT MIN(op_date) FROM money");
-if ($row = $result->fetch_row()) $dt = $row[0]; else $dt = '2015-01-01';
+$dt = ($row = $result->fetch_row()) ? $row[0] : '2015-01-01';
 $f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : $dt;
 echo '<article><p>Отчёт №4, по группам
-с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '" autofocus>
+с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
 по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
 <input type="button" value="Отчёт" onclick="get_report(\'report4\')"> 
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
@@ -22,7 +22,7 @@ while ($row = $result->fetch_assoc()) {
 	$sm = $sm + floatval($row['summ']);
 	$c = (floatval($row['summ']) < 0) ? 'minus' : 'plus';
 	echo '<tr class="' . $c . '"><td>' . $row['name'];
-	echo '<td class="edit num ' . $c . '" onclick="money_table(4,' . $row['id'] . ',\'\')">';
+	echo '<td class="edit num ' . $c . '" onclick="get_form(\'money_table\',0,\'money&f=3&f_groups_id=' . $row['id'] . '\')">';
 	echo number_format($row['summ'], 2, '.', '');
 }
 echo '<tr><td>Итого' . '<td class="num ' . (($sm < 0) ? 'minus' : 'plus') . '">' . number_format($sm, 2, '.', '');

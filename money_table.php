@@ -10,20 +10,18 @@ $f_groups_id = isset($_POST['f_groups_id']) ? intval($_POST['f_groups_id']) : -1
 $f_walls_id = isset($_POST['f_walls_id']) ? intval($_POST['f_walls_id']) : -1;
 $f_users_id = isset($_POST['f_users_id']) ? intval($_POST['f_users_id']) : -1;
 $f = isset($_POST['f']) ? intval($_POST['f']) : 1;
-if ($f == 1) {
+if (isset($_POST['mo'])) {
+	$f_dtto = date('Y-m-t', strtotime($_POST['mo'] . '-01'));
+	$f_dtfr = date('Y-m-d', strtotime($_POST['mo'] . '-01'));
+} elseif ($f == 1) {
 	$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
 	$result = byQu($mysqli, "SELECT MAX(op_date) FROM money");
-	if ($row = $result->fetch_row()) $f_dtfr = $row[0]; else $f_dtfr = date('Y-m-d');
+	$f_dtfr = ($row = $result->fetch_row()) ? $row[0] : date('Y-m-d');
 	$f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : (new DateTime($f_dtfr))->modify('first day of this month -1 month')->format('Y-m-d');
-} elseif ($f == 2) {
-	if (isset($_POST['mo'])) {
-		$f_dtto = date('Y-m-t', strtotime($_POST['mo'] . '-01'));
-		$f_dtfr = date('Y-m-d', strtotime($_POST['mo'] . '-01'));
-	}
 } elseif ($f == 3) {
 	$f_dtto = date('Y-m-d');
 	$result = byQu($mysqli, "SELECT MIN(op_date) FROM money");
-	if ($row = $result->fetch_row()) $f_dtfr = $row[0]; else $f_dtfr = '2015-01-01';
+	$f_dtfr = ($row = $result->fetch_row()) ? $row[0] : '2015-01-01';
 }
 $filter = "";
 if ($f_goods_id > -1) $filter .= " AND goods_id=" . $f_goods_id;

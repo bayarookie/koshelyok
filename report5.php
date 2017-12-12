@@ -29,7 +29,7 @@ while ($row = $result->fetch_assoc()) {
 	$sm = $sm + floatval($row['summ']);
 	echo '<tr class="' . ((floatval($row['summ']) < 0) ? 'minus' : 'plus') . '">';
 	echo '<td>' . $row['name'] . '<td>' . $row['gnam'];
-	echo '<td class="edit num" onclick="money_table(5,' . $row['id'] . ',\'\')">';
+	echo '<td class="edit num" onclick="get_form(\'money_table\',0,\'money&f=3&f_goods_id=' . $row['id'] . '\')">';
 	echo number_format($row['summ'], 2, '.', '');
 }
 if ($sg <> '') echo '<tr><td><td>Итого<td class="num">' . number_format($su, 2, '.', '');

@@ -20,7 +20,7 @@ function ajaxsend(data, elem) {
 			elem.innerHTML = xhr.responseText;
 			var js = document.getElementById("chartjs");
 			if (js) {
-				var ch = "Chart.js";
+				var ch = "Chart.min.js";
 				if (document.getElementById(ch)) eval(js.innerHTML);
 				else loadScript(ch, function(){eval(js.innerHTML);});
 			}
@@ -67,39 +67,32 @@ function get_new_sect(id) {
 	return sect;
 }
 
+function get_inputs(s) {
+	var data = '';
+	var elem = document.querySelectorAll(s);
+	var imax = elem.length;
+	for (var i = 0; i < imax; i++) {
+		el = elem[i];
+		data += "&" + el.id + "=" + encodeURIComponent(el.value);
+	}
+	return data;
+}
+
 //get content
 function get_form(form_id, id, s) {
 	var data = "frm=" + form_id;
 	if (id != null) data += "&id=" + id + "&tbl=" + s;
-	var sect = get_new_sect(form_id);
-	ajaxsend(data, sect);
+	ajaxsend(data, get_new_sect(form_id));
 }
 
 //money
-function money_table(fltr, id, s) {
+function money_table(fltr, ordn) {
 	var el_1 = document.getElementById("o");
-	if (fltr == 0) if (el_1) el_1.value = id;
+	if (fltr == 0) if (el_1) el_1.value = ordn;
 	var o = el_1 ? el_1.value : 1;
-	var data = "frm=money_table&o=" + o;
-	if ([0,1].includes(fltr)) {
-		data += "&f=1";
-		var elem = document.querySelectorAll("#money_table input[type=date], #money_table select");
-		var imax = elem.length;
-		for (var i = 0; i < imax; i++) {
-			el = elem[i];
-			data += "&" + el.id + "=" + encodeURIComponent(el.value);
-		}
-	} else if (fltr == 2) {
-		data += "&f=2&f_groups_id=" + id + "&mo=" + s;
-	} else if ([3,5].includes(fltr)) {
-		data += "&f=3&f_goods_id=" + id;
-	} else if (fltr == 4) {
-		data += "&f=3&f_groups_id=" + id;
-	} else if (fltr == 6) {
-		data += "&f=3&f_groups_id=" + id + "&f_users_id=" + s;
-	}
-	var sect = get_new_sect('money_table');
-	ajaxsend(data, sect);
+	var data = "frm=money_table";
+	if (fltr >= 0) data += "&f=1&o=" + o + get_inputs("#money_table input[type=date], #money_table select");
+	ajaxsend(data, get_new_sect('money_table'));
 }
 
 //save changes to db
@@ -112,16 +105,10 @@ function edit_to_db(tbl) {
 		data += "&" + el.id + "=" + encodeURIComponent(el.value);
 	}
 	if (tbl == "money") {
-		var elem = document.querySelectorAll("#money_table input[type=date], #money_table select");
-		var imax = elem.length;
-		for (var i = 0; i < imax; i++) {
-			el = elem[i];
-			data += "&" + el.id + "=" + encodeURIComponent(el.value);
-		}
-	}
+		data += get_inputs("#money_table input[type=date], #money_table select");
+		var sect = document.getElementById("money_table");
+	} else var sect = document.getElementById("edit_table");
 	id_close("edit_form");
-	if (tbl == "money") var sect = document.getElementById("money_table");
-	else var sect = document.getElementById("edit_table");
 	ajaxsend(data, sect);
 }
 
@@ -134,8 +121,7 @@ function import_form2() {
 	fdat.append('i_id', i_id);
 	fdat.append('bankstate', i_fn.files[0]);
 	fdat.append('frm', 'import_form2');
-	var sect = document.getElementById("import_form2");
-	ajaxsend(data, sect);
+	ajaxsend(data, document.getElementById("import_form2"));
 }
 
 //save bankstate to db
@@ -143,12 +129,8 @@ function import_to_db() {
 	var data = "frm=import_to_db";
 	var elem = document.querySelectorAll("#import_form2 input:checked");
 	var imax = elem.length;
-	for (var i = 0; i < imax; i++) {
-		el = elem[i];
-		data += "&imp_" + i + "=" + encodeURIComponent(el.value);
-	}
-	var sect = document.getElementById("import_form2");
-	ajaxsend(data, sect);
+	for (var i = 0; i < imax; i++) data += "&imp_" + i + "=" + encodeURIComponent(elem[i].value);
+	ajaxsend(data, document.getElementById("import_form2"));
 }
 
 //get report
@@ -158,8 +140,7 @@ function get_report(form_id) {
 	var el_2 = document.getElementById("p_date_to");
 	if (el_1) data += "&from=" + encodeURIComponent(el_1.value);
 	if (el_2) data += "&to=" + encodeURIComponent(el_2.value);
-	var sect = get_new_sect('report');
-	ajaxsend(data, sect);
+	ajaxsend(data, get_new_sect('report'));
 }
 
 window.onload = load();
