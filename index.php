@@ -14,7 +14,8 @@ function loadScript(url, callback){
 function ajaxsend(data, elem) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "db.php", true);
-	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	if (typeof(data) == 'string')
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
 			elem.innerHTML = xhr.responseText;
@@ -121,7 +122,7 @@ function import_form2() {
 	fdat.append('i_id', i_id);
 	fdat.append('bankstate', i_fn.files[0]);
 	fdat.append('frm', 'import_form2');
-	ajaxsend(data, document.getElementById("import_form2"));
+	ajaxsend(fdat, document.getElementById("import_form2"));
 }
 
 //save bankstate to db
