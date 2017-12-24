@@ -25,8 +25,12 @@ function ajaxsend(data, elem) {
 				if (document.getElementById(ch)) eval(js.innerHTML);
 				else loadScript(ch, function(){eval(js.innerHTML);});
 			}
-			var el = elem.getElementsByTagName("input")[0];
-			if (el) {el.focus(); el.select();}
+			var els = elem.querySelectorAll("input[type=text], input[type=number]");
+			if (els.length > 0) {
+				el = els[0];
+				el.focus();
+				el.select();
+			}
 		}
 	}
 	xhr.send(data);
