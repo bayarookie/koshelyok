@@ -40,6 +40,16 @@ if ($tbl == 'goods') {
 		$q = "INSERT INTO money (op_date, op_summ, goods_id, walls_id, users_id, comment)
 				VALUES (STR_TO_DATE('$date', '%Y-%m-%d'), $summ, $g_id, $w_id, $u_id, '$komm')";
 	}
+} elseif ($tbl == 'money_order') {
+	$ordr = isset($_POST['e_order_by']) ? $mysqli->real_escape_string($_POST['e_order_by']) : '';
+	if ($e_id > -1) {
+		$q = "UPDATE money_order
+				SET name='$name', order_by='$ordr'
+				WHERE id=$e_id";
+	} else {
+		$q = "INSERT INTO $tbl (name, order_by)
+				VALUES ('$name', '$ordr')";
+	}
 } else {
 	if ($e_id > -1) {
 		$q = "UPDATE $tbl

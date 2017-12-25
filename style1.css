@@ -19,10 +19,8 @@ nav {
 	position: fixed;
 	top: 0;
 	width: 100%;
-	margin: 0;
-	padding: 0;
 	background: var(--ab);
-	z-index: 2;
+	z-index: 1;
 }
 
 nav li {
@@ -32,7 +30,6 @@ nav li {
 nav li a {
 	display: inline-block;
 	padding: 15px 16px;
-	text-align: center;
 	text-decoration: none;
 	color: var(--af);
 }
@@ -46,17 +43,12 @@ nav li div {
 	display: none;
 	position: absolute;
 	min-width: 160px;
-	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+	box-shadow: 0px 8px 16px 0px rgba(255,255,255,0.4);
 	background: var(--ab);
 }
 
-nav li:hover div {
+nav li:hover div, nav li div a {
 	display: block;
-}
-
-nav li div a {
-	display: block;
-	text-align: left;
 }
 
 main {
@@ -71,7 +63,6 @@ section {
 	bottom: 8px;
 	background: rgba(0,0,0,0.7);
 	overflow: auto;
-	z-index: 1;
 }
 
 article {

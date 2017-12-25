@@ -33,102 +33,57 @@ if ($f_users_id > -1) $filter .= " AND users_id=" . $f_users_id;
 echo '<table class="money_table"><tr><th class="edit" onclick="money_table(0,0)">';
 $order = "";
 $o = isset($_POST['o']) ? intval($_POST['o']) : 1;
+$result = byQu($mysqli, "SELECT order_by FROM money_order WHERE id=" . $o);
+if ($row = $result->fetch_row()) $order = "ORDER BY " . $row[0];
 
-//по дате
-echo '<th class="edit" onclick="money_table(0,';
-if ($o == 1) {
-	$order = "ORDER BY money.op_date";
-	echo '2)">↑';
-} elseif ($o == 2) {
-	$order = "ORDER BY money.op_date DESC";
-	echo '1)">↓';
-} else
-	echo '1)">';
+function byOr($mysqli, $s) {
+	$result = byQu($mysqli, "SELECT id FROM money_order WHERE order_by LIKE '$s'");
+	if ($row = $result->fetch_row()) {
+		return $row[0];
+	}
+}
+
+function byTh($mysqli, $s) {
+	global $order;
+	$e = byOr($mysqli, '%' . $s) . ')">';
+	if (strpos($order, $s) !== false) {
+		if (strpos($order, 'DESC') === false) {
+			$s = byOr($mysqli, '%' . $s . ' DESC%');
+			$e = ($s != '') ? $s . ')">↑' : $e; 
+		} else {
+			$e .= '↓';
+		}
+	}
+	echo ' onclick="money_table(0,'. $e;
+}
+
+echo '<th class="edit"';
+byTh($mysqli, 'op_date');
 echo 'Дата';
 
-//по сумме
-echo '<th class="edit" colspan="2" onclick="money_table(0,';
-if ($o == 3) {
-	$order = "ORDER BY money.op_summ";
-	echo '4)">↑';
-} elseif ($o == 4) {
-	$order = "ORDER BY money.op_summ DESC";
-	echo '3)">↓';
-} else
-	echo '4)">';
+echo '<th class="edit" colspan="2"';
+byTh($mysqli, 'op_summ');
 echo 'Сумма';
 
-//по конторам
-echo '<th class="edit" onclick="money_table(0,';
-if ($o == 5) {
-	$order = "ORDER BY goods_name";
-	echo '6)">↑';
-} elseif ($o == 6) {
-	$order = "ORDER BY goods_name DESC";
-	echo '5)">↓';
-} else
-	echo '5)">';
+echo '<th class="edit"';
+byTh($mysqli, 'goods_name');
 echo 'Контора';
 
-//по группам
-echo '<th class="edit" onclick="money_table(0,';
-if ($o == 7) {
-	$order = "ORDER BY groups.name";
-	echo '8)">↑';
-} elseif ($o == 8) {
-	$order = "ORDER BY groups.name DESC";
-	echo '7)">↓';
-} else
-	echo '7)">';
+echo '<th class="edit"';
+byTh($mysqli, 'groups.name');
 echo 'Группа';
 
-//по комментам
-echo '<th class="edit" onclick="money_table(0,';
-if ($o == 9) {
-	$order = "ORDER BY money.comment";
-	echo '10)">↑';
-} elseif ($o == 10) {
-	$order = "ORDER BY money.comment DESC";
-	echo '9)">↓';
-} else
-	echo '9)">';
+echo '<th class="edit"';
+byTh($mysqli, 'money.comment');
 echo 'Описание';
 
-//по кошелькам
-echo '<th class="edit" onclick="money_table(0,';
-if ($o == 11) {
-	$order = "ORDER BY walls.name";
-	echo '12)">↑';
-} elseif ($o == 12) {
-	$order = "ORDER BY walls.name DESC";
-	echo '11)">↓';
-} else
-	echo '11)">';
+echo '<th class="edit"';
+byTh($mysqli, 'walls.name');
 echo 'Кошелёк';
 
-//по пользователям
-echo '<th class="edit" onclick="money_table(0,';
-if ($o == 13) {
-	$order = "ORDER BY users.name";
-	echo '14)">↑';
-} elseif ($o == 14) {
-	$order = "ORDER BY users.name DESC";
-	echo '13)">↓';
-} else
-	echo '13)">';
+echo '<th class="edit"';
+byTh($mysqli, 'users.name');
 echo 'Юзер';
-
-//по группам, конторам
-if ($o == 15)
-	$order = "ORDER BY groups.name, goods_name";
-elseif ($o == 16)
-	$order = "ORDER BY groups.name DESC, goods_name DESC";
-
-//по кошелькам, дате
-if ($o == 17)
-	$order = "ORDER BY walls.name, money.op_date";
-elseif ($o == 18)
-	$order = "ORDER BY walls.name DESC, money.op_date DESC";
 
 //таблица, остаток на начало
 $result = byQu($mysqli, "SELECT SUM(op_summ) AS summ, walls.name FROM money
@@ -212,45 +167,13 @@ echo '</table></article>';
 
 //фильтры
 echo '<article><table class="form">';
-
-//фильтр по дате
 echo '<tr><td>Фильтр: с <td><input type="date" id="from" value="' . $f_dtfr . '">';
 echo ' по <input type="date" id="to" value="' . $f_dtto . '">';
-
-//фильтр по конторе
 bySe($mysqli, 'контора:', 'f_goods_id', 'goods', $f_goods_id, 'Все');
-
-//фильтр по группе
 bySe($mysqli, 'группа:', 'f_groups_id', 'groups', $f_groups_id, 'Все');
-
-//фильтр по кошельку
 bySe($mysqli, 'кошелёк:', 'f_walls_id', 'walls', $f_walls_id, 'Все');
-
-//фильтр по пользователю
 bySe($mysqli, 'пользователь:', 'f_users_id', 'users', $f_users_id, 'Все');
-
-//сортировка
-echo '<tr><td>Cортировка:<td><select size="1" id="o">';
-echo '<option'; if (0 == $o) echo ' selected'; echo ' value="0">Без сортировки</option>';
-echo '<option'; if (1 == $o) echo ' selected'; echo ' value="1">По дате</option>';
-echo '<option'; if (2 == $o) echo ' selected'; echo ' value="2">По дате обратно</option>';
-echo '<option'; if (3 == $o) echo ' selected'; echo ' value="3">По сумме</option>';
-echo '<option'; if (4 == $o) echo ' selected'; echo ' value="4">По сумме обратно</option>';
-echo '<option'; if (5 == $o) echo ' selected'; echo ' value="5">По конторам</option>';
-echo '<option'; if (6 == $o) echo ' selected'; echo ' value="6">По конторам обратно</option>';
-echo '<option'; if (7 == $o) echo ' selected'; echo ' value="7">По группам</option>';
-echo '<option'; if (8 == $o) echo ' selected'; echo ' value="8">По группам обратно</option>';
-echo '<option'; if (9 == $o) echo ' selected'; echo ' value="9">По описаниям</option>';
-echo '<option'; if (10 == $o) echo ' selected'; echo ' value="10">По описаниям обратно</option>';
-echo '<option'; if (11 == $o) echo ' selected'; echo ' value="11">По кошелькам</option>';
-echo '<option'; if (12 == $o) echo ' selected'; echo ' value="12">По кошелькам обратно</option>';
-echo '<option'; if (13 == $o) echo ' selected'; echo ' value="13">По пользователям</option>';
-echo '<option'; if (14 == $o) echo ' selected'; echo ' value="14">По пользователям обратно</option>';
-echo '<option'; if (15 == $o) echo ' selected'; echo ' value="15">По группам, конторам</option>';
-echo '<option'; if (16 == $o) echo ' selected'; echo ' value="16">По группам, конторам обратно</option>';
-echo '<option'; if (17 == $o) echo ' selected'; echo ' value="17">По кошелькам, дате</option>';
-echo '<option'; if (18 == $o) echo ' selected'; echo ' value="18">По кошелькам, дате обратно</option>';
-echo '</select>';
+bySe($mysqli, 'Cортировка:', 'o', 'money_order', $o, 'Без сортировки');
 
 echo '<tr><td><td><input type="button" value="Обновить" onclick="money_table(1)"></table>';
 if ($res2->num_rows > 25) echo $t;

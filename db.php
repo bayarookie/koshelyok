@@ -76,7 +76,7 @@ if ($user_id > 0) {
 	$frm = isset($_POST['frm']) ? $_POST['frm'] : '';
 	if ($frm != '') include $frm . '.php';
 } else {
-	$errm = 'Имя или пароль не того';
+	$errm = 'Имя или пароль не подошли.';
 	include 'login.php';
 }
 ?>

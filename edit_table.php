@@ -1,36 +1,33 @@
 <?php
-$tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : 'goods';
-if ($tbl == 'goods') {
+$tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
+if ($tbl == '') die('table?');
+$table = $tbl;
+$th = '<tr><th><th>Наименование<th>Описание';
+if ($tbl == 'goods_v') {
 	$title = 'Конторы';
-	$th = '<tr><th><th>Наименование<th>Описание<th>Группа<th>Опер.';
+	$th .= '<th>Группа<th>Опер.';
+	$table = 'goods';
 } elseif ($tbl == 'groups') {
 	$title = 'Группы';
-	$th = '<tr><th><th>Наименование<th>Описание';
 } elseif ($tbl == 'walls') {
 	$title = 'Кошельки';
-	$th = '<tr><th><th>Наименование<th>Описание';
+} elseif ($tbl == 'money_order') {
+	$title = 'Сортировка';
+	$th = '<tr><th><th>Наименование<th>ORDER BY';
 } else {
 	$title = 'Пользователи';
 	$th = '<tr><th><th>Имя<th>Пароль<th>Наименование';
 }
 $t = '<p>' . $title . '
-<input type="button" value="Добавить" onclick="get_form(\'edit_form\',-1,\'' . $tbl . '\')">
+<input type="button" value="Добавить" onclick="get_form(\'edit_form\',-1,\'' . $table . '\')">
 <input type="button" value="Закрыть" onclick="id_close(\'edit_table\')"></p>';
 echo '<article>' . $t . '<table>' . $th;
-if ($tbl == 'goods') {
-	$result = byQu($mysqli, "SELECT goods.id, goods.name, goods.comment, groups.name as groups_name, COUNT(money.id) as cnt
-	FROM goods
-	LEFT JOIN groups ON goods.groups_id=groups.id
-	LEFT JOIN money ON goods.id=money.goods_id
-	GROUP BY goods.id
-	ORDER BY groups.name, goods.name");
-} else {
-	$result = byQu($mysqli, "SELECT * FROM $tbl");
-}
+$result = byQu($mysqli, "SELECT * FROM $tbl");
+$imax = $result->field_count;
 while ($row = $result->fetch_row()) {
-	echo '<tr><td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'' . $tbl . '\')">Редактировать';
-	for ($i = 1; $i < count($row); $i++) {
-		if (($i == 4) && ($tbl == 'goods')) {
+	echo '<tr><td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'' . $table . '\')">Редактировать';
+	for ($i = 1; $i < $imax; $i++) {
+		if ($i == 4) {
 			echo '<td class="num' . ((intval($row[$i]) > 0) ? ' edit" onclick="money_table(3,' . $row[0] . ')' : '') . '">' . $row[$i];
 		} elseif (($i == 2) && ($tbl == 'users')) {
 			echo '<td>*******';

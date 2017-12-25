@@ -4,7 +4,7 @@ header('Content-type: text/plain; charset=utf-8');
 header('Content-Disposition: attachment; filename=' . DB_DATAB . '.sql');
 
 echo "-- Koshelyok SQL Dump
--- version 0.0.1
+-- version 0.0.2
 -- http://bayarookie.wallst.ru
 --
 -- Хост: " . DB_ADRES . "
@@ -18,13 +18,23 @@ echo "-- Koshelyok SQL Dump
 ";
 
 
-$tables = array();
-$result = byQu($mysqli, "SHOW TABLES");
-while($row = $result->fetch_row()) {
-	$tables[] = $row[0];
-}
+$res1 = byQu($mysqli, "SHOW FULL TABLES");
+while($ro1 = $res1->fetch_row()) {
+	$table = $ro1[0];
+if ($ro1[1] == 'VIEW') {
+	echo "
+-- --------------------------------------------------------
 
-foreach($tables as $table) {
+--
+-- Структура для представления `$table`
+--
+
+";
+	$res2 = byQu($mysqli, "SHOW CREATE TABLE " . $table);
+	$ro2 = $res2->fetch_row();
+	echo $ro2[1] . ";
+";
+} else {
 	echo "
 -- --------------------------------------------------------
 
@@ -33,19 +43,19 @@ foreach($tables as $table) {
 --
 
 ";
-	$result = byQu($mysqli, "SHOW CREATE TABLE " . $table);
-	$row = $result->fetch_row();
-	echo $row[1] . ";
+	$res2 = byQu($mysqli, "SHOW CREATE TABLE " . $table);
+	$ro2 = $res2->fetch_row();
+	echo $ro2[1] . ";
 
 --
 -- Дамп данных таблицы `$table`
 --
 
 ";
-	$result = byQu($mysqli, "SELECT * FROM " . $table);
+	$res3 = byQu($mysqli, "SELECT * FROM " . $table);
 	$num_fields = $mysqli->field_count;
-	if ($row = $result->fetch_row()) {
-		$finfo = $result->fetch_fields();
+	if ($ro3 = $res3->fetch_row()) {
+		$finfo = $res3->fetch_fields();
 		echo "INSERT INTO `$table` (";
 		for($i=0; $i<$num_fields; $i++) {
 			echo "`" . $finfo[$i]->name . "`";
@@ -55,15 +65,15 @@ foreach($tables as $table) {
 		while (true) {
 			echo "\n(";
 			for($i=0; $i<$num_fields; $i++) {
-				$row[$i] = $mysqli->real_escape_string($row[$i]);
-				if (in_array($finfo[$i]->type, array(1, 2, 3, 8, 9), true)) echo $row[$i];
-				else echo "'" . $row[$i] . "'";
+				$ro3[$i] = $mysqli->real_escape_string($ro3[$i]);
+				if (in_array($finfo[$i]->type, array(1, 2, 3, 8, 9), true)) echo $ro3[$i];
+				else echo "'" . $ro3[$i] . "'";
 				if ($i<($num_fields-1)) echo ", ";
 			}
 			echo ")";
-			if ($row = $result->fetch_row()) echo ","; else break;
+			if ($ro3 = $res3->fetch_row()) echo ","; else break;
 		}
 	echo ";\n";
 	}
-}
+}}
 ?>

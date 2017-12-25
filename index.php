@@ -14,8 +14,7 @@ function loadScript(url, callback){
 function ajaxsend(data, elem) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "db.php", true);
-	if (typeof(data) == 'string')
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	if (typeof(data) == 'string') xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	xhr.onreadystatechange = function() {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
 			elem.innerHTML = xhr.responseText;
@@ -72,9 +71,9 @@ function get_new_sect(id) {
 	return sect;
 }
 
-function get_inputs(s) {
+function get_inputs(e, s) {
 	var data = '';
-	var elem = document.querySelectorAll(s);
+	var elem = e.querySelectorAll(s);
 	var imax = elem.length;
 	for (var i = 0; i < imax; i++) {
 		el = elem[i];
@@ -96,22 +95,19 @@ function money_table(fltr, ordn) {
 	if (fltr == 0) if (el_1) el_1.value = ordn;
 	var o = el_1 ? el_1.value : 1;
 	var data = "frm=money_table";
-	if (fltr >= 0) data += "&f=1&o=" + o + get_inputs("#money_table input[type=date], #money_table select");
+	var el_2 = document.getElementById("money_table");
+	if (fltr >= 0) data += "&f=1&o=" + o + get_inputs(el_2, "input[type=date], select");
 	ajaxsend(data, get_new_sect('money_table'));
 }
 
 //save changes to db
 function edit_to_db(tbl) {
 	var data = "frm=edit_to_db&tbl=" + encodeURIComponent(tbl);
-	var elem = document.querySelectorAll("#edit_form input[type=hidden], #edit_form input[type=text], #edit_form input[type=date], #edit_form input[type=number], #edit_form input[type=password], #edit_form select");
-	var imax = elem.length;
-	for (var i = 0; i < imax; i++) {
-		el = elem[i];
-		data += "&" + el.id + "=" + encodeURIComponent(el.value);
-	}
+	var efrm = document.getElementById("edit_form");
+	data += get_inputs(efrm, "input[type=hidden], input[type=text], input[type=date], input[type=number], input[type=password], select");
 	if (tbl == "money") {
-		data += get_inputs("#money_table input[type=date], #money_table select");
 		var sect = document.getElementById("money_table");
+		data += get_inputs(sect, "input[type=date], select");
 	} else var sect = document.getElementById("edit_table");
 	id_close("edit_form");
 	ajaxsend(data, sect);

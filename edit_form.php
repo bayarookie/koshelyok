@@ -1,5 +1,6 @@
 <?php
-$tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : 'goods';
+$tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
+if ($tbl == '') die('table?');
 $e_id = isset($_POST['id']) ? intval($_POST['id']) : -1;
 if ($tbl == 'goods') {
 	$title = 'Контора';
@@ -13,6 +14,9 @@ if ($tbl == 'goods') {
 } elseif ($tbl == 'users') {
 	$title = 'Пользователь';
 	$td = array('id', 'Имя', 'Пароль', 'Наименование');
+} elseif ($tbl == 'money_order') {
+	$title = 'Сортировка';
+	$td = array('id', 'Наименование', 'ORDER BY');
 } else {
 	$title = 'Транзакция';
 	$td = array('id', 'Дата', 'Сумма', 'Контора', 'Кошелёк', 'Пользователь', 'Описание');
