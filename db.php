@@ -18,20 +18,21 @@ if (isset($_POST['logout'])) {
 
 include 'config.php';
 
-function byQu($mysqli, $query) {
+function byQu($query) {
+	$mysqli = $GLOBALS['mysqli'];
 	$result = $mysqli->query($query);
 	if (!$result) die('Неверный запрос: ' . $mysqli->error . "<pre>Запрос целиком:\n" . $query .'</pre>');
 	return $result;
 }
 
-function bySe($mysqli, $txt, $idn, $tbl, $id, $all) {
+function bySe($txt, $idn, $tbl, $id, $all) {
 	echo '<tr><td>' . $txt . '<td><select size="1" id="' . $idn . '">';
 	echo '<option' . ((-1 == $id) ? ' selected' : '') . ' value="-1">' . $all . '</option>';
-	if ($tbl == 'goods') $result = byQu($mysqli, "SELECT goods.id, CONCAT(groups.name,' - ',IF(goods.comment='',goods.name,goods.comment)) AS name
+	if ($tbl == 'goods') $result = byQu("SELECT goods.id, CONCAT(groups.name,' - ',IF(goods.comment='',goods.name,goods.comment)) AS name
 	FROM goods
 	LEFT JOIN groups ON goods.groups_id=groups.id
 	ORDER BY name");
-	else $result = byQu($mysqli, "SELECT id, name FROM $tbl ORDER BY name");
+	else $result = byQu("SELECT id, name FROM $tbl ORDER BY name");
 	while ($row = $result->fetch_assoc())
 		echo '<option' . (($row['id'] == $id) ? ' selected' : '') . ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
 	echo '</select>';
@@ -58,7 +59,7 @@ if (isset($_POST['login'])) {
 	$reme = isset($_POST['remember']) ? $_POST['remember'] : 'false';
 }
 if ($user != '') {
-	$result = byQu($mysqli, "SELECT id FROM users WHERE username='$user' AND password='$pass'");
+	$result = byQu("SELECT id FROM users WHERE username='$user' AND password='$pass'");
 	if ($row = $result->fetch_row()) {
 		$user_id = intval($row[0]);
 		$_SESSION['user_id'] = $user_id;

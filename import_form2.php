@@ -1,6 +1,5 @@
-<h1><a href="">Импорт</a></h1>
 <?php
-$w_id = isset($_POST['w_id']) ? intval($_POST['w_id']) : 1; //1 = Сбербанк
+$w_id = isset($_POST['w_id']) ? intval($_POST['w_id']) : 1;
 $uploadfile = '/tmp/' . basename($_FILES['bankstate']['name']);
 echo '<pre>';
 if (move_uploaded_file($_FILES['bankstate']['tmp_name'], $uploadfile)) {
@@ -35,25 +34,25 @@ function byTr($c2, $date, $nm, $summ) {
 	$g_id = -1;
 	$nm = $mysqli->real_escape_string($nm);
 	$name = "не найден";
-	$result = byQu($mysqli, "SELECT id, name FROM goods WHERE name LIKE '$nm'");
+	$result = byQu("SELECT id, name FROM goods WHERE name LIKE '$nm'");
 	if ($row = $result->fetch_row()) {
 		$g_id = $row[0];
 		$name = $row[1];
 	} else {
-		$result = byQu($mysqli, "SELECT id, name FROM goods WHERE name LIKE '$nm%'");
+		$result = byQu("SELECT id, name FROM goods WHERE name LIKE '$nm%'");
 		if ($result->num_rows == 1 && $row = $result->fetch_row()) {
 			$g_id = $row[0];
 			$name = $row[1];
 		} elseif ($result->num_rows == 0) {
-			$result = byQu($mysqli, "INSERT INTO goods (name, groups_id, comment) VALUES ('$nm', -1, '')");
-			$result = byQu($mysqli, "SELECT id, name FROM goods WHERE name LIKE '$nm'");
+			$result = byQu("INSERT INTO goods (name, groups_id, comment) VALUES ('$nm', -1, '')");
+			$result = byQu("SELECT id, name FROM goods WHERE name LIKE '$nm'");
 			if ($row = $result->fetch_row()) {
 				$g_id = $row[0];
 				$name = $row[1];
 			}
 		}
 	}
-	$result = byQu($mysqli, "SELECT id FROM money
+	$result = byQu("SELECT id FROM money
 	WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND goods_id=$g_id AND walls_id=$w_id");
 	if ($result->num_rows > 0 && $row = $result->fetch_row()) {
 		$chkd = '';
@@ -69,7 +68,7 @@ function byTr($c2, $date, $nm, $summ) {
 	echo '<td>' . $nm;
 	echo '<td class="num">' . number_format($summ, 2, '.', ' ');
 	echo '<td>' . $name;
-	echo '<td>' . $trnz;
+	echo $trnz;
 }
 
 $c2 = 0;
@@ -77,7 +76,7 @@ $path_parts = pathinfo($uploadfile);
 echo $path_parts['extension'];
 
 if ($fh = fopen($uploadfile,'r')) {
-	echo '<table><tr><th><th>№<th>Дата<th>Имя<th>Сумма<th>найденное в БД';
+	echo '<table><tr><th><th>№<th>Дата<th>Имя<th>Сумма<th>найденное в БД<th>Есть';
 	if ($path_parts['extension'] == 'csv') {
 		$line = fgetcsv($fh, 1000, ';'); //header
 		while ($line = fgetcsv($fh, 1000, ';')) {

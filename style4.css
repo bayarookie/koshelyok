@@ -120,6 +120,11 @@ input[type=checkbox] {
 	width: 13px;
 }
 
+input[type=file]::-webkit-file-upload-button {
+	visibility: hidden;
+	width: 0;
+}
+
 input:focus, input:hover, select:focus, select:hover, .edit:hover {
 	color: var(--ab);
 	background: var(--af);

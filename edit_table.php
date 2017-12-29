@@ -22,7 +22,7 @@ $t = '<p>' . $title . '
 <input type="button" value="Добавить" onclick="get_form(\'edit_form\',-1,\'' . $table . '\')">
 <input type="button" value="Закрыть" onclick="id_close(\'edit_table\')"></p>';
 echo '<article>' . $t . '<table>' . $th;
-$result = byQu($mysqli, "SELECT * FROM $tbl");
+$result = byQu("SELECT * FROM $tbl");
 $imax = $result->field_count;
 while ($row = $result->fetch_row()) {
 	echo '<tr><td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'' . $table . '\')">Редактировать';

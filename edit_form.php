@@ -23,14 +23,14 @@ if ($tbl == 'goods') {
 }
 echo '<figure><figcaption>' . $title . '</figcaption><table class="form">';
 if ($e_id >= 0)
-	$result = byQu($mysqli, "SELECT * FROM $tbl WHERE id=$e_id");
+	$result = byQu("SELECT * FROM $tbl WHERE id=$e_id");
 else
-	$result = byQu($mysqli, "SELECT * FROM $tbl ORDER BY id DESC LIMIT 1");
+	$result = byQu("SELECT * FROM $tbl ORDER BY id DESC LIMIT 1");
 $row = $result->fetch_row();
 $finfo = $result->fetch_fields();
 for ($i = 1; $i < count($finfo); $i++) {
 	if (substr($finfo[$i]->name,-3) == '_id')
-		bySe($mysqli, $td[$i], 'e_' . $finfo[$i]->name, substr($finfo[$i]->name, 0, -3), (($e_id < 0) ? -1 : $row[$i]), '');
+		bySe($td[$i], 'e_' . $finfo[$i]->name, substr($finfo[$i]->name, 0, -3), (($e_id < 0) ? -1 : $row[$i]), '');
 	else {
 		echo '<tr><td>' . $td[$i] . '<td>';
 		if ($finfo[$i]->type == 10) {

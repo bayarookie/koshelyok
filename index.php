@@ -115,11 +115,11 @@ function edit_to_db(tbl) {
 
 //import from bankstate
 function import_form2() {
-	var i_id = document.getElementById("i_id").value;
+	var w_id = document.getElementById("w_id").value;
 	var i_fn = document.getElementById("bankstate");
 	if (i_fn.files.length === 0) return;
 	var fdat = new FormData();
-	fdat.append('i_id', i_id);
+	fdat.append('w_id', w_id);
 	fdat.append('bankstate', i_fn.files[0]);
 	fdat.append('frm', 'import_form2');
 	ajaxsend(fdat, document.getElementById("import_form2"));

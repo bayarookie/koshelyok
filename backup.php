@@ -18,7 +18,7 @@ echo "-- Koshelyok SQL Dump
 ";
 
 
-$res1 = byQu($mysqli, "SHOW FULL TABLES");
+$res1 = byQu("SHOW FULL TABLES");
 while($ro1 = $res1->fetch_row()) {
 	$table = $ro1[0];
 if ($ro1[1] == 'VIEW') {
@@ -30,7 +30,7 @@ if ($ro1[1] == 'VIEW') {
 --
 
 ";
-	$res2 = byQu($mysqli, "SHOW CREATE TABLE " . $table);
+	$res2 = byQu("SHOW CREATE TABLE " . $table);
 	$ro2 = $res2->fetch_row();
 	echo $ro2[1] . ";
 ";
@@ -43,7 +43,7 @@ if ($ro1[1] == 'VIEW') {
 --
 
 ";
-	$res2 = byQu($mysqli, "SHOW CREATE TABLE " . $table);
+	$res2 = byQu("SHOW CREATE TABLE " . $table);
 	$ro2 = $res2->fetch_row();
 	echo $ro2[1] . ";
 
@@ -52,7 +52,7 @@ if ($ro1[1] == 'VIEW') {
 --
 
 ";
-	$res3 = byQu($mysqli, "SELECT * FROM " . $table);
+	$res3 = byQu("SELECT * FROM " . $table);
 	$num_fields = $mysqli->field_count;
 	if ($ro3 = $res3->fetch_row()) {
 		$finfo = $res3->fetch_fields();

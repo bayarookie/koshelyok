@@ -1,6 +1,6 @@
 <?php
 $f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
-$result = byQu($mysqli, "SELECT MIN(op_date) FROM money");
+$result = byQu("SELECT MIN(op_date) FROM money");
 if ($row = $result->fetch_row()) $dt = $row[0]; else $dt = '2015-01-01';
 $f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : $dt;
 echo '<article><p>Отчёт №6, по пользователям
@@ -9,7 +9,7 @@ echo '<article><p>Отчёт №6, по пользователям
 <input type="button" value="Отчёт" onclick="get_report(\'report6\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<table><tr><th>Группа';
-$res0 = byQu($mysqli, "SELECT money.users_id, users.name, SUM(op_summ) as summ
+$res0 = byQu("SELECT money.users_id, users.name, SUM(op_summ) as summ
 	FROM money
 	LEFT JOIN users ON money.users_id=users.id
 	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
@@ -19,7 +19,7 @@ while ($row0 = $res0->fetch_assoc())
 	echo '<th>' . $row0['name'];
 echo '<th>Сумма';
 $sm = 0;
-$res1 = byQu($mysqli, "SELECT goods.groups_id, groups.name, SUM(op_summ) as summ
+$res1 = byQu("SELECT goods.groups_id, groups.name, SUM(op_summ) as summ
 	FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
 	LEFT JOIN groups ON goods.groups_id=groups.id
@@ -30,7 +30,7 @@ while ($row1 = $res1->fetch_assoc()) {
 	echo '<tr><td>' . $row1['name'];
 	$res0->data_seek(0);
 	while ($row0 = $res0->fetch_assoc()) {
-		$res2 = byQu($mysqli, "SELECT SUM(op_summ) as summ
+		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
 			LEFT JOIN goods ON money.goods_id=goods.id
 			WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
@@ -72,7 +72,7 @@ while ($row0 = $res0->fetch_assoc()) {
 	data: [';
 	$res1->data_seek(0);
 	while ($row1 = $res1->fetch_assoc()) {
-		$res2 = byQu($mysqli, "SELECT SUM(op_summ) as summ
+		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
 			LEFT JOIN goods ON money.goods_id=goods.id
 			WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'

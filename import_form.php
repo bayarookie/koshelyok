@@ -1,16 +1,8 @@
-<article><h1><a href="">Импорт</a></h1>
-<?php
-$w_id = 1;
-echo '<p>Выберите кошелёк: <select size="1" id="i_id">';
-$result = byQu($mysqli, "SELECT id, name FROM walls");
-while ($row = $result->fetch_assoc()) {
-	echo '<option';
-	if ($row['id'] == $w_id) {echo ' selected';}
-	echo ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
-}
-echo '</select></p>';
-?>
-<p>Выбрать файл: <input type="file" id="bankstate">
-<input type="button" value="Отправить этот файл" onclick="import_to_db()"></p>
+<article><h1>Импорт выписки из банка</h1><table class="form">
+<?php bySe('кошелёк:', 'w_id', 'walls', 1, '');?>
+<tr><td>Выбрать файл:<td><input type="file" id="bankstate" accept=".txt, .csv">
+<tr><td><td><input type="button" value="Отправить файл" onclick="import_form2()">
 <input type="button" value="Закрыть" onclick="id_close('import_form')">
+</table>
+<div id="import_form2"></div>
 </article>

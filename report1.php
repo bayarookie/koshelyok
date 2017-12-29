@@ -7,14 +7,14 @@ echo '<article><p>Отчёт №1, помесячно
 <input type="button" value="Отчёт" onclick="get_report(\'report1\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<table><tr><th>Группа';
-$res0 = byQu($mysqli, "SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, SUM(op_summ) as summ
+$res0 = byQu("SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, SUM(op_summ) as summ
 	FROM money
 	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
 	GROUP BY mo");
 while ($row0 = $res0->fetch_assoc()) echo '<th>' . $row0['mo'];
 echo '<th>Сумма';
 $sm = 0;
-$res1 = byQu($mysqli, "SELECT goods.groups_id, groups.name, SUM(op_summ) as summ
+$res1 = byQu("SELECT goods.groups_id, groups.name, SUM(op_summ) as summ
 	FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
 	LEFT JOIN groups ON goods.groups_id=groups.id
@@ -25,7 +25,7 @@ while ($row1 = $res1->fetch_assoc()) {
 	echo '<tr><td>' . $row1['name'];
 	$res0->data_seek(0);
 	while ($row0 = $res0->fetch_assoc()) {
-		$res2 = byQu($mysqli, "SELECT SUM(op_summ) as summ
+		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
 			LEFT JOIN goods ON money.goods_id=goods.id
 			WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
@@ -68,7 +68,7 @@ while ($row1 = $res1->fetch_assoc()) {
 	data: [';
 	$res0->data_seek(0);
 	while ($row0 = $res0->fetch_assoc()) {
-		$res2 = byQu($mysqli, "SELECT SUM(op_summ) as summ
+		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
 			LEFT JOIN goods ON money.goods_id=goods.id
 			WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'

@@ -84,7 +84,7 @@ table, td {
 	border: 1px solid var(--mf);
 }
 
-input, select, .edit {
+input, select, .edit, input[type=file]::-webkit-file-upload-button {
 	border-color: var(--af);
 	color: var(--af);
 	background: var(--ab);

@@ -60,7 +60,7 @@ if ($tbl == 'goods') {
 				VALUES ('$name', '$komm')";
 	}
 }
-byQu($mysqli, $q);
+byQu($q);
 if ($tbl == 'money') include 'money_table.php';
 else include 'edit_table.php';
 ?>

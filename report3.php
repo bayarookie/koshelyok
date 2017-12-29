@@ -12,7 +12,7 @@ echo '<article><p>Отчёт №3, в среднем
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<figure><figcaption>месяцев = ' . $d . '</figcaption><table><tr><th>Группа<th>Сумма';
 $sm = 0;
-$res0 = byQu($mysqli, "SELECT groups_id, groups.name, SUM(op_summ) AS summ
+$res0 = byQu("SELECT groups_id, groups.name, SUM(op_summ) AS summ
 	FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
 	LEFT JOIN groups ON goods.groups_id=groups.id
@@ -20,7 +20,7 @@ $res0 = byQu($mysqli, "SELECT groups_id, groups.name, SUM(op_summ) AS summ
 	GROUP BY groups_id
 	ORDER by summ DESC");
 while ($row0 = $res0->fetch_assoc()) {
-	$res1 = byQu($mysqli, "SELECT SUM(op_summ) as summ
+	$res1 = byQu("SELECT SUM(op_summ) as summ
 		FROM money
 		LEFT JOIN goods ON money.goods_id=goods.id
 		WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto' AND groups_id=" . $row0['groups_id']);

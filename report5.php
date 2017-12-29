@@ -1,6 +1,6 @@
 <?php
 $f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
-$result = byQu($mysqli, "SELECT MIN(op_date) FROM money");
+$result = byQu("SELECT MIN(op_date) FROM money");
 if ($row = $result->fetch_row()) $dt = $row[0]; else $dt = '2015-01-01';
 $f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : $dt;
 echo '<article><p>Отчёт №5, по конторам
@@ -11,7 +11,7 @@ echo '<article><p>Отчёт №5, по конторам
 echo '<figure><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption>
 <table><tr><th>Группа<th>Контора<th>Сумма';
 $sm = 0; $sg = ''; $su = 0; 
-$result = byQu($mysqli, "SELECT goods.id, groups.name, IF(goods.comment='',goods.name,goods.comment) AS gnam, SUM(op_summ) as summ
+$result = byQu("SELECT goods.id, groups.name, IF(goods.comment='',goods.name,goods.comment) AS gnam, SUM(op_summ) as summ
 	FROM money
 	LEFT JOIN goods ON money.goods_id=goods.id
 	LEFT JOIN groups ON goods.groups_id=groups.id
