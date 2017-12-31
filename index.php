@@ -90,13 +90,28 @@ function get_form(form_id, id, s) {
 }
 
 //money
-function money_table(fltr, ordn) {
-	var el_1 = document.getElementById("o");
-	if (fltr == 0) if (el_1) el_1.value = ordn;
-	var o = el_1 ? el_1.value : 1;
+function money_table(fltr, id, s) {
 	var data = "frm=money_table";
-	var el_2 = document.getElementById("money_table");
-	if (fltr >= 0) data += "&f=1&o=" + o + get_inputs(el_2, "input[type=date], select");
+	if (fltr == 3) {
+		data += "&f=3&f_servs_id=" + id + s;
+	} else if (fltr == 4) {
+		data += "&f=3&f_grups_id=" + id + s;
+	} else if (fltr == 5) {
+		data += "&f=5&f_servs_id=" + id + s;
+		var el_2 = document.getElementById("report");
+		if (el_2) data += get_inputs(el_2, "input[type=date]");
+	} else if (fltr == 6) {
+		data += "&f=5&f_grups_id=" + id + s;
+		var el_2 = document.getElementById("report");
+		if (el_2) data += get_inputs(el_2, "input[type=date]");
+	} else if (fltr >= 0) {
+		var el_1 = document.getElementById("o");
+		if (fltr == 0) if (el_1) el_1.value = id;
+		var o = el_1 ? el_1.value : 1;
+		data += "&o=" + o;
+		var el_2 = document.getElementById("money_table");
+		if (el_2) data += get_inputs(el_2, "input[type=date], select");
+	}
 	ajaxsend(data, get_new_sect('money_table'));
 }
 

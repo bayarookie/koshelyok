@@ -9,17 +9,16 @@ echo '<article><p>Отчёт №1, помесячно
 echo '<table><tr><th>Группа';
 $res0 = byQu("SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, SUM(op_summ) as summ
 	FROM money
-	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
+	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 	GROUP BY mo");
 while ($row0 = $res0->fetch_assoc()) echo '<th>' . $row0['mo'];
 echo '<th>Сумма';
 $sm = 0;
-$res1 = byQu("SELECT goods.groups_id, groups.name, SUM(op_summ) as summ
+$res1 = byQu("SELECT grups_id, grups.name, SUM(op_summ) as summ
 	FROM money
-	LEFT JOIN goods ON money.goods_id=goods.id
-	LEFT JOIN groups ON goods.groups_id=groups.id
-	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
-	GROUP BY goods.groups_id
+	LEFT JOIN grups ON grups_id=grups.id
+	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
+	GROUP BY grups_id
 	ORDER BY summ DESC");
 while ($row1 = $res1->fetch_assoc()) {
 	echo '<tr><td>' . $row1['name'];
@@ -27,14 +26,13 @@ while ($row1 = $res1->fetch_assoc()) {
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
-			LEFT JOIN goods ON money.goods_id=goods.id
-			WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
-			AND groups_id=" . $row1['groups_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
+			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
+			AND grups_id=" . $row1['grups_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc())
 			if ($row2['summ'] == '')
 				echo '<td class="num">0.00';
 			else
-				echo '<td class="edit num" onclick="get_form(\'money_table\',0,\'money&f_groups_id=' . $row1['groups_id'] . '&mo=' . $row0['mo'] . '\')">' . $row2['summ'];
+				echo '<td class="edit num" onclick="money_table(4,' . $row1['grups_id'] . ',\'&mo=' . $row0['mo'] . '\')">' . $row2['summ'];
 	}
 	echo '<td class="' . ((floatval($row1['summ']) < 0) ? 'minus' : 'plus') . ' num">' . $row1['summ'];
 	$sm = $sm + floatval($row1['summ']);
@@ -70,9 +68,8 @@ while ($row1 = $res1->fetch_assoc()) {
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
-			LEFT JOIN goods ON money.goods_id=goods.id
-			WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
-			AND groups_id=" . $row1['groups_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
+			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
+			AND grups_id=" . $row1['grups_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc()) echo ($row2['summ'] ? abs($row2['summ']) : '0.00') . ',';
 	}
 	echo ']

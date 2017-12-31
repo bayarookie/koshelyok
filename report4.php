@@ -11,18 +11,17 @@ echo '<article><p>Отчёт №4, по группам
 echo '<figure><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption>
 <table><tr><th>Группа<th>Сумма';
 $sm = 0;
-$result = byQu("SELECT groups.id, groups.name, SUM(op_summ) as summ
+$result = byQu("SELECT grups_id, grups.name, SUM(op_summ) as summ
 	FROM money
-	LEFT JOIN goods ON money.goods_id=goods.id
-	LEFT JOIN groups ON goods.groups_id=groups.id
-	WHERE money.op_date>='$f_dtfr' AND money.op_date<='$f_dtto'
-	GROUP BY groups.id
+	LEFT JOIN grups ON grups_id=grups.id
+	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
+	GROUP BY grups_id
 	ORDER BY summ DESC");
 while ($row = $result->fetch_assoc()) {
 	$sm = $sm + floatval($row['summ']);
 	$c = (floatval($row['summ']) < 0) ? 'minus' : 'plus';
 	echo '<tr class="' . $c . '"><td>' . $row['name'];
-	echo '<td class="edit num ' . $c . '" onclick="get_form(\'money_table\',0,\'money&f=3&f_groups_id=' . $row['id'] . '\')">';
+	echo '<td class="edit num" onclick="money_table(6,' . $row['grups_id'] . ')">';
 	echo number_format($row['summ'], 2, '.', '');
 }
 echo '<tr><td>Итого' . '<td class="num ' . (($sm < 0) ? 'minus' : 'plus') . '">' . number_format($sm, 2, '.', '');

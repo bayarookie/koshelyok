@@ -2,10 +2,10 @@
 $tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
 if ($tbl == '') die('table?');
 $e_id = isset($_POST['id']) ? intval($_POST['id']) : -1;
-if ($tbl == 'goods') {
+if ($tbl == 'servs') {
 	$title = 'Контора';
 	$td = array('id', 'Наименование', 'Описание', 'Группа');
-} elseif ($tbl == 'groups') {
+} elseif ($tbl == 'grups') {
 	$title = 'Группа';
 	$td = array('id', 'Наименование', 'Описание');
 } elseif ($tbl == 'walls') {
@@ -19,7 +19,7 @@ if ($tbl == 'goods') {
 	$td = array('id', 'Наименование', 'ORDER BY');
 } else {
 	$title = 'Транзакция';
-	$td = array('id', 'Дата', 'Сумма', 'Контора', 'Кошелёк', 'Пользователь', 'Описание');
+	$td = array('id', 'Дата', 'Сумма', 'Контора', 'Группа', 'Кошелёк', 'Пользователь', 'Описание');
 }
 echo '<figure><figcaption>' . $title . '</figcaption><table class="form">';
 if ($e_id >= 0)

@@ -31,37 +31,42 @@ function byMo($m) {
 function byTr($c2, $date, $nm, $summ) {
 	global $mysqli, $w_id, $impo;
 	if ($summ < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
+	$s_id = -1;
 	$g_id = -1;
 	$nm = $mysqli->real_escape_string($nm);
 	$name = "не найден";
-	$result = byQu("SELECT id, name FROM goods WHERE name LIKE '$nm'");
+	$result = byQu("SELECT id, name, grups_id FROM servs WHERE name LIKE '$nm'");
 	if ($row = $result->fetch_row()) {
-		$g_id = $row[0];
+		$s_id = $row[0];
 		$name = $row[1];
+		$g_id = $row[2];
 	} else {
-		$result = byQu("SELECT id, name FROM goods WHERE name LIKE '$nm%'");
+		$result = byQu("SELECT id, name, grups_id FROM servs WHERE name LIKE '$nm%'");
 		if ($result->num_rows == 1 && $row = $result->fetch_row()) {
-			$g_id = $row[0];
+			$s_id = $row[0];
 			$name = $row[1];
+			$g_id = $row[2];
 		} elseif ($result->num_rows == 0) {
-			$result = byQu("INSERT INTO goods (name, groups_id, comment) VALUES ('$nm', -1, '')");
-			$result = byQu("SELECT id, name FROM goods WHERE name LIKE '$nm'");
+			$result = byQu("INSERT INTO servs (name, grups_id, comment) VALUES ('$nm', -1, '')");
+			$result = byQu("SELECT id, name, grups_id FROM servs WHERE name LIKE '$nm'");
 			if ($row = $result->fetch_row()) {
-				$g_id = $row[0];
+				$s_id = $row[0];
 				$name = $row[1];
+				$g_id = $row[2];
 			}
 		}
 	}
-	$result = byQu("SELECT id FROM money
-	WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND goods_id=$g_id AND walls_id=$w_id");
+	$result = byQu("SELECT money.id, grups.name FROM money
+	LEFT JOIN grups ON money.grups_id=grups.id
+	WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND servs_id=$s_id AND walls_id=$w_id");
 	if ($result->num_rows > 0 && $row = $result->fetch_row()) {
 		$chkd = '';
-		$trnz = '<td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'money\')">Уже есть';
+		$trnz = '<td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'money\')">Уже есть<td>' . $row[1];
 	} else {
 		$chkd = ' checked';
-		$trnz = '<td>Новая тр';
+		$trnz = '<td>Новая тр<td>';
 	}
-	$arr = $date . ";" . $summ . ";" . intval($g_id) . ";" . $w_id;
+	$arr = $date . ";" . $summ . ";" . intval($s_id) . ";" . intval($g_id) . ";" . $w_id;
 	echo '<td><input type="checkbox" id="imp_' . $c2 . '" value="' . $arr . '"' . $chkd . '>';
 	echo '<td class="num">' . $c2;
 	echo '<td>' . $date;
@@ -76,7 +81,7 @@ $path_parts = pathinfo($uploadfile);
 echo $path_parts['extension'];
 
 if ($fh = fopen($uploadfile,'r')) {
-	echo '<table><tr><th><th>№<th>Дата<th>Имя<th>Сумма<th>найденное в БД<th>Есть';
+	echo '<table><tr><th><th>№<th>Дата<th>Имя<th>Сумма<th>найденное в БД<th>Есть<th>Группа';
 	if ($path_parts['extension'] == 'csv') {
 		$line = fgetcsv($fh, 1000, ';'); //header
 		while ($line = fgetcsv($fh, 1000, ';')) {
