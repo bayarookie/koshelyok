@@ -3,7 +3,7 @@
 -- http://bayarookie.wallst.ru
 --
 -- Хост: localhost
--- Время создания: January 1 2018, 00:51
+-- Время создания: January 4 2018, 01:25
 -- Версия сервера: 5.7.20-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.22-0ubuntu0.16.04.1
 
@@ -14,27 +14,70 @@
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `bgrup`
+--
+
+CREATE TABLE `bgrup` (
+  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `comment` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `bgrup`
+--
+
+INSERT INTO `bgrup` (`id`, `name`, `comment`) VALUES
+(1, 'Дом', ''),
+(2, 'Еда', ''),
+(3, 'Коммуналка', ''),
+(4, 'Ширпотреб', ''),
+(5, 'Доходы', '');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `grups`
 --
 
 CREATE TABLE `grups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(4) NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `comment` text NOT NULL,
+  `bgrup_id` int(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `grups`
 --
 
-INSERT INTO `grups` (`id`, `name`, `comment`) VALUES
-(0, 'Коммуналка', 'все коммунальные платежи'),
-(1, 'Еда', 'жратва'),
-(2, 'Доходы', ''),
-(3, 'Дом', 'движение внутри дома'),
-(4, 'Ширпотреб', 'всё остальное');
+INSERT INTO `grups` (`id`, `name`, `comment`, `bgrup_id`) VALUES
+(0, 'Коммуналка', 'все коммунальные платежи', 3),
+(1, 'Еда', 'жратва', 2),
+(2, 'Доходы', '', 5),
+(3, 'Дом', 'движение внутри дома', 1),
+(4, 'Ширпотреб', 'всё остальное', 4),
+(5, 'Лекарства', '', 4),
+(6, 'Внутри', 'Перемещения со счёта на счёт', 1),
+(7, 'Техника', '', 4),
+(8, 'Одежда', '', 4),
+(9, 'Электроэнергия', '', 3),
+(10, 'Жильё', '', 3),
+(11, 'Отопление, горячая вода', '', 3),
+(12, 'Телефон', '', 3),
+(13, 'Капремонт', '', 3),
+(14, 'Вода', '', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Структура для представления `grups_v`
+--
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `grups_v` AS select `grups`.`id` AS `id`,`grups`.`name` AS `name`,`grups`.`comment` AS `comment`,`bgrup`.`name` AS `bgrup_name` from (`grups` left join `bgrup` on((`grups`.`bgrup_id` = `bgrup`.`id`))) order by `bgrup`.`name`,`grups`.`name`;
 
 -- --------------------------------------------------------
 
@@ -75,7 +118,7 @@ CREATE TABLE `money_order` (
   `name` text NOT NULL,
   `order_by` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `money_order`
@@ -88,16 +131,17 @@ INSERT INTO `money_order` (`id`, `name`, `order_by`) VALUES
 (4, 'По сумме обратно', 'op_summ DESC'),
 (5, 'По конторам', 'servs_name'),
 (6, 'По конторам обратно', 'servs_name DESC'),
-(7, 'По группам', 'groups.name'),
-(8, 'По группам обратно', 'groups.name DESC'),
+(7, 'По подгруппам', 'grups.name'),
+(8, 'По подгруппам обратно', 'grups.name DESC'),
 (9, 'По комментариям', 'money.comment'),
 (10, 'По комментариям обратно', 'money.comment DESC'),
 (11, 'По кошелькам', 'walls.name'),
 (12, 'По кошелькам обратно', 'walls.name DESC'),
 (13, 'По пользователям', 'users.name'),
 (14, 'По пользователям обратно', 'users.name DESC'),
-(15, 'По группам, конторам', 'groups.name, servs_name'),
-(16, 'По кошелькам, дате', 'walls.name, op_date');
+(15, 'По подгруппам, конторам', 'grups.name, servs_name'),
+(16, 'По кошелькам, дате', 'walls.name, op_date'),
+(17, 'По группам', 'bgrup.name, grups.name');
 
 -- --------------------------------------------------------
 
@@ -109,7 +153,7 @@ CREATE TABLE `servs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `comment` text NOT NULL,
-  `grups_id` int(11) NOT NULL,
+  `grups_id` int(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
