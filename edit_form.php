@@ -2,10 +2,16 @@
 $tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
 if ($tbl == '') die('table?');
 $e_id = isset($_POST['id']) ? intval($_POST['id']) : -1;
-if ($tbl == 'servs') {
+$table = $tbl;
+if ($tbl == 'servs_v') {
 	$title = 'Контора';
+	$td = array('id', 'Наименование', 'Описание', 'Подгруппа');
+	$table = 'servs';
+} elseif ($tbl == 'grups_v') {
+	$title = 'Подгруппа';
 	$td = array('id', 'Наименование', 'Описание', 'Группа');
-} elseif ($tbl == 'grups') {
+	$table = 'grups';
+} elseif ($tbl == 'bgrup') {
 	$title = 'Группа';
 	$td = array('id', 'Наименование', 'Описание');
 } elseif ($tbl == 'walls') {
@@ -19,13 +25,13 @@ if ($tbl == 'servs') {
 	$td = array('id', 'Наименование', 'ORDER BY');
 } else {
 	$title = 'Транзакция';
-	$td = array('id', 'Дата', 'Сумма', 'Контора', 'Группа', 'Кошелёк', 'Пользователь', 'Описание');
+	$td = array('id', 'Дата', 'Сумма', 'Контора', 'Подгруппа', 'Кошелёк', 'Пользователь', 'Описание');
 }
 echo '<figure><figcaption>' . $title . '</figcaption><table class="form">';
 if ($e_id >= 0)
-	$result = byQu("SELECT * FROM $tbl WHERE id=$e_id");
+	$result = byQu("SELECT * FROM $table WHERE id=$e_id");
 else
-	$result = byQu("SELECT * FROM $tbl ORDER BY id DESC LIMIT 1");
+	$result = byQu("SELECT * FROM $table LIMIT 1");
 $row = $result->fetch_row();
 $finfo = $result->fetch_fields();
 for ($i = 1; $i < count($finfo); $i++) {

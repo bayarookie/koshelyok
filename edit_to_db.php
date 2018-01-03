@@ -5,15 +5,30 @@ $e_id = isset($_POST['e_id']) ? intval($_POST['e_id']) : -1;
 $name = isset($_POST['e_name']) ? $mysqli->real_escape_string($_POST['e_name']) : '';
 $komm = isset($_POST['e_comment']) ? $mysqli->real_escape_string($_POST['e_comment']) : '';
 if (empty($tbl)) die('table?');
-if ($tbl == 'goods') {
-	$r_id = isset($_POST['e_groups_id']) ? intval($_POST['e_groups_id']) : -1;
+if ($tbl == 'money') {
+	$date = isset($_POST['e_op_date']) ? $mysqli->real_escape_string($_POST['e_op_date']) : date('Y-m-d');
+	$summ = isset($_POST['e_op_summ']) ? floatval($_POST['e_op_summ']) : 0;
+	$s_id = isset($_POST['e_servs_id']) ? intval($_POST['e_servs_id']) : -1;
+	$g_id = isset($_POST['e_grups_id']) ? intval($_POST['e_grups_id']) : -1;
+	$w_id = isset($_POST['e_walls_id']) ? intval($_POST['e_walls_id']) : -1;
+	$u_id = isset($_POST['e_users_id']) ? intval($_POST['e_users_id']) : -1;
 	if ($e_id > -1) {
-		$q = "UPDATE goods
-				SET name='$name', comment='$komm', groups_id=$r_id
+		$q = "UPDATE money
+				SET op_date=STR_TO_DATE('$date', '%Y-%m-%d'), op_summ=$summ, servs_id=$s_id, grups_id=$g_id, walls_id=$w_id, users_id=$u_id, comment='$komm'
 				WHERE id=$e_id";
 	} else {
-		$q = "INSERT INTO goods (name, comment, groups_id)
-				VALUES ('$name', '$komm', $r_id)";
+		$q = "INSERT INTO money (op_date, op_summ, servs_id, grups_id, walls_id, users_id, comment)
+				VALUES (STR_TO_DATE('$date', '%Y-%m-%d'), $summ, $s_id, $g_id, $w_id, $u_id, '$komm')";
+	}
+} elseif ($tbl == 'money_order') {
+	$ordr = isset($_POST['e_order_by']) ? $mysqli->real_escape_string($_POST['e_order_by']) : '';
+	if ($e_id > -1) {
+		$q = "UPDATE money_order
+				SET name='$name', order_by='$ordr'
+				WHERE id=$e_id";
+	} else {
+		$q = "INSERT INTO $tbl (name, order_by)
+				VALUES ('$name', '$ordr')";
 	}
 } elseif ($tbl == 'users') {
 	$user = isset($_POST['e_username']) ? $mysqli->real_escape_string($_POST['e_username']) : '';
@@ -26,29 +41,25 @@ if ($tbl == 'goods') {
 		$q = "INSERT INTO users (username, password, name)
 				VALUES ('$user', '$pass', '$name')";
 	}
-} elseif ($tbl == 'money') {
-	$date = isset($_POST['e_op_date']) ? $mysqli->real_escape_string($_POST['e_op_date']) : date('Y-m-d');
-	$summ = isset($_POST['e_op_summ']) ? floatval($_POST['e_op_summ']) : 0;
-	$g_id = isset($_POST['e_goods_id']) ? intval($_POST['e_goods_id']) : -1;
-	$w_id = isset($_POST['e_walls_id']) ? intval($_POST['e_walls_id']) : -1;
-	$u_id = isset($_POST['e_users_id']) ? intval($_POST['e_users_id']) : -1;
+} elseif ($tbl == 'servs_v') {
+	$r_id = isset($_POST['e_grups_id']) ? intval($_POST['e_grups_id']) : -1;
 	if ($e_id > -1) {
-		$q = "UPDATE money
-				SET op_date=STR_TO_DATE('$date', '%Y-%m-%d'), op_summ=$summ, goods_id=$g_id, walls_id=$w_id, users_id=$u_id, comment='$komm'
+		$q = "UPDATE servs
+				SET name='$name', comment='$komm', grups_id=$r_id
 				WHERE id=$e_id";
 	} else {
-		$q = "INSERT INTO money (op_date, op_summ, goods_id, walls_id, users_id, comment)
-				VALUES (STR_TO_DATE('$date', '%Y-%m-%d'), $summ, $g_id, $w_id, $u_id, '$komm')";
+		$q = "INSERT INTO servs (name, comment, grups_id)
+				VALUES ('$name', '$komm', $r_id)";
 	}
-} elseif ($tbl == 'money_order') {
-	$ordr = isset($_POST['e_order_by']) ? $mysqli->real_escape_string($_POST['e_order_by']) : '';
+} elseif ($tbl == 'grups_v') {
+	$r_id = isset($_POST['e_bgrup_id']) ? intval($_POST['e_bgrup_id']) : -1;
 	if ($e_id > -1) {
-		$q = "UPDATE money_order
-				SET name='$name', order_by='$ordr'
+		$q = "UPDATE grups
+				SET name='$name', comment='$komm', bgrup_id=$r_id
 				WHERE id=$e_id";
 	} else {
-		$q = "INSERT INTO $tbl (name, order_by)
-				VALUES ('$name', '$ordr')";
+		$q = "INSERT INTO grups (name, comment, bgrup_id)
+				VALUES ('$name', '$komm', $r_id)";
 	}
 } else {
 	if ($e_id > -1) {

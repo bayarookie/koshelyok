@@ -7,6 +7,7 @@ echo '<article>' . $t;
 //фильтры
 $f_servs_id = isset($_POST['f_servs_id']) ? intval($_POST['f_servs_id']) : -1;
 $f_grups_id = isset($_POST['f_grups_id']) ? intval($_POST['f_grups_id']) : -1;
+$f_bgrup_id = isset($_POST['f_bgrup_id']) ? intval($_POST['f_bgrup_id']) : -1;
 $f_walls_id = isset($_POST['f_walls_id']) ? intval($_POST['f_walls_id']) : -1;
 $f_users_id = isset($_POST['f_users_id']) ? intval($_POST['f_users_id']) : -1;
 $f = isset($_POST['f']) ? intval($_POST['f']) : 1;
@@ -29,6 +30,7 @@ if (isset($_POST['mo'])) {
 $filter = "";
 if ($f_servs_id > -1) $filter .= " AND money.servs_id=" . $f_servs_id;
 if ($f_grups_id > -1) $filter .= " AND money.grups_id=" . $f_grups_id;
+if ($f_bgrup_id > -1) $filter .= " AND grups.bgrup_id=" . $f_bgrup_id;
 if ($f_walls_id > -1) $filter .= " AND money.walls_id=" . $f_walls_id;
 if ($f_users_id > -1) $filter .= " AND money.users_id=" . $f_users_id;
 
@@ -61,14 +63,14 @@ function byTh($s, $t) {
 byTh('op_date', 'Дата');
 byTh('op_summ', 'Сумма');
 byTh('servs_name', 'Контора');
-byTh('grups.name', 'Группа');
+byTh('grups.name', 'Подгруппа');
 byTh('money.comment', 'Описание');
 byTh('walls.name', 'Кошелёк');
 byTh('users.name', 'Юзер');
 
 //таблица, остаток на начало
 $result = byQu("SELECT SUM(op_summ) AS summ, walls.name FROM money
-	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON money.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<'$f_dtfr'$filter
 	GROUP BY walls_id");
@@ -84,6 +86,7 @@ $res2 = byQu("SELECT money.id, op_date,
 	FROM money
 	LEFT JOIN servs ON money.servs_id=servs.id
 	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN bgrup ON grups.bgrup_id=bgrup.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	LEFT JOIN users ON money.users_id=users.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'$filter
@@ -105,7 +108,7 @@ echo '</tbody><tfoot>';
 //сумма движения денег
 $result = byQu("SELECT SUM(if(op_summ>0,op_summ,0)) AS summ1, SUM(if(op_summ<0,op_summ,0)) AS summ2, walls.name
 	FROM money
-	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON money.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
@@ -115,6 +118,7 @@ while ($row = $result->fetch_assoc())
 //итого движение денег
 $result = byQu("SELECT SUM(op_summ) AS summ
 	FROM money
+	LEFT JOIN grups ON money.grups_id=grups.id
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc()) {
 	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
@@ -125,6 +129,7 @@ if ($row = $result->fetch_assoc()) {
 if ($f_dtto < date('Y-m-d')) {
 $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	FROM money
+	LEFT JOIN grups ON money.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
@@ -136,6 +141,7 @@ while ($row = $result->fetch_assoc()) {
 //остаток
 $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	FROM money
+	LEFT JOIN grups ON money.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE true$filter
 	GROUP BY walls_id");
@@ -151,7 +157,8 @@ echo '<article><table class="form">';
 echo '<tr><td>Фильтр: с <td><input type="date" id="from" value="' . $f_dtfr . '">';
 echo ' по <input type="date" id="to" value="' . $f_dtto . '">';
 bySe('контора:', 'f_servs_id', 'servs', $f_servs_id, 'Все');
-bySe('группа:', 'f_grups_id', 'grups', $f_grups_id, 'Все');
+bySe('подгруппа:', 'f_grups_id', 'grups', $f_grups_id, 'Все');
+bySe('группа:', 'f_bgrup_id', 'bgrup', $f_bgrup_id, 'Все');
 bySe('кошелёк:', 'f_walls_id', 'walls', $f_walls_id, 'Все');
 bySe('пользователь:', 'f_users_id', 'users', $f_users_id, 'Все');
 bySe('Cортировка:', 'o', 'money_order', $o, 'Без сортировки');

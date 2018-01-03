@@ -104,6 +104,10 @@ function money_table(fltr, id, s) {
 		data += "&f=5&f_grups_id=" + id + s;
 		var el_2 = document.getElementById("report");
 		if (el_2) data += get_inputs(el_2, "input[type=date]");
+	} else if (fltr == 7) {
+		data += "&f=5&f_bgrup_id=" + id + s;
+		var el_2 = document.getElementById("report");
+		if (el_2) data += get_inputs(el_2, "input[type=date]");
 	} else if (fltr >= 0) {
 		var el_1 = document.getElementById("o");
 		if (fltr == 0) if (el_1) el_1.value = id;

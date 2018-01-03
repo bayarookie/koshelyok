@@ -2,8 +2,9 @@
 	<li><a onclick="money_table(-1)">Операции</a>
 	<li><a>Списки &#9662;</a>
 		<div>
-			<a onclick="get_form('edit_table',-1,'goods_v')">Конторы</a>
-			<a onclick="get_form('edit_table',-1,'groups')">Группы</a>
+			<a onclick="get_form('edit_table',-1,'servs_v')">Конторы</a>
+			<a onclick="get_form('edit_table',-1,'grups_v')">Подгруппы</a>
+			<a onclick="get_form('edit_table',-1,'bgrup')">Группы</a>
 			<a onclick="get_form('edit_table',-1,'walls')">Кошельки</a>
 <?php if ($user_id = 1) {?>
 			<a onclick="get_form('edit_table',-1,'users')">Пользователи</a>
@@ -15,9 +16,10 @@
 			<a onclick="get_report('report1')">Помесячно (таблица 1)</a>
 			<a onclick="get_report('report2')">Помесячно (таблица 2)</a>
 			<a onclick="get_report('report3')">В среднем за месяц</a>
-			<a onclick="get_report('report4')">По группам</a>
+			<a onclick="get_report('report4')">По подгруппам</a>
 			<a onclick="get_report('report5')">По конторам</a>
 			<a onclick="get_report('report6')">По пользователям</a>
+			<a onclick="get_report('report7')">По группам</a>
 		</div>
 <?php if ($user_id = 1) {?>
 	<li><a>Служебные &#9662;</a>
