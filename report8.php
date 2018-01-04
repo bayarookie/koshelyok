@@ -1,49 +1,45 @@
 <?php
 $f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
 $f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -6 month'));
-echo '<article><p>Отчёт №1, помесячно группы
-с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
-по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
-<input type="button" value="Отчёт" onclick="get_report(\'report1\')">
-<input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
-echo '<table><tr><th>Подгруппа';
-$res0 = byQu("SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, SUM(op_summ) as summ
+$f_grups_id = isset($_POST['f_grups_id']) ? intval($_POST['f_grups_id']) : 0;
+echo '<article><table class="form"><tr><td>Отчёт №8, помесячно
+с<td><input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
+по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">';
+bySe('подгруппа:', 'f_grups_id', 'grups', $f_grups_id, '');
+echo '<tr><td><td><input type="button" value="Отчёт" onclick="get_report(\'report8\')">
+<input type="button" value="Закрыть" onclick="id_close(\'report\')"></table>
+<table><tr><th>Месяц';
+$res0 = byQu("SELECT grups_id, grups.name, SUM(op_summ) as summ
+	FROM money
+	LEFT JOIN grups ON grups_id=grups.id
+	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto' AND grups_id=$f_grups_id");
+while ($row0 = $res0->fetch_assoc()) echo '<th>' . $row0['name'];
+$gr = "";
+$sm = 0;
+$res1 = byQu("SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, SUM(op_summ) as summ
 	FROM money
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 	GROUP BY mo");
-while ($row0 = $res0->fetch_assoc()) echo '<th>' . $row0['mo'];
-echo '<th>Сумма';
-$sm = 0;
-$res1 = byQu("SELECT bgrup_id, bgrup.name, SUM(op_summ) as summ
-	FROM money
-	LEFT JOIN grups ON grups_id=grups.id
-	LEFT JOIN bgrup ON bgrup_id=bgrup.id
-	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-	GROUP BY bgrup_id
-	ORDER BY summ DESC");
 while ($row1 = $res1->fetch_assoc()) {
-	echo '<tr><td>' . $row1['name'];
+	echo '<tr><td>' . $row1['mo'];
 	$res0->data_seek(0);
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
-			LEFT JOIN grups ON grups_id=grups.id
-			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-			AND bgrup_id=" . $row1['bgrup_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
+			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto' AND grups_id=$f_grups_id
+			AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc())
 			if ($row2['summ'] == '')
 				echo '<td class="num">0.00';
 			else
-				echo '<td class="edit num" onclick="money_table(4,' . $row1['bgrup_id'] . ',\'&mo=' . $row0['mo'] . '\')">' . $row2['summ'];
+				echo '<td class="edit num" onclick="money_table(4,' . $row0['grups_id'] . ',\'&mo=' . $row1['mo'] . '\')">' . $row2['summ'];
 	}
-	echo '<td class="' . ((floatval($row1['summ']) < 0) ? 'minus' : 'plus') . ' num">' . $row1['summ'];
 	$sm = $sm + floatval($row1['summ']);
 }
 echo '<tr><td>Итого';
 $res0->data_seek(0);
 while ($row0 = $res0->fetch_assoc())
 	echo '<td class="' . ((floatval($row0['summ']) < 0) ? 'minus' : 'plus') . ' num">' . $row0['summ'];
-echo '<td class="' . (($sm < 0) ? 'minus' : 'plus') . ' num">' . number_format($sm, 2, '.', '');
 ?>
 </table>
 <canvas id="Chart1" width="500" height="300"></canvas>
@@ -55,24 +51,23 @@ var myChart = new Chart(ctx, {
 		datasets: [
 <?php
 $mo = '';
-$res0->data_seek(0);
-while ($row0 = $res0->fetch_assoc()) $mo .= '"' . $row0['mo'] . '",';
 $res1->data_seek(0);
-while ($row1 = $res1->fetch_assoc()) {
+while ($row1 = $res1->fetch_assoc()) $mo .= '"' . $row1['mo'] . '",';
+$res0->data_seek(0);
+while ($row0 = $res0->fetch_assoc()) {
 	$co = byCo();
 	echo '{
-	label: "' . $row1['name'] . '",
+	label: "' . $row0['name'] . '",
 	backgroundColor: "' . $co . '",
 	borderColor: "' . $co . '",
 	fill: false,
 	data: [';
-	$res0->data_seek(0);
-	while ($row0 = $res0->fetch_assoc()) {
+	$res1->data_seek(0);
+	while ($row1 = $res1->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
-			LEFT JOIN grups ON grups_id=grups.id
-			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-			AND bgrup_id=" . $row1['bgrup_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
+			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto' AND grups_id=$f_grups_id
+			AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc()) echo ($row2['summ'] ? abs($row2['summ']) : '0.00') . ',';
 	}
 	echo ']

@@ -20,6 +20,7 @@
 			<a onclick="get_report('report5')">По конторам</a>
 			<a onclick="get_report('report6')">По пользователям</a>
 			<a onclick="get_report('report7')">По группам</a>
+			<a onclick="get_report('report8')">Помесячно по подгруппе</a>
 		</div>
 <?php if ($user_id = 1) {?>
 	<li><a>Служебные &#9662;</a>
