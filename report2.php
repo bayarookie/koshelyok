@@ -7,11 +7,12 @@ echo '<article><p>Отчёт №2, помесячно подгруппы
 <input type="button" value="Отчёт" onclick="get_report(\'report2\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<table><tr><th>Месяц';
-$res0 = byQu("SELECT grups_id, grups.name, SUM(op_summ) as summ
+$res0 = byQu("SELECT bgrup_id, bgrup.name, SUM(op_summ) as summ
 	FROM money
 	LEFT JOIN grups ON grups_id=grups.id
+	LEFT JOIN bgrup ON bgrup_id=bgrup.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-	GROUP BY grups_id
+	GROUP BY bgrup_id
 	ORDER BY summ DESC");
 while ($row0 = $res0->fetch_assoc()) echo '<th>' . $row0['name'];
 echo '<th>Сумма';
@@ -27,13 +28,14 @@ while ($row1 = $res1->fetch_assoc()) {
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
+			LEFT JOIN grups ON grups_id=grups.id
 			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-			AND grups_id=" . $row0['grups_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
+			AND bgrup_id=" . $row0['bgrup_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc())
 			if ($row2['summ'] == '')
 				echo '<td class="num">0.00';
 			else
-				echo '<td class="edit num" onclick="money_table(4,' . $row0['grups_id'] . ',\'&mo=' . $row1['mo'] . '\')">' . $row2['summ'];
+				echo '<td class="edit num" onclick="money_table(7,' . $row0['bgrup_id'] . ',\'&mo=' . $row1['mo'] . '\')">' . $row2['summ'];
 	}
 	echo '<td class="' . ((floatval($row1['summ']) < 0) ? 'minus' : 'plus') . ' num">' . $row1['summ'];
 	$sm = $sm + floatval($row1['summ']);
@@ -69,8 +71,9 @@ while ($row1 = $res1->fetch_assoc()) {
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
+			LEFT JOIN grups ON grups_id=grups.id
 			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-			AND grups_id=" . $row0['grups_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
+			AND bgrup_id=" . $row0['bgrup_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc()) echo ($row2['summ'] ? abs($row2['summ']) : '0.00') . ',';
 	}
 	echo ']
@@ -98,7 +101,7 @@ echo '],labels: [' . $gr . ']';
 				display: true,
 				scaleLabel: {
 					display: true,
-					labelString: 'Подгруппа'
+					labelString: 'Группа'
 				}
 			}],
 			yAxes: [{
