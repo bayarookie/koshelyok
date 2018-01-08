@@ -153,6 +153,15 @@ function import_to_db() {
 	ajaxsend(data, document.getElementById("import_form2"));
 }
 
+//save services from bankstate to db
+function imp_to_serv() {
+	var data = "frm=imp_to_serv";
+	var elem = document.querySelectorAll("#import_form2 input:checked");
+	var imax = elem.length;
+	for (var i = 0; i < imax; i++) data += "&srv_" + i + "=" + encodeURIComponent(elem[i].value);
+	ajaxsend(data, document.getElementById("import_form2"));
+}
+
 //get report
 function get_report(form_id) {
 	var data = "frm=" + form_id;

@@ -9,6 +9,8 @@ if (move_uploaded_file($_FILES['bankstate']['tmp_name'], $uploadfile)) {
 }
 echo 'Некоторая отладочная информация:';
 print_r($_FILES);
+$path_parts = pathinfo($uploadfile);
+echo $path_parts['extension'];
 echo '</pre>';
 
 function byMo($m) {
@@ -28,13 +30,14 @@ function byMo($m) {
 	}
 }
 
-function byTr($c2, $date, $nm, $summ) {
-	global $mysqli, $w_id, $impo;
-	if ($summ < 0) echo '<tr class="minus">'; else echo '<tr class="plus">';
+function byTr($date, $nm, $summ) {
+	if ($summ === 0.00) return;
+	global $c2, $sr, $mysqli, $w_id, $tb;
+	$tb .= '<tr class="' . (($summ < 0) ? 'minus' : 'plus') . '">';
 	$s_id = -1;
+	$name = 'не найден';
 	$g_id = -1;
 	$nm = $mysqli->real_escape_string($nm);
-	$name = "не найден";
 	$result = byQu("SELECT id, name, grups_id FROM servs WHERE name LIKE '$nm'");
 	if ($row = $result->fetch_row()) {
 		$s_id = $row[0];
@@ -47,50 +50,45 @@ function byTr($c2, $date, $nm, $summ) {
 			$name = $row[1];
 			$g_id = $row[2];
 		} elseif ($result->num_rows == 0) {
-			$result = byQu("INSERT INTO servs (name, grups_id, comment) VALUES ('$nm', -1, '')");
-			$result = byQu("SELECT id, name, grups_id FROM servs WHERE name LIKE '$nm'");
-			if ($row = $result->fetch_row()) {
-				$s_id = $row[0];
-				$name = $row[1];
-				$g_id = $row[2];
-			}
+			if (!in_array($nm, $sr)) $sr[] = $nm;
 		}
 	}
-	$result = byQu("SELECT money.id, grups.name FROM money
-	LEFT JOIN grups ON money.grups_id=grups.id
-	WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND servs_id=$s_id AND walls_id=$w_id");
+	$result = byQu("SELECT id FROM money
+	WHERE op_date=STR_TO_DATE('$date', '%Y-%m-%d') AND op_summ=$summ AND servs_id=$s_id");
 	if ($result->num_rows > 0 && $row = $result->fetch_row()) {
 		$chkd = '';
-		$trnz = '<td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'money\')">Уже есть<td>' . $row[1];
+		$trnz = '<td class="edit" onclick="get_form(\'edit_form\',' . $row[0] . ',\'money\')">Уже есть';
 	} else {
 		$chkd = ' checked';
-		$trnz = '<td>Новая тр<td>';
+		$trnz = '<td>Новая тр';
 	}
 	$arr = $date . ";" . $summ . ";" . intval($s_id) . ";" . intval($g_id) . ";" . $w_id;
-	echo '<td><input type="checkbox" id="imp_' . $c2 . '" value="' . $arr . '"' . $chkd . '>';
-	echo '<td class="num">' . $c2;
-	echo '<td>' . $date;
-	echo '<td>' . $nm;
-	echo '<td class="num">' . number_format($summ, 2, '.', ' ');
-	echo '<td>' . $name;
-	echo $trnz;
+	$tb .= '<td><input type="checkbox" id="imp_' . $c2 . '" value="' . $arr . '"' . $chkd . '>';
+	$tb .= '<td class="num">' . $c2;
+	$tb .= '<td>' . $date;
+	$tb .= '<td>' . $nm;
+	$tb .= '<td class="num">' . number_format($summ, 2, '.', ' ');
+	$tb .= '<td>' . $name;
+	$tb .= $trnz;
 }
 
 $c2 = 0;
-$path_parts = pathinfo($uploadfile);
-echo $path_parts['extension'];
+$tb = '';
+$sr = array();
 
 if ($fh = fopen($uploadfile,'r')) {
-	echo '<table><tr><th><th>№<th>Дата<th>Имя<th>Сумма<th>найденное в БД<th>Есть<th>Группа';
 	if ($path_parts['extension'] == 'csv') {
-		$line = fgetcsv($fh, 1000, ';'); //header
 		while ($line = fgetcsv($fh, 1000, ';')) {
 			$c2++;
-			//if (count($line) < 11) die('неформат');
-			$date = date('Y-m-d', strtotime($line[2]));
-			$nm = trim($line[8]);
-			$summ = floatval($line[11]);
-			byTr($c2, $date, $nm, $summ);
+			if (count($line) == 6) { //Yandex money
+				list($nm, $t) = explode(": ", trim($line[5]));
+				$nm = str_replace(array('Перевод на счет ', 'Перевод от ', 'Возврат:', ', пополнение'), '', $nm);
+				$summ = floatval(str_replace(',', '.', $line[2]));
+				if ($line[0] == '-') $summ = -$summ;
+				byTr(date('Y-m-d', strtotime($line[1])), $nm, $summ);
+			} elseif (count($line) == 13) { //Сбербанк онлайн
+				byTr(date('Y-m-d', strtotime($line[2])), trim($line[8]), floatval($line[11]));
+			}
 		}
 	} elseif ($path_parts['extension'] == 'txt') {
 		while ($line = fgets($fh)) {
@@ -102,14 +100,27 @@ if ($fh = fopen($uploadfile,'r')) {
 			$nm = trim(mb_convert_encoding(substr($line, 41, 22), 'UTF-8', 'Windows-1251'));
 			$summ = floatval(substr($line, 84, 11));
 			if (substr($line, 95, 2) != 'CR') $summ = -$summ;
-			byTr($c2, $date, $nm, $summ);
+			byTr($date, $nm, $summ);
 		}
 	}
 	fclose($fh);
-	echo '</table>';
 } else {
 	echo 'Ошибка открытия файла: ' . $uploadfile . '<br>';
 }
+$iMax = count($sr);
+if ($iMax == 0) {
+	echo '<table><tr><th><th>№<th>Дата<th>Имя<th>Сумма<th>Имя найденное в БД<th>Есть';
+	echo $tb;
+	echo '</table>';
+	echo '<input type="button" value="Сохранить" onclick="import_to_db()">';
+} else {
+	echo '<table><tr><th><th>№<th>Имя';
+	for ($i = 0 ; $i < $iMax; $i++) {
+		echo '<tr><td><input type="checkbox" id="srv_' . ($i+1) . '" value="' . $sr[$i] . '" checked>';
+		echo '<td class="num">' . ($i+1) . '<td>' . $sr[$i];
+	}
+	echo '</table>';
+	echo '<input type="button" value="Сохранить" onclick="imp_to_serv()">';
+}
 ?>
-<input type="button" value="Сохранить" onclick="import_to_db()">
 <input type="button" value="Закрыть" onclick="id_close('import_form')">
