@@ -1,8 +1,6 @@
 <?php
 $f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
-$result = byQu("SELECT MIN(op_date) FROM money");
-$dt = ($row = $result->fetch_row()) ? $row[0] : '2015-01-01';
-$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : $dt;
+$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : byDt();
 echo '<article><p>Отчёт №7, по группам
 с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
 по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
@@ -27,7 +25,6 @@ while ($row = $result->fetch_assoc()) {
 	$sd .= abs($row['summ'] ?: '0.00') . ',';
 	$gr .= '"' . $row['name'] . '",';
 	$sm = $sm + floatval($row['summ']);
-//	$c = (floatval($row['summ']) < 0) ? 'minus' : 'plus';
 	echo '<tr style="background-color:' . $c . ';"><td>' . $row['name'];
 	echo '<td class="edit num" onclick="money_table(7,' . $row['bgrup_id'] . ')">';
 	echo number_format($row['summ'], 2, '.', '');
@@ -43,9 +40,6 @@ var myChart = new Chart(ctx, {
 	data: {
 		datasets: [{
 <?php
-$result->data_seek(0);
-while ($row = $result->fetch_assoc()) {
-}
 echo '			backgroundColor: [' . $co . '],
 			data: [' . $sd . ']
 		}],
