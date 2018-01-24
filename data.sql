@@ -3,8 +3,8 @@
 -- http://bayarookie.wallst.ru
 --
 -- Хост: localhost
--- Время создания: January 4 2018, 01:25
--- Версия сервера: 5.7.20-0ubuntu0.16.04.1
+-- Время создания: January 24 2018, 20:22
+-- Версия сервера: 5.7.21-0ubuntu0.16.04.1
 -- Версия PHP: 7.0.22-0ubuntu0.16.04.1
 
 --
@@ -18,9 +18,9 @@
 --
 
 CREATE TABLE `bgrup` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `comment` text NOT NULL,
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `comment` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
@@ -42,13 +42,13 @@ INSERT INTO `bgrup` (`id`, `name`, `comment`) VALUES
 --
 
 CREATE TABLE `grups` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `comment` text NOT NULL,
-  `bgrup_id` int(4) NOT NULL,
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `comment` varchar(64) NOT NULL,
+  `bgrup_id` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `grups`
@@ -66,10 +66,12 @@ INSERT INTO `grups` (`id`, `name`, `comment`, `bgrup_id`) VALUES
 (8, 'Одежда', '', 4),
 (9, 'Электроэнергия', '', 3),
 (10, 'Жильё', '', 3),
-(11, 'Отопление, горячая вода', '', 3),
+(11, 'Горячая вода', '', 3),
 (12, 'Телефон', '', 3),
 (13, 'Капремонт', '', 3),
-(14, 'Вода', '', 3);
+(14, 'Вода', '', 3),
+(15, 'Интернет', '', 3),
+(16, 'Домофон', '', 3);
 
 -- --------------------------------------------------------
 
@@ -86,14 +88,14 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 
 CREATE TABLE `money` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
   `op_date` date NOT NULL,
   `op_summ` decimal(12,2) NOT NULL,
-  `servs_id` int(11) NOT NULL,
-  `grups_id` int(4) NOT NULL,
-  `walls_id` int(4) NOT NULL,
-  `users_id` int(4) NOT NULL DEFAULT '0',
-  `comment` text NOT NULL,
+  `servs_id` mediumint(9) NOT NULL,
+  `grups_id` tinyint(4) NOT NULL,
+  `walls_id` tinyint(4) NOT NULL,
+  `users_id` tinyint(4) NOT NULL,
+  `comment` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `walls_id` (`walls_id`),
@@ -114,9 +116,10 @@ INSERT INTO `money` (`id`, `op_date`, `op_summ`, `servs_id`, `grups_id`, `walls_
 --
 
 CREATE TABLE `money_order` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `order_by` text NOT NULL,
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `order_by` varchar(64) NOT NULL,
+  `comment` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
@@ -124,24 +127,24 @@ CREATE TABLE `money_order` (
 -- Дамп данных таблицы `money_order`
 --
 
-INSERT INTO `money_order` (`id`, `name`, `order_by`) VALUES
-(1, 'По дате', 'op_date'),
-(2, 'По дате обратно', 'op_date DESC'),
-(3, 'По сумме', 'op_summ'),
-(4, 'По сумме обратно', 'op_summ DESC'),
-(5, 'По конторам', 'servs_name'),
-(6, 'По конторам обратно', 'servs_name DESC'),
-(7, 'По подгруппам', 'grups.name'),
-(8, 'По подгруппам обратно', 'grups.name DESC'),
-(9, 'По комментариям', 'money.comment'),
-(10, 'По комментариям обратно', 'money.comment DESC'),
-(11, 'По кошелькам', 'walls.name'),
-(12, 'По кошелькам обратно', 'walls.name DESC'),
-(13, 'По пользователям', 'users.name'),
-(14, 'По пользователям обратно', 'users.name DESC'),
-(15, 'По подгруппам, конторам', 'grups.name, servs_name'),
-(16, 'По кошелькам, дате', 'walls.name, op_date'),
-(17, 'По группам', 'bgrup.name, grups.name');
+INSERT INTO `money_order` (`id`, `name`, `order_by`, `comment`) VALUES
+(1, 'По дате', 'op_date', ''),
+(2, 'По дате обратно', 'op_date DESC', ''),
+(3, 'По сумме', 'op_summ', ''),
+(4, 'По сумме обратно', 'op_summ DESC', ''),
+(5, 'По конторам', 'servs_name', ''),
+(6, 'По конторам обратно', 'servs_name DESC', ''),
+(7, 'По подгруппам', 'grups.name', ''),
+(8, 'По подгруппам обратно', 'grups.name DESC', ''),
+(9, 'По комментариям', 'money.comment', ''),
+(10, 'По комментариям обратно', 'money.comment DESC', ''),
+(11, 'По кошелькам', 'walls.name', ''),
+(12, 'По кошелькам обратно', 'walls.name DESC', ''),
+(13, 'По пользователям', 'users.name', ''),
+(14, 'По пользователям обратно', 'users.name DESC', ''),
+(15, 'По подгруппам, конторам', 'grups.name, servs_name', ''),
+(16, 'По кошелькам, дате', 'walls.name, op_date', ''),
+(17, 'По группам', 'bgrup.name, grups.name', '');
 
 -- --------------------------------------------------------
 
@@ -150,10 +153,10 @@ INSERT INTO `money_order` (`id`, `name`, `order_by`) VALUES
 --
 
 CREATE TABLE `servs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `comment` text NOT NULL,
-  `grups_id` int(4) NOT NULL,
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `comment` varchar(64) NOT NULL,
+  `grups_id` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -180,10 +183,11 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 
 CREATE TABLE `users` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
   `username` varchar(64) NOT NULL DEFAULT '',
   `password` varchar(64) NOT NULL DEFAULT '',
-  `name` text NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `comment` varchar(64) DEFAULT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
@@ -191,9 +195,9 @@ CREATE TABLE `users` (
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `name`) VALUES
-(1, 'root', '1', 'Баяр'),
-(2, 'ya', '1234', 'РДЖ');
+INSERT INTO `users` (`id`, `username`, `password`, `name`, `comment`) VALUES
+(1, 'root', '1', 'Баяр', ''),
+(2, 'ya', '1234', 'РДЖ', '');
 
 -- --------------------------------------------------------
 
@@ -202,11 +206,11 @@ INSERT INTO `users` (`id`, `username`, `password`, `name`) VALUES
 --
 
 CREATE TABLE `walls` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `comment` text NOT NULL,
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `comment` varchar(64) NOT NULL,
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `walls`
@@ -214,4 +218,5 @@ CREATE TABLE `walls` (
 
 INSERT INTO `walls` (`id`, `name`, `comment`) VALUES
 (0, 'наличные', 'в кошельке, в шкафу, в карманах'),
-(1, 'карта 3008', 'карта сбербанка');
+(1, 'карта 3008', 'карта сбербанка'),
+(2, 'яндекс', 'Yandex деньги');

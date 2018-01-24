@@ -5,28 +5,31 @@ $t = '<p>Операции
 echo '<article>' . $t;
 
 //фильтры
-$f_servs_id = isset($_POST['f_servs_id']) ? intval($_POST['f_servs_id']) : -1;
-$f_grups_id = isset($_POST['f_grups_id']) ? intval($_POST['f_grups_id']) : -1;
-$f_bgrup_id = isset($_POST['f_bgrup_id']) ? intval($_POST['f_bgrup_id']) : -1;
-$f_walls_id = isset($_POST['f_walls_id']) ? intval($_POST['f_walls_id']) : -1;
-$f_users_id = isset($_POST['f_users_id']) ? intval($_POST['f_users_id']) : -1;
 $f = isset($_POST['f']) ? intval($_POST['f']) : 1;
 if (isset($_POST['mo'])) {
 	$f_dtto = date('Y-m-t', strtotime($_POST['mo'] . '-01'));
 	$f_dtfr = date('Y-m-d', strtotime($_POST['mo'] . '-01'));
 } elseif ($f == 3) {
 	$f_dtto = date('Y-m-d');
-	$result = byQu("SELECT MIN(op_date) FROM money");
-	$f_dtfr = ($row = $result->fetch_row()) ? $row[0] : '2015-01-01';
+	$f_dtfr = byDt();
 } elseif ($f == 5) {
 	$f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
 	$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d');
 } else {
 	$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
-	$result = byQu("SELECT MAX(op_date) FROM money");
-	$f_dtfr = ($row = $result->fetch_row()) ? $row[0] : date('Y-m-d');
-	$f_dtfr = isset($_POST['from']) ? date('Y-m-d', strtotime($_POST['from'])) : (new DateTime($f_dtfr))->modify('first day of this month -1 month')->format('Y-m-d');
+	if (isset($_POST['from'])) {
+		$f_dtfr = date('Y-m-d', strtotime($_POST['from']));
+	} else {
+		$result = byQu("SELECT MAX(op_date) FROM money");
+		$f_dtfr = ($row = $result->fetch_row()) ? $row[0] : date('Y-m-d');
+		$f_dtfr = (new DateTime($f_dtfr))->modify('first day of this month -1 month')->format('Y-m-d');
+	}
 }
+$f_servs_id = isset($_POST['f_servs_id']) ? intval($_POST['f_servs_id']) : -1;
+$f_grups_id = isset($_POST['f_grups_id']) ? intval($_POST['f_grups_id']) : -1;
+$f_bgrup_id = isset($_POST['f_bgrup_id']) ? intval($_POST['f_bgrup_id']) : -1;
+$f_walls_id = isset($_POST['f_walls_id']) ? intval($_POST['f_walls_id']) : -1;
+$f_users_id = isset($_POST['f_users_id']) ? intval($_POST['f_users_id']) : -1;
 $filter = "";
 if ($f_servs_id > -1) $filter .= " AND money.servs_id=" . $f_servs_id;
 if ($f_grups_id > -1) $filter .= " AND money.grups_id=" . $f_grups_id;
@@ -35,7 +38,7 @@ if ($f_walls_id > -1) $filter .= " AND money.walls_id=" . $f_walls_id;
 if ($f_users_id > -1) $filter .= " AND money.users_id=" . $f_users_id;
 
 //сортировка
-echo '<table class="money_table"><thead><tr><th class="edit" onclick="money_table(0,0)">';
+echo '<table class="money_table"><thead><tr><th>№<th class="edit" onclick="money_table(0,0)">';
 $order = "";
 $o = isset($_POST['o']) ? intval($_POST['o']) : 1;
 $result = byQu("SELECT order_by FROM money_order WHERE id=" . $o);
@@ -75,11 +78,11 @@ $result = byQu("SELECT SUM(op_summ) AS summ, walls.name FROM money
 	WHERE op_date<'$f_dtfr'$filter
 	GROUP BY walls_id");
 while ($row = $result->fetch_assoc())
-	echo '<tr><td>На начало<td>' . $f_dtfr . '<td>' . $row['summ'] . '<td><td><td><td><td>' . $row['name'] . '<td>';
+	echo '<tr><td><td>На начало<td>' . $f_dtfr . '<td>' . $row['summ'] . '<td><td><td><td><td>' . $row['name'] . '<td>';
 echo '</thead><tbody>';
 
 //движение денег
-$res2 = byQu("SELECT money.id, op_date,
+$result = byQu("SELECT money.id, op_date,
 	IF(op_summ>=0,op_summ,NULL) AS summ1, IF(op_summ<0,op_summ,NULL) AS summ2,
 	IF(servs.comment='',servs.name,servs.comment) AS servs_name,
 	grups.name AS grups_name, money.comment, walls.name AS walls_name, users.name AS users_name
@@ -91,8 +94,12 @@ $res2 = byQu("SELECT money.id, op_date,
 	LEFT JOIN users ON money.users_id=users.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'$filter
 	$order");
-while ($ro2 = $res2->fetch_assoc()) {
+$rep = ($result->num_rows > 25);
+$cnt = 0;
+while ($ro2 = $result->fetch_assoc()) {
 	echo (($ro2['summ1'] == '') ? '<tr class="minus">' : '<tr class="plus">');
+	$cnt++;
+	echo '<td>' . $cnt;
 	echo '<td class="edit" onclick="get_form(\'edit_form\',' . $ro2['id'] . ',\'money\')">Редактировать';
 	echo '<td>' . $ro2['op_date'];
 	echo '<td>' . $ro2['summ1'];
@@ -113,7 +120,7 @@ $result = byQu("SELECT SUM(if(op_summ>0,op_summ,0)) AS summ1, SUM(if(op_summ<0,o
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
 while ($row = $result->fetch_assoc())
-	echo '<tr><td>Сумма<td><td class="plus">' . $row['summ1'] . '<td class="minus">' . $row['summ2'] . '<td><td><td><td>' . $row['name'] . '<td>';
+	echo '<tr><td><td>Сумма<td><td class="plus">' . $row['summ1'] . '<td class="minus">' . $row['summ2'] . '<td><td><td><td>' . $row['name'] . '<td>';
 
 //итого движение денег
 $result = byQu("SELECT SUM(op_summ) AS summ
@@ -122,7 +129,7 @@ $result = byQu("SELECT SUM(op_summ) AS summ
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc()) {
 	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
-	echo '<td>Итого<td><td><td>' . $row['summ'] . '<td><td><td><td><td>';
+	echo '<td><td>Итого<td><td><td>' . $row['summ'] . '<td><td><td><td><td>';
 }
 
 //остаток на день
@@ -135,7 +142,7 @@ $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	GROUP BY walls_id");
 while ($row = $result->fetch_assoc()) {
 	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
-	echo '<td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
+	echo '<td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
 }}
 
 //остаток
@@ -147,7 +154,7 @@ $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	GROUP BY walls_id");
 while ($row = $result->fetch_assoc()) {
 	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
-	echo '<td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
+	echo '<td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
 }
 echo '</tfoot>';
 echo '</table></article>';
@@ -164,6 +171,6 @@ bySe('пользователь:', 'f_users_id', 'users', $f_users_id, 'Все');
 bySe('Cортировка:', 'o', 'money_order', $o, 'Без сортировки');
 
 echo '<tr><td><td><input type="button" value="Обновить" onclick="money_table(1)"></table>';
-if ($res2->num_rows > 25) echo $t;
+if ($rep) echo $t;
 echo '</article>';
 ?>

@@ -103,13 +103,13 @@ input:focus, input:active, input:hover, .edit:hover {
 	background: var(--mi);
 }
 
-.money_table td:nth-child(2),
-.money_table td:nth-child(8) {
+.money_table td:nth-child(3),
+.money_table td:nth-child(9) {
 	width: 80px;
 }
 
-.money_table td:nth-child(3),
 .money_table td:nth-child(4),
+.money_table td:nth-child(5),
 .num {
 	text-align: right;
 }

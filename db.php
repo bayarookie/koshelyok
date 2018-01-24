@@ -30,14 +30,21 @@ function bySe($txt, $idn, $tbl, $id, $all) {
 	echo '<option' . ((-1 == $id) ? ' selected' : '') . ' value="-1">' . $all . '</option>';
 	if ($tbl == 'servs') $tbl = 'servs_v';
 	if ($tbl == 'grups') $tbl = 'grups_v';
-	$result = byQu("SELECT id, name FROM $tbl ORDER BY name");
+	$result = byQu("SELECT id, name, comment FROM $tbl ORDER BY name");
 	while ($row = $result->fetch_assoc())
-		echo '<option' . (($row['id'] == $id) ? ' selected' : '') . ' value="' . $row['id'] . '">' . $row['name'] . '</option>';
+		echo '<option' . (($row['id'] == $id) ? ' selected' : '') . ' value="' . $row['id'] . '">'
+		. $row['name'] . (($row['comment']) ? ' - ' . $row['comment'] : '') . '</option>';
 	echo '</select>';
 }
 
 function byCo() {
 	return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+}
+
+function byDt() {
+	$result = byQu("SELECT MIN(op_date) FROM money");
+	$f_dtfr = ($row = $result->fetch_row()) ? $row[0] : '2015-01-01';
+	return $f_dtfr;
 }
 
 //подключение к базе
