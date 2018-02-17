@@ -161,11 +161,12 @@ echo '</table></article>';
 
 //фильтры
 echo '<article><table class="form">';
-echo '<tr><td>Фильтр: с <td><input type="date" id="from" value="' . $f_dtfr . '">';
-echo ' по <input type="date" id="to" value="' . $f_dtto . '">';
-bySe('контора:', 'f_servs_id', 'servs', $f_servs_id, 'Все');
-bySe('подгруппа:', 'f_grups_id', 'grups', $f_grups_id, 'Все');
-bySe('группа:', 'f_bgrup_id', 'bgrup', $f_bgrup_id, 'Все');
+echo '<tr><td>Фильтр: с <td><input type="date" name="from" value="' . $f_dtfr . '">';
+echo ' по <input type="date" name="to" value="' . $f_dtto . '">';
+$ret = '';
+$ret .= byCb('группа:', 'f_bgrup_id', 'bgrup', $f_bgrup_id, 'Все');
+$ret .= byCb('подгруппа:', 'f_grups_id', 'grups', $f_grups_id, 'Все');
+$ret .= byCb('контора:', 'f_servs_id', 'servs', $f_servs_id, 'Все');
 bySe('кошелёк:', 'f_walls_id', 'walls', $f_walls_id, 'Все');
 bySe('пользователь:', 'f_users_id', 'users', $f_users_id, 'Все');
 bySe('Cортировка:', 'o', 'money_order', $o, 'Без сортировки');
@@ -174,3 +175,25 @@ echo '<tr><td><td><input type="button" value="Обновить" onclick="money_t
 if ($rep) echo $t;
 echo '</article>';
 ?>
+<script id="combojs">
+<?php echo $ret;?>
+
+my_f_bgrup_id.attachEvent("onChange", function(value){
+	my_f_grups_id.clearAll();
+	my_f_grups_id.setComboValue(null);
+	my_f_grups_id.setComboText("");
+	my_f_grups_id.load("db.php?frm=get_grups&f_bgrup_id="+value, function(){
+		if (my_f_grups_id.getOptionsCount() == 2) {
+			var obj = my_f_grups_id.getOptionByIndex(1);
+			my_f_grups_id.setComboValue(obj.value);
+			my_f_grups_id.setFocus();
+		};
+	});
+});
+my_f_grups_id.attachEvent("onChange", function(value){
+	my_f_servs_id.clearAll();
+	my_f_servs_id.setComboValue(null);
+	my_f_servs_id.setComboText("");
+	my_f_servs_id.load("db.php?frm=get_servs&f_grups_id="+value);
+});
+</script>

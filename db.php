@@ -26,7 +26,7 @@ function byQu($query) {
 }
 
 function bySe($txt, $idn, $tbl, $id, $all) {
-	echo '<tr><td>' . $txt . '<td><select size="1" id="' . $idn . '">';
+	echo '<tr><td>' . $txt . '<td><select size="1" name="' . $idn . '">';
 	echo '<option' . ((-1 == $id) ? ' selected' : '') . ' value="-1">' . $all . '</option>';
 	if ($tbl == 'servs') $tbl = 'servs_v';
 	if ($tbl == 'grups') $tbl = 'grups_v';
@@ -35,6 +35,29 @@ function bySe($txt, $idn, $tbl, $id, $all) {
 		echo '<option' . (($row['id'] == $id) ? ' selected' : '') . ' value="' . $row['id'] . '">'
 		. $row['name'] . (($row['comment']) ? ' - ' . $row['comment'] : '') . '</option>';
 	echo '</select>';
+}
+
+function byCb($txt, $idn, $tbl, $id, $all) {
+	$cnt = 0;
+	$ind = 0;
+	$cmb = 'my_' . $idn;
+	$ret = 'var ' . $cmb . ' = new dhtmlXCombo("id_' . $idn . '","' . $idn . '",400);
+' . $cmb . '.addOption([["-1", ""],
+';
+	echo '<tr><td>' . $txt . '<td id="id_' . $idn . '">';
+	if ($tbl == 'servs') $tbl = 'servs_v';
+	if ($tbl == 'grups') $tbl = 'grups_v';
+	$result = byQu("SELECT id, name, comment FROM $tbl ORDER BY name");
+	while ($row = $result->fetch_assoc()) {
+		$ret .= '["' . $row['id'] . '", "' . $row['name'] . (($row['comment']) ? ' - ' . $row['comment'] : '') . '"],';
+		$cnt++;
+		if ($row['id'] == $id) $ind = $cnt;
+	}
+	$ret .= ']);
+' . $cmb . '.enableFilteringMode(true);
+' . $cmb . '.selectOption(' . $ind . ');
+' . $cmb . '.setPlaceholder("' . $all . '");';
+	return $ret;
 }
 
 function byCo() {
@@ -80,7 +103,14 @@ if ($user != '') {
 if ($user_id > 0) {
 	if (isset($_POST['load']) || isset($_POST['login'])) include 'menu.php';
 	$frm = isset($_POST['frm']) ? $_POST['frm'] : '';
+	if ($frm == '') $frm = isset($_GET['frm']) ? $_GET['frm'] : '';
 	if ($frm != '') include $frm . '.php';
+	if (isset($_GET['debug'])) {
+		echo '<pre>';
+		print_r($_POST);
+		print_r($_GET);
+		echo '</pre>';
+	}
 } else {
 	$errm = 'Имя или пароль не подошли.';
 	include 'login.php';

@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Кошелёк</title>
+<link rel="shortcut icon" type="image/png" href="favicon.png">
 <link id="css" rel="stylesheet" href="css.php">
+<link rel="stylesheet" href="dhtmlxcombo.css">
+<script src="dhtmlxcombo.js"></script>  
+<script src="Chart.min.js"></script>  
 </head><body>
 <script>
-function loadScript(url, callback){
-	var script = document.createElement("script")
-	script.onload = function(){callback();}
-	script.src = url;
-	script.id = url;
-	document.getElementsByTagName("head")[0].appendChild(script);
-}
-
 function ajaxsend(data, elem) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "db.php", true);
@@ -19,10 +15,11 @@ function ajaxsend(data, elem) {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
 			elem.innerHTML = xhr.responseText;
 			var js = document.getElementById("chartjs");
+			if (js) eval(js.innerHTML);
+			var js = document.getElementById("combojs");
 			if (js) {
-				var ch = "Chart.min.js";
-				if (document.getElementById(ch)) eval(js.innerHTML);
-				else loadScript(ch, function(){eval(js.innerHTML);});
+				eval(js.innerHTML);
+				js.parentNode.removeChild(js);
 			}
 			var els = elem.querySelectorAll("input[type=text], input[type=number]");
 			if (els.length > 0) {
@@ -77,7 +74,7 @@ function get_inputs(e, s) {
 	var imax = elem.length;
 	for (var i = 0; i < imax; i++) {
 		el = elem[i];
-		data += "&" + el.id + "=" + encodeURIComponent(el.value);
+		if (el.name) data += "&" + el.name + "=" + encodeURIComponent(el.value);
 	}
 	return data;
 }
@@ -103,7 +100,7 @@ function money_table(fltr, id, s) {
 	} else if (fltr == 6) {
 		data += "&f=5&f_grups_id=" + id + s;
 		var el_2 = document.getElementById("report");
-		if (el_2) data += get_inputs(el_2, "input[type=date], select");
+		if (el_2) data += get_inputs(el_2, "input[type=date], select, input[type=hidden]");
 	} else if (fltr == 7) {
 		data += "&f=5&f_bgrup_id=" + id + s;
 		var el_2 = document.getElementById("report");
@@ -114,7 +111,7 @@ function money_table(fltr, id, s) {
 		var o = el_1 ? el_1.value : 1;
 		data += "&o=" + o;
 		var el_2 = document.getElementById("money_table");
-		if (el_2) data += get_inputs(el_2, "input[type=date], select");
+		if (el_2) data += get_inputs(el_2, "input[type=date], select, input[type=hidden]");
 	}
 	ajaxsend(data, get_new_sect("money_table"));
 }

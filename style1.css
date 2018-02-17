@@ -160,3 +160,14 @@ input:focus, input:active, input:hover, .edit:hover {
 	min-width: 175px;
 	margin: 5px;
 }
+
+/*dhxcombobox*/
+div.dhxcombolist_material {
+	border: 1px solid var(--af);
+	color: var(--af);
+	background: var(--ab);
+}
+div.dhxcombolist_material div.dhxcombo_option.dhxcombo_option_selected {
+	color: var(--ab);
+	background-color: var(--af);
+}

@@ -3,8 +3,8 @@ $f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to
 $f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -6 month'));
 $f_grups_id = isset($_POST['f_grups_id']) ? intval($_POST['f_grups_id']) : 0;
 echo '<article><table class="form"><tr><td>Отчёт №8, помесячно
-с<td><input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
-по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">';
+с<td><input type="date" name="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
+по <input type="date" name="p_date_to" placeholder="Дата" value="' . $f_dtto . '">';
 bySe('подгруппа:', 'f_grups_id', 'grups', $f_grups_id, '');
 echo '<tr><td><td><input type="button" value="Отчёт" onclick="get_report(\'report8\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></table>

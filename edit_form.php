@@ -3,6 +3,7 @@ $tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
 if ($tbl == '') die('table?');
 $e_id = isset($_POST['id']) ? intval($_POST['id']) : -1;
 $table = $tbl;
+$ret = '';
 if ($tbl == 'servs_v') {
 	$title = 'Контора';
 	$td = array('id', 'Наименование', 'Описание', 'Подгруппа');
@@ -25,7 +26,7 @@ if ($tbl == 'servs_v') {
 	$td = array('id', 'Наименование', 'ORDER BY');
 } else {
 	$title = 'Транзакция';
-	$td = array('id', 'Дата', 'Сумма', 'Контора', 'Подгруппа', 'Кошелёк', 'Пользователь', 'Описание');
+	$td = array('id', 'Дата', 'Сумма', 'Подгруппа', 'Контора', 'Кошелёк', 'Пользователь', 'Описание');
 }
 echo '<figure><figcaption>' . $title . '</figcaption><table class="form">';
 if ($e_id >= 0)
@@ -35,27 +36,43 @@ else
 $row = $result->fetch_row();
 $finfo = $result->fetch_fields();
 for ($i = 1; $i < count($finfo); $i++) {
-	if (substr($finfo[$i]->name,-3) == '_id')
-		bySe($td[$i], 'e_' . $finfo[$i]->name, substr($finfo[$i]->name, 0, -3), (($e_id < 0) ? -1 : $row[$i]), '');
-	else {
+	if (substr($finfo[$i]->name,-3) == '_id') {
+		if ($e_id < 0) {
+			$row[$i] = -1;
+			if ($tbl == 'money') {
+				if ($finfo[$i]->name == 'users_id') {$row[$i] = $user_id;}
+				if ($finfo[$i]->name == 'walls_id') {$row[$i] = 1;} //карта сбер, доделать
+			}
+		}
+		$ret .= byCb($td[$i], 'e_' . $finfo[$i]->name, substr($finfo[$i]->name, 0, -3), $row[$i], '');
+	} else {
+		if ($e_id < 0) {$row[$i] = '';}
 		echo '<tr><td>' . $td[$i] . '<td>';
 		if ($finfo[$i]->type == 10) {
 			echo '<input type="date"';
 			if ($e_id < 0) $row[$i] = date('Y-m-d');
 		} elseif ($finfo[$i]->type == 246) {
 			echo '<input type="number" step="0.01"';
-			if ($e_id < 0) $row[$i] = 0;
 		} elseif ($finfo[$i]->name == 'password') {
 			echo '<input type="password"';
-			if ($e_id < 0) $row[$i] = '';
 		} else {
 			echo '<input type="text" size="45"';
-			if ($e_id < 0) $row[$i] = '';
 		}
-		echo ' id="e_' . $finfo[$i]->name . '" value="' . $row[$i] . '">';
+		echo ' name="e_' . $finfo[$i]->name . '" value="' . $row[$i] . '">';
 	}
 }
 echo '<tr><td><td><input type="button" value="Сохранить" onclick="edit_to_db(\'' . $tbl . '\')">
 <input type="button" value="Отменить" onclick="id_close(\'edit_form\')"></table>
-<input type="hidden" id="e_id" value="' . $e_id . '"></figure>';
+<input type="hidden" name="e_id" value="' . $e_id . '"></figure>';
 ?>
+<script id="combojs">
+<?php echo $ret; if ($tbl == 'money') {?>
+
+my_e_grups_id.attachEvent("onChange", function(value){
+	my_e_servs_id.clearAll();
+	my_e_servs_id.setComboValue(null);
+	my_e_servs_id.setComboText("");
+	my_e_servs_id.load("db.php?frm=get_servs&f_grups_id="+value);
+});
+<?php }?>
+</script>

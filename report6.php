@@ -4,8 +4,8 @@ $result = byQu("SELECT MIN(op_date) FROM money");
 if ($row = $result->fetch_row()) $dt = $row[0]; else $dt = '2015-01-01';
 $f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : $dt;
 echo '<article><p>Отчёт №6, по пользователям
-с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
-по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
+с <input type="date" name="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
+по <input type="date" name="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
 <input type="button" value="Отчёт" onclick="get_report(\'report6\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<table><tr><th>Группа';

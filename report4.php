@@ -2,8 +2,8 @@
 $f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
 $f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : byDt();
 echo '<article><p>Отчёт №4, по подгруппам
-с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
-по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
+с <input type="date" name="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
+по <input type="date" name="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
 <input type="button" value="Отчёт" onclick="get_report(\'report4\')"> 
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<figure><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption>

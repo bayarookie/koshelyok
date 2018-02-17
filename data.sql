@@ -91,8 +91,8 @@ CREATE TABLE `money` (
   `id` mediumint(9) NOT NULL AUTO_INCREMENT,
   `op_date` date NOT NULL,
   `op_summ` decimal(12,2) NOT NULL,
-  `servs_id` mediumint(9) NOT NULL,
   `grups_id` tinyint(4) NOT NULL,
+  `servs_id` mediumint(9) NOT NULL,
   `walls_id` tinyint(4) NOT NULL,
   `users_id` tinyint(4) NOT NULL,
   `comment` varchar(64) NOT NULL,
@@ -106,8 +106,8 @@ CREATE TABLE `money` (
 -- Дамп данных таблицы `money`
 --
 
-INSERT INTO `money` (`id`, `op_date`, `op_summ`, `servs_id`, `grups_id`, `walls_id`, `users_id`, `comment`) VALUES
-(0, '2015-11-25', '100.00', 0, 3, 0, 1, 'Стартовый капитал');
+INSERT INTO `money` (`id`, `op_date`, `op_summ`, `grups_id`, `servs_id`, `walls_id`, `users_id`, `comment`) VALUES
+(0, '2015-11-25', '100.00', 3, 0, 0, 1, 'Стартовый капитал');
 
 -- --------------------------------------------------------
 

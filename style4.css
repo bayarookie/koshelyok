@@ -188,3 +188,15 @@ input:active, select:active, .edit:active {
 	min-width: 175px;
 	margin: 5px;
 }
+
+/*dhxcombobox*/
+div.dhxcombolist_material {
+	border: 1px solid var(--af);
+	color: var(--af);
+	background: var(--ab);
+	transition-duration: 0.4s;
+}
+div.dhxcombolist_material div.dhxcombo_option.dhxcombo_option_selected {
+	color: var(--ab);
+	background-color: var(--af);
+}
