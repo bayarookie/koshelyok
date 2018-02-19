@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Кошелёк</title>
-<link rel="shortcut icon" type="image/png" href="favicon.png">
-<link id="css" rel="stylesheet" href="css.php">
-<link rel="stylesheet" href="dhtmlxcombo.css">
-<script src="dhtmlxcombo.js"></script>  
-<script src="Chart.min.js"></script>  
+<link rel="stylesheet" href="jquery-ui.css">
+<link rel="stylesheet" href="css.php" id="css">
+<script src="jquery-3.3.1.min.js"></script>
+<script src="jquery-ui.min.js"></script>
+<script src="autocombo.js"></script>
 </head><body>
 <script>
+function loadScript(url, callback){
+	var script = document.createElement("script")
+	script.onload = function(){callback();}
+	script.src = url;
+	script.id = url;
+	document.head.appendChild(script);
+}
+
 function ajaxsend(data, elem) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "db.php", true);
@@ -15,12 +23,13 @@ function ajaxsend(data, elem) {
 		if ((xhr.readyState == 4) && (xhr.status == 200)) {
 			elem.innerHTML = xhr.responseText;
 			var js = document.getElementById("chartjs");
-			if (js) eval(js.innerHTML);
-			var js = document.getElementById("combojs");
 			if (js) {
-				eval(js.innerHTML);
-				js.parentNode.removeChild(js);
+				var ch = "Chart.min.js";
+				if (document.getElementById(ch)) eval(js.innerHTML);
+				else loadScript(ch, function(){eval(js.innerHTML);});
 			}
+			var cb = document.getElementById("combojs");
+			if (cb) {eval(cb.innerHTML);}
 			var els = elem.querySelectorAll("input[type=text], input[type=number]");
 			if (els.length > 0) {
 				el = els[0];
@@ -38,8 +47,8 @@ function load() {
 }
 
 function login() {
-	var data = "login=1";
-	var el_1 = document.getElementById("username");
+	var data = "login=1",
+		el_1 = document.getElementById("username");
 	if (el_1) data += "&username=" + encodeURIComponent(el_1.value)
 	+ "&password=" + encodeURIComponent(document.getElementById("password").value)
 	+ "&remember=" + document.getElementById("remember").checked;
@@ -69,12 +78,12 @@ function get_new_sect(id) {
 }
 
 function get_inputs(e, s) {
-	var data = "";
-	var elem = e.querySelectorAll(s);
-	var imax = elem.length;
+	var data = "",
+		elem = e.querySelectorAll(s),
+		imax = elem.length;
 	for (var i = 0; i < imax; i++) {
 		el = elem[i];
-		if (el.name) data += "&" + el.name + "=" + encodeURIComponent(el.value);
+		data += "&" + el.id + "=" + encodeURIComponent(el.value);
 	}
 	return data;
 }
@@ -100,7 +109,7 @@ function money_table(fltr, id, s) {
 	} else if (fltr == 6) {
 		data += "&f=5&f_grups_id=" + id + s;
 		var el_2 = document.getElementById("report");
-		if (el_2) data += get_inputs(el_2, "input[type=date], select, input[type=hidden]");
+		if (el_2) data += get_inputs(el_2, "input[type=date], select");
 	} else if (fltr == 7) {
 		data += "&f=5&f_bgrup_id=" + id + s;
 		var el_2 = document.getElementById("report");
@@ -111,15 +120,15 @@ function money_table(fltr, id, s) {
 		var o = el_1 ? el_1.value : 1;
 		data += "&o=" + o;
 		var el_2 = document.getElementById("money_table");
-		if (el_2) data += get_inputs(el_2, "input[type=date], select, input[type=hidden]");
+		if (el_2) data += get_inputs(el_2, "input[type=date], select");
 	}
 	ajaxsend(data, get_new_sect("money_table"));
 }
 
 //save changes to db
 function edit_to_db(tbl) {
-	var data = "frm=edit_to_db&tbl=" + encodeURIComponent(tbl);
-	var efrm = document.getElementById("edit_form");
+	var data = "frm=edit_to_db&tbl=" + encodeURIComponent(tbl),
+		efrm = document.getElementById("edit_form");
 	data += get_inputs(efrm, "input[type=hidden], input[type=text], input[type=date], input[type=number], input[type=password], select");
 	if (tbl == "money") {
 		var sect = document.getElementById("money_table");
@@ -131,10 +140,10 @@ function edit_to_db(tbl) {
 
 //import from bankstate
 function import_form2() {
-	var w_id = document.getElementById("w_id").value;
-	var i_fn = document.getElementById("bankstate");
+	var w_id = document.getElementById("w_id").value,
+		i_fn = document.getElementById("bankstate"),
+		fdat = new FormData();
 	if (i_fn.files.length === 0) return;
-	var fdat = new FormData();
 	fdat.append("w_id", w_id);
 	fdat.append("bankstate", i_fn.files[0]);
 	fdat.append("frm", "import_form2");
@@ -143,26 +152,26 @@ function import_form2() {
 
 //save bankstate to db
 function import_to_db() {
-	var data = "frm=import_to_db";
-	var elem = document.querySelectorAll("#import_form2 input:checked");
-	var imax = elem.length;
+	var data = "frm=import_to_db",
+		elem = document.querySelectorAll("#import_form2 input:checked"),
+		imax = elem.length;
 	for (var i = 0; i < imax; i++) data += "&imp_" + i + "=" + encodeURIComponent(elem[i].value);
 	ajaxsend(data, document.getElementById("import_form2"));
 }
 
 //save services from bankstate to db
 function imp_to_serv() {
-	var data = "frm=imp_to_serv";
-	var elem = document.querySelectorAll("#import_form2 input:checked");
-	var imax = elem.length;
+	var data = "frm=imp_to_serv",
+		elem = document.querySelectorAll("#import_form2 input:checked"),
+		imax = elem.length;
 	for (var i = 0; i < imax; i++) data += "&srv_" + i + "=" + encodeURIComponent(elem[i].value);
 	ajaxsend(data, document.getElementById("import_form2"));
 }
 
 //get report
 function get_report(form_id) {
-	var data = "frm=" + form_id;
-	var sect = document.getElementById("report");
+	var data = "frm=" + form_id,
+		sect = document.getElementById("report");
 	if (sect) data += get_inputs(sect, "input[type=date], select");
 	else sect = get_new_sect("report");
 	ajaxsend(data, sect);

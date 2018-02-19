@@ -3,7 +3,6 @@ $tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
 if ($tbl == '') die('table?');
 $e_id = isset($_POST['id']) ? intval($_POST['id']) : -1;
 $table = $tbl;
-$ret = '';
 if ($tbl == 'servs_v') {
 	$title = 'Контора';
 	$td = array('id', 'Наименование', 'Описание', 'Подгруппа');
@@ -41,10 +40,10 @@ for ($i = 1; $i < count($finfo); $i++) {
 			$row[$i] = -1;
 			if ($tbl == 'money') {
 				if ($finfo[$i]->name == 'users_id') {$row[$i] = $user_id;}
-				if ($finfo[$i]->name == 'walls_id') {$row[$i] = 1;} //карта сбер, доделать
+				if ($finfo[$i]->name == 'walls_id') {$row[$i] = 1;} //доделать
 			}
 		}
-		$ret .= byCb($td[$i], 'e_' . $finfo[$i]->name, substr($finfo[$i]->name, 0, -3), $row[$i], '');
+		bySe($td[$i], 'e_' . $finfo[$i]->name, substr($finfo[$i]->name, 0, -3), $row[$i], '');
 	} else {
 		if ($e_id < 0) {$row[$i] = '';}
 		echo '<tr><td>' . $td[$i] . '<td>';
@@ -58,21 +57,11 @@ for ($i = 1; $i < count($finfo); $i++) {
 		} else {
 			echo '<input type="text" size="45"';
 		}
-		echo ' name="e_' . $finfo[$i]->name . '" value="' . $row[$i] . '">';
+		echo ' id="e_' . $finfo[$i]->name . '" value="' . $row[$i] . '">';
 	}
 }
 echo '<tr><td><td><input type="button" value="Сохранить" onclick="edit_to_db(\'' . $tbl . '\')">
 <input type="button" value="Отменить" onclick="id_close(\'edit_form\')"></table>
-<input type="hidden" name="e_id" value="' . $e_id . '"></figure>';
+<input type="hidden" id="e_id" value="' . $e_id . '"></figure>';
 ?>
-<script id="combojs">
-<?php echo $ret; if ($tbl == 'money') {?>
-
-my_e_grups_id.attachEvent("onChange", function(value){
-	my_e_servs_id.clearAll();
-	my_e_servs_id.setComboValue(null);
-	my_e_servs_id.setComboText("");
-	my_e_servs_id.load("db.php?frm=get_servs&f_grups_id="+value);
-});
-<?php }?>
-</script>
+<script id="combojs">$(".combobox").combobox();</script>

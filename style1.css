@@ -161,13 +161,27 @@ input:focus, input:active, input:hover, .edit:hover {
 	margin: 5px;
 }
 
-/*dhxcombobox*/
-div.dhxcombolist_material {
+/*custom-combobox*/
+.custom-combobox-input {
+	width: 313px;
+	padding-bottom: 2px;
+}
+.custom-combobox-toggle {
+	border: 2px inset var(--af);
+	border-left-width: 0px;
+	height: 21px;
+	width: 15px;
+}
+.ui-icon {
+	width: 16px;
+	height: 16px;
+	background: url(data:image/gif;base64,R0lGODlhEAAQAIAAAP///////yH5BAEKAAEALAAAAAAQABAAAAIUjI+py+0PYwO0Amfvq1LLD4bieBQAOw==);
+}
+.ui-tooltip {
 	border: 1px solid var(--af);
 	color: var(--af);
 	background: var(--ab);
 }
-div.dhxcombolist_material div.dhxcombo_option.dhxcombo_option_selected {
-	color: var(--ab);
-	background-color: var(--af);
+.ui-button-icon-only {
+	padding: 10px 0 8px;
 }
