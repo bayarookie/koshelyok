@@ -138,21 +138,12 @@ input:focus, input:active, input:hover, .edit:hover {
 	font-size: 14px;
 }
 
-.form, .form td {
-	border: 0;
-	padding-top: 7px;
-}
-
-.form td:nth-child(1) {
-	text-align: right;
-}
-
 .edit {
 	cursor: pointer;
 }
 
 #edit_form figure {
-	width: 500px;
+	width: 600px;
 }
 
 #report figure {
@@ -161,33 +152,37 @@ input:focus, input:active, input:hover, .edit:hover {
 	margin: 5px;
 }
 
-.ui-widget-content {
-	border: 1px solid var(--af);
-	background: var(--ab);
-	color: var(--af);
+.form div {
+	line-height: 25px;
 }
 
-/*custom-combobox*/
-.custom-combobox-input {
-	width: 315px;
-	padding-bottom: 2px;
+.form div label {
+	display: inline-block;
+	width: 110px;
+	text-align: right;
 }
-.custom-combobox-toggle {
-	border: 1px solid var(--af);
-	border-left-width: 0px;
-	width: 15px;
-	background: var(--ab);
+
+.form div input[type=text].combobox_input {
+	width: 320px;
 }
-.ui-icon {
-	width: 16px;
-	height: 16px;
-	background: url(data:image/gif;base64,R0lGODlhEAAQAIABAAAAAP///yH5BAEKAAEALAAAAAAQABAAAAIUjI+py+0PYwO0Amfvq1LLD4bieBQAOw==);
+
+.form div input[type=text] {
+	width: 342px;
 }
-.ui-tooltip {
-	border: 1px solid var(--af);
-	color: var(--af);
-	background: var(--ab);
+
+.form div input[type=button].combobox_button {
+	margin-left: -6px;
+	width: 24px;
 }
-.ui-button-icon-only {
-	padding: 9px 0 9px;
+
+.form div input[type=button] {
+	width: 120px;
+}
+
+.form div select.combobox_list {
+	margin-left: 114px;
+}
+
+.form div select {
+	width: 341px;
 }

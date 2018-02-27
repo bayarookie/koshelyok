@@ -2,8 +2,8 @@
 $f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
 $f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -1 year'));
 echo '<article><p>Отчёт №1, помесячно группы
-с <input type="date" id="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
-по <input type="date" id="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
+с <input type="date" value="' . $f_dtfr . '" name="p_date_from" placeholder="Дата">
+по <input type="date" value="' . $f_dtto . '" name="p_date_to" placeholder="Дата">
 <input type="button" value="Отчёт" onclick="get_report(\'report1\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<table><tr><th>Подгруппа';
@@ -34,7 +34,7 @@ while ($row1 = $res1->fetch_assoc()) {
 			if ($row2['summ'] == '')
 				echo '<td class="num">0.00';
 			else
-				echo '<td class="edit num" onclick="money_table(4,' . $row1['bgrup_id'] . ',\'&mo=' . $row0['mo'] . '\')">' . $row2['summ'];
+				echo '<td class="edit num" onclick="money_table(7,' . $row1['bgrup_id'] . ',\'&mo=' . $row0['mo'] . '\')">' . $row2['summ'];
 	}
 	echo '<td class="' . ((floatval($row1['summ']) < 0) ? 'minus' : 'plus') . ' num">' . $row1['summ'];
 	$sm = $sm + floatval($row1['summ']);
@@ -47,7 +47,7 @@ echo '<td class="' . (($sm < 0) ? 'minus' : 'plus') . ' num">' . number_format($
 ?>
 </table>
 <canvas id="Chart1" width="500" height="300"></canvas>
-<script id='chartjs'>
+<script id='js'>
 var ctx = document.getElementById("Chart1");
 var myChart = new Chart(ctx, {
 	type: 'line',

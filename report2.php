@@ -1,9 +1,9 @@
 <?php
 $f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
-$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -6 month'));
+$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -1 year'));
 echo '<article><p>Отчёт №2, помесячно подгруппы
-с <input type="date" name="p_date_from" placeholder="Дата" value="' . $f_dtfr . '" autofocus>
-по <input type="date" name="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
+с <input type="date" value="' . $f_dtfr . '" name="p_date_from" placeholder="Дата">
+по <input type="date" value="' . $f_dtto . '" name="p_date_to" placeholder="Дата">
 <input type="button" value="Отчёт" onclick="get_report(\'report2\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<table><tr><th>Месяц';
@@ -48,7 +48,7 @@ echo '<td class="' . (($sm < 0) ? 'minus' : 'plus') . ' num">' . number_format($
 ?>
 </table>
 <canvas id="Chart2" width="500" height="300"></canvas>
-<script id='chartjs'>
+<script id='js'>
 var ctx = document.getElementById("Chart2");
 var myChart = new Chart(ctx, {
 	type: 'bar',

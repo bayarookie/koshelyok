@@ -13,14 +13,14 @@
 		</div>
 	<li><a>Отчёты &#9662;</a>
 		<div>
-			<a onclick="get_report('report1')">Помесячно (таблица 1)</a>
-			<a onclick="get_report('report2')">Помесячно (таблица 2)</a>
-			<a onclick="get_report('report3')">В среднем за месяц</a>
-			<a onclick="get_report('report4')">По подгруппам</a>
-			<a onclick="get_report('report5')">По конторам</a>
-			<a onclick="get_report('report6')">По пользователям</a>
-			<a onclick="get_report('report7')">По группам</a>
-			<a onclick="get_report('report8')">Помесячно по подгруппе</a>
+			<a onclick="get_report('report1')">1 - Помесячно (таблица 1)</a>
+			<a onclick="get_report('report2')">2 - Помесячно (таблица 2)</a>
+			<a onclick="get_report('report3')">3 - В среднем за месяц</a>
+			<a onclick="get_report('report4')">4 - По подгруппам</a>
+			<a onclick="get_report('report5')">5 - По конторам</a>
+			<a onclick="get_report('report6')">6 - По пользователям</a>
+			<a onclick="get_report('report7')">7 - По группам</a>
+			<a onclick="get_report('report8')">8 - Помесячно по подгруппе</a>
 		</div>
 <?php if ($user_id = 1) {?>
 	<li><a>Служебные &#9662;</a>

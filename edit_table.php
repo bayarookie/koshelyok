@@ -1,29 +1,18 @@
 <?php
 $tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
 if ($tbl == '') die('table?');
-$th = '<tr><th>№<th><th>Наименование<th>Описание';
-if ($tbl == 'servs_v') {
-	$title = 'Конторы';
-	$th .= '<th>Подгруппа<th>Опер.';
-} elseif ($tbl == 'grups_v') {
-	$title = 'Подгруппы';
-	$th .= '<th>Группа';
-} elseif ($tbl == 'bgrup') {
-	$title = 'Группы';
-} elseif ($tbl == 'walls') {
-	$title = 'Кошельки';
-} elseif ($tbl == 'money_order') {
-	$title = 'Сортировка';
-	$th = '<tr><th>№<th><th>Наименование<th>ORDER BY<th>Описание';
-} else {
-	$title = 'Пользователи';
-	$th = '<tr><th>№<th><th>Имя<th>Пароль<th>Наименование<th>Описание';
-}
+$title = $tbl_nam[$tbl];
 $t = '<p>' . $title . '
 <input type="button" value="Добавить" onclick="get_form(\'edit_form\',-1,\'' . $tbl . '\')">
 <input type="button" value="Закрыть" onclick="id_close(\'edit_table\')"></p>';
-echo '<article>' . $t . '<table>' . $th;
 $result = byQu("SELECT * FROM $tbl");
+$finfo = $result->fetch_fields();
+$th = '<tr><th>№<th>';
+for ($i = 1; $i < count($finfo); $i++) {
+	$f = $finfo[$i]->name;
+	$th .= '<th>' . $fld_nam[$f];
+}
+echo '<article>' . $t . '<table>' . $th;
 $imax = $result->field_count;
 $cnt = 0;
 while ($row = $result->fetch_row()) {

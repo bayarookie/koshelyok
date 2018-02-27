@@ -1,37 +1,28 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Кошелёк</title>
-<link rel="stylesheet" href="jquery-ui.css">
+<link rel="shortcut icon" type="image/png" href="favicon.png">
 <link rel="stylesheet" href="css.php" id="css">
-<script src="jquery-3.3.1.min.js"></script>
-<script src="jquery-ui.min.js"></script>
-<script src="autocombo.js"></script>
+<script type="text/javascript" src="Chart.min.js"></script>
 </head><body>
 <script>
-function loadScript(url, callback){
-	var script = document.createElement("script")
-	script.onload = function(){callback();}
-	script.src = url;
-	script.id = url;
-	document.head.appendChild(script);
-}
+RegExp.escape = function(s){
+	return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
 
-function ajaxsend(data, elem) {
+function ajaxsend(data, elem){
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", "db.php", true);
 	if (typeof(data) == "string") xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhr.onreadystatechange = function() {
-		if ((xhr.readyState == 4) && (xhr.status == 200)) {
+	xhr.onreadystatechange = function(){
+		if((xhr.readyState == 4) && (xhr.status == 200)){
 			elem.innerHTML = xhr.responseText;
-			var js = document.getElementById("chartjs");
+			var js = document.getElementById("js");
 			if (js) {
-				var ch = "Chart.min.js";
-				if (document.getElementById(ch)) eval(js.innerHTML);
-				else loadScript(ch, function(){eval(js.innerHTML);});
+				eval(js.innerHTML);
+				js.parentNode.removeChild(js);
 			}
-			var cb = document.getElementById("combojs");
-			if (cb) {eval(cb.innerHTML);}
 			var els = elem.querySelectorAll("input[type=text], input[type=number]");
-			if (els.length > 0) {
+			if(els.length > 0){
 				el = els[0];
 				el.focus();
 				el.select();
@@ -41,35 +32,35 @@ function ajaxsend(data, elem) {
 	xhr.send(data);
 }
 
-function load() {
+function load(){
 	var data = "load=1";
 	ajaxsend(data, document.body);
 }
 
-function login() {
+function login(){
 	var data = "login=1",
 		el_1 = document.getElementById("username");
-	if (el_1) data += "&username=" + encodeURIComponent(el_1.value)
+	if(el_1) data += "&username=" + encodeURIComponent(el_1.value)
 	+ "&password=" + encodeURIComponent(document.getElementById("password").value)
 	+ "&remember=" + document.getElementById("remember").checked;
 	ajaxsend(data, document.body);
 }
 
-function logout() {
+function logout(){
 	var data = "logout=1";
 	ajaxsend(data, document.body);
 }
 
-function ch_css(id) {
+function ch_css(id){
 	document.getElementById("css").href="css.php?CSSID="+id;
 }
 
-function id_close(id) {
+function id_close(id){
 	var sect = document.getElementById(id);
-	if (sect) sect.parentNode.removeChild(sect);
+	if(sect) sect.parentNode.removeChild(sect);
 }
 
-function get_new_sect(id) {
+function get_new_sect(id){
 	id_close(id);
 	var sect = document.createElement("section");
 	sect.id = id;
@@ -77,102 +68,102 @@ function get_new_sect(id) {
 	return sect;
 }
 
-function get_inputs(e, s) {
+function get_inputs(e, s){
 	var data = "",
 		elem = e.querySelectorAll(s),
 		imax = elem.length;
-	for (var i = 0; i < imax; i++) {
+	for(var i = 0; i < imax; i++){
 		el = elem[i];
-		data += "&" + el.id + "=" + encodeURIComponent(el.value);
+		if(el.name) data += "&" + el.name + "=" + encodeURIComponent(el.value);
 	}
 	return data;
 }
 
 //get content
-function get_form(form_id, id, s) {
+function get_form(form_id, id, s){
 	var data = "frm=" + form_id;
-	if (id != null) data += "&id=" + id + "&tbl=" + s;
+	if(id != null) data += "&id=" + id + "&tbl=" + s;
 	ajaxsend(data, get_new_sect(form_id));
 }
 
 //money
-function money_table(fltr, id, s) {
+function money_table(fltr, id, s){
 	var data = "frm=money_table";
-	if (fltr == 3) {
+	if(fltr == 3){
 		data += "&f=3&f_servs_id=" + id + s;
-	} else if (fltr == 4) {
+	}else if(fltr == 4){
 		data += "&f=3&f_grups_id=" + id + s;
-	} else if (fltr == 5) {
+	}else if(fltr == 5){
 		data += "&f=5&f_servs_id=" + id + s;
 		var el_2 = document.getElementById("report");
-		if (el_2) data += get_inputs(el_2, "input[type=date]");
-	} else if (fltr == 6) {
+		if(el_2) data += get_inputs(el_2, "input[type=date]");
+	}else if(fltr == 6){
 		data += "&f=5&f_grups_id=" + id + s;
 		var el_2 = document.getElementById("report");
-		if (el_2) data += get_inputs(el_2, "input[type=date], select");
-	} else if (fltr == 7) {
+		if(el_2) data += get_inputs(el_2, "input[type=date], input[type=hidden], select");
+	}else if(fltr == 7){
 		data += "&f=5&f_bgrup_id=" + id + s;
 		var el_2 = document.getElementById("report");
-		if (el_2) data += get_inputs(el_2, "input[type=date]");
-	} else if (fltr >= 0) {
-		var el_1 = document.getElementById("o");
-		if (fltr == 0) if (el_1) el_1.value = id;
+		if(el_2) data += get_inputs(el_2, "input[type=date]");
+	}else if(fltr >= 0){
+		var el_1 = document.getElementById("o_money_order_id");
+		if(fltr == 0) if(el_1) el_1.value = id;
 		var o = el_1 ? el_1.value : 1;
-		data += "&o=" + o;
+		data += "&o_money_order_id=" + o;
 		var el_2 = document.getElementById("money_table");
-		if (el_2) data += get_inputs(el_2, "input[type=date], select");
+		if(el_2) data += get_inputs(el_2, "input[type=date], input[type=hidden], select");
 	}
 	ajaxsend(data, get_new_sect("money_table"));
 }
 
 //save changes to db
-function edit_to_db(tbl) {
+function edit_to_db(tbl){
 	var data = "frm=edit_to_db&tbl=" + encodeURIComponent(tbl),
 		efrm = document.getElementById("edit_form");
 	data += get_inputs(efrm, "input[type=hidden], input[type=text], input[type=date], input[type=number], input[type=password], select");
-	if (tbl == "money") {
+	if(tbl == "money"){
 		var sect = document.getElementById("money_table");
 		data += get_inputs(sect, "input[type=date], select");
-	} else var sect = document.getElementById("edit_table");
+	}else var sect = document.getElementById("edit_table");
 	id_close("edit_form");
 	ajaxsend(data, sect);
 }
 
 //import from bankstate
-function import_form2() {
-	var w_id = document.getElementById("w_id").value,
+function import_form2(){
+	var w_id = document.getElementById("i_walls_id").value,
 		i_fn = document.getElementById("bankstate"),
 		fdat = new FormData();
-	if (i_fn.files.length === 0) return;
-	fdat.append("w_id", w_id);
+	if(i_fn.files.length === 0) return;
+	fdat.append("i_walls_id", w_id);
 	fdat.append("bankstate", i_fn.files[0]);
 	fdat.append("frm", "import_form2");
 	ajaxsend(fdat, document.getElementById("import_form2"));
 }
 
 //save bankstate to db
-function import_to_db() {
+function import_to_db(){
 	var data = "frm=import_to_db",
 		elem = document.querySelectorAll("#import_form2 input:checked"),
 		imax = elem.length;
-	for (var i = 0; i < imax; i++) data += "&imp_" + i + "=" + encodeURIComponent(elem[i].value);
+	for(var i = 0; i < imax; i++) data += "&imp_" + i + "=" + encodeURIComponent(elem[i].value);
 	ajaxsend(data, document.getElementById("import_form2"));
 }
 
 //save services from bankstate to db
-function imp_to_serv() {
+function imp_to_serv(){
 	var data = "frm=imp_to_serv",
 		elem = document.querySelectorAll("#import_form2 input:checked"),
 		imax = elem.length;
-	for (var i = 0; i < imax; i++) data += "&srv_" + i + "=" + encodeURIComponent(elem[i].value);
+	for(var i = 0; i < imax; i++) data += "&srv_" + i + "=" + encodeURIComponent(elem[i].value);
 	ajaxsend(data, document.getElementById("import_form2"));
 }
 
 //get report
-function get_report(form_id) {
+function get_report(form_id){
 	var data = "frm=" + form_id,
 		sect = document.getElementById("report");
-	if (sect) data += get_inputs(sect, "input[type=date], select");
+	if(sect) data += get_inputs(sect, "input[type=date], input[type=hidden], select");
 	else sect = get_new_sect("report");
 	ajaxsend(data, sect);
 }

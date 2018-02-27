@@ -1,18 +1,20 @@
 <?php
-$w_id = isset($_POST['w_id']) ? intval($_POST['w_id']) : 1;
+$w_id = intval($_POST['i_walls_id'] ?? $wall_id);
 $uploadfile = '/tmp/' . basename($_FILES['bankstate']['name']);
-echo '<pre>';
 if (move_uploaded_file($_FILES['bankstate']['tmp_name'], $uploadfile)) {
-	echo "Файл корректен и был успешно загружен.\n";
+	$s = 'Файл корректен и был успешно загружен.';
 } else {
-	echo "Возможная атака с помощью файловой загрузки!\n";
+	$s = 'Возможная атака с помощью файловой загрузки!';
 }
-echo 'Некоторая отладочная информация:';
+if ($debug) {
+echo '<pre>';
+echo $s . '
+Некоторая отладочная информация:';
 print_r($_FILES);
 $path_parts = pathinfo($uploadfile);
 echo $path_parts['extension'];
 echo '</pre>';
-
+}
 function byMo($m) {
 	switch ($m) {
 		case "ЯНВ": return "01";

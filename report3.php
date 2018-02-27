@@ -6,8 +6,8 @@ $d2 = strtotime($f_dtto . ' +1 day');
 $d = 0;
 while (($d1 = strtotime(' +1 month', $d1)) <= $d2) $d++;
 echo '<article><p>Отчёт №3, в среднем
-с <input type="date" name="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
-по <input type="date" name="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
+с <input type="date" value="' . $f_dtfr . '" name="p_date_from" placeholder="Дата">
+по <input type="date" value="' . $f_dtto . '" name="p_date_to" placeholder="Дата">
 <input type="button" value="Отчёт" onclick="get_report(\'report3\')"> 
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<figure><figcaption>месяцев = ' . $d . '</figcaption><table><tr><th>Группа<th>Сумма';
@@ -39,7 +39,7 @@ while ($row0 = $res0->fetch_assoc()) {
 echo '<tr><td>Итого<td class="' . (($sm < 0) ? 'minus' : 'plus') . ' num">' . number_format($sm, 2, '.', '');
 ?>
 </table></figure><canvas id="Chart4" width="500" height="300"></canvas>
-<script id='chartjs'>
+<script id='js'>
 var ctx = document.getElementById("Chart4");
 var myChart = new Chart(ctx, {
 	type: 'pie',

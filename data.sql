@@ -3,9 +3,9 @@
 -- http://bayarookie.wallst.ru
 --
 -- Хост: localhost
--- Время создания: January 24 2018, 20:22
--- Версия сервера: 5.7.21-0ubuntu0.16.04.1
--- Версия PHP: 7.0.22-0ubuntu0.16.04.1
+-- Время создания: February 25 2018, 21:56
+-- Версия сервера: 5.7.21-0ubuntu0.17.10.1
+-- Версия PHP: 7.1.11-0ubuntu0.17.10.1
 
 --
 -- База данных: `koshelyok`
@@ -22,18 +22,14 @@ CREATE TABLE `bgrup` (
   `name` varchar(64) NOT NULL,
   `comment` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `bgrup`
 --
 
 INSERT INTO `bgrup` (`id`, `name`, `comment`) VALUES
-(1, 'Дом', ''),
-(2, 'Еда', ''),
-(3, 'Коммуналка', ''),
-(4, 'Ширпотреб', ''),
-(5, 'Доходы', '');
+(1, 'Дом', '');
 
 -- --------------------------------------------------------
 
@@ -48,30 +44,14 @@ CREATE TABLE `grups` (
   `bgrup_id` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `grups`
 --
 
 INSERT INTO `grups` (`id`, `name`, `comment`, `bgrup_id`) VALUES
-(0, 'Коммуналка', 'все коммунальные платежи', 3),
-(1, 'Еда', 'жратва', 2),
-(2, 'Доходы', '', 5),
-(3, 'Дом', 'движение внутри дома', 1),
-(4, 'Ширпотреб', 'всё остальное', 4),
-(5, 'Лекарства', '', 4),
-(6, 'Внутри', 'Перемещения со счёта на счёт', 1),
-(7, 'Техника', '', 4),
-(8, 'Одежда', '', 4),
-(9, 'Электроэнергия', '', 3),
-(10, 'Жильё', '', 3),
-(11, 'Горячая вода', '', 3),
-(12, 'Телефон', '', 3),
-(13, 'Капремонт', '', 3),
-(14, 'Вода', '', 3),
-(15, 'Интернет', '', 3),
-(16, 'Домофон', '', 3);
+(1, 'Дом', 'движение внутри дома', 1);
 
 -- --------------------------------------------------------
 
@@ -91,8 +71,8 @@ CREATE TABLE `money` (
   `id` mediumint(9) NOT NULL AUTO_INCREMENT,
   `op_date` date NOT NULL,
   `op_summ` decimal(12,2) NOT NULL,
-  `grups_id` tinyint(4) NOT NULL,
   `servs_id` mediumint(9) NOT NULL,
+  `grups_id` tinyint(4) DEFAULT NULL,
   `walls_id` tinyint(4) NOT NULL,
   `users_id` tinyint(4) NOT NULL,
   `comment` varchar(64) NOT NULL,
@@ -106,8 +86,8 @@ CREATE TABLE `money` (
 -- Дамп данных таблицы `money`
 --
 
-INSERT INTO `money` (`id`, `op_date`, `op_summ`, `grups_id`, `servs_id`, `walls_id`, `users_id`, `comment`) VALUES
-(0, '2015-11-25', '100.00', 3, 0, 0, 1, 'Стартовый капитал');
+INSERT INTO `money` (`id`, `op_date`, `op_summ`, `servs_id`, `grups_id`, `walls_id`, `users_id`, `comment`) VALUES
+(0, '2015-11-25', '100.00', 0, 3, 0, 1, 'Стартовый капитал');
 
 -- --------------------------------------------------------
 
@@ -159,14 +139,14 @@ CREATE TABLE `servs` (
   `grups_id` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `servs`
 --
 
 INSERT INTO `servs` (`id`, `name`, `comment`, `grups_id`) VALUES
-(0, 'Дом', '', 3);
+(1, 'Дом', '', 3);
 
 -- --------------------------------------------------------
 
@@ -188,6 +168,7 @@ CREATE TABLE `users` (
   `password` varchar(64) NOT NULL DEFAULT '',
   `name` varchar(64) NOT NULL,
   `comment` varchar(64) DEFAULT NULL,
+  `walls_id` tinyint(4) NOT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
@@ -195,9 +176,9 @@ CREATE TABLE `users` (
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `name`, `comment`) VALUES
-(1, 'root', '1', 'Баяр', ''),
-(2, 'ya', '1234', 'РДЖ', '');
+INSERT INTO `users` (`id`, `username`, `password`, `name`, `comment`, `walls_id`) VALUES
+(1, 'root', '1', 'Баяр', '', 2),
+(2, 'ya', '1234', 'РДЖ', '', 0);
 
 -- --------------------------------------------------------
 
@@ -210,13 +191,13 @@ CREATE TABLE `walls` (
   `name` varchar(64) NOT NULL,
   `comment` varchar(64) NOT NULL,
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `walls`
 --
 
 INSERT INTO `walls` (`id`, `name`, `comment`) VALUES
-(0, 'наличные', 'в кошельке, в шкафу, в карманах'),
-(1, 'карта 3008', 'карта сбербанка'),
-(2, 'яндекс', 'Yandex деньги');
+(1, 'наличные', 'в кошельке, в шкафу, в карманах'),
+(2, 'карта 3008', 'карта сбербанка'),
+(3, 'яндекс', 'Yandex деньги');

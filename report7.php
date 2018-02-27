@@ -1,9 +1,9 @@
 <?php
 $f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
-$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : byDt();
+$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : byDt('MIN');
 echo '<article><p>Отчёт №7, по группам
-с <input type="date" name="p_date_from" placeholder="Дата" value="' . $f_dtfr . '">
-по <input type="date" name="p_date_to" placeholder="Дата" value="' . $f_dtto . '">
+с <input type="date" value="' . $f_dtfr . '" name="p_date_from" placeholder="Дата">
+по <input type="date" value="' . $f_dtto . '" name="p_date_to" placeholder="Дата">
 <input type="button" value="Отчёт" onclick="get_report(\'report7\')"> 
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
 echo '<figure><figcaption>с ' . $f_dtfr . ' по ' . $f_dtto . '</figcaption>
@@ -33,7 +33,7 @@ echo '<tr><td>Итого' . '<td class="num ' . (($sm < 0) ? 'minus' : 'plus') .
 ?>
 </table></figure>
 <canvas id="Chart4" width="500" height="300"></canvas>
-<script id='chartjs'>
+<script id='js'>
 var ctx = document.getElementById("Chart4");
 var myChart = new Chart(ctx, {
 	type: 'pie',

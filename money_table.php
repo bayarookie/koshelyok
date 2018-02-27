@@ -3,16 +3,15 @@ $t = '<p>Операции
 <input type="button" value="Добавить" onclick="get_form(\'edit_form\',-1,\'money\')">
 <input type="button" value="Закрыть" onclick="id_close(\'money_table\')"></p>';
 echo '<article>' . $t;
-
 //фильтры
-$f = isset($_POST['f']) ? intval($_POST['f']) : 1;
+$f = intval($_POST['f'] ?? 1);
 if (isset($_POST['mo'])) {
 	$f_dtto = date('Y-m-t', strtotime($_POST['mo'] . '-01'));
 	$f_dtfr = date('Y-m-d', strtotime($_POST['mo'] . '-01'));
 } elseif ($f == 3) {
 	$f_dtto = date('Y-m-d');
-	$f_dtfr = byDt();
-} elseif ($f == 5) {
+	$f_dtfr = byDt('MIN');
+} elseif ($f == 5) { //from report
 	$f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
 	$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d');
 } else {
@@ -20,29 +19,26 @@ if (isset($_POST['mo'])) {
 	if (isset($_POST['from'])) {
 		$f_dtfr = date('Y-m-d', strtotime($_POST['from']));
 	} else {
-		$result = byQu("SELECT MAX(op_date) FROM money");
-		$f_dtfr = ($row = $result->fetch_row()) ? $row[0] : date('Y-m-d');
-		$f_dtfr = (new DateTime($f_dtfr))->modify('first day of this month -1 month')->format('Y-m-d');
+		$f_dtfr = (new DateTime(byDt('MAX')))->modify('first day of this month -1 month')->format('Y-m-d');
 	}
 }
-$f_servs_id = isset($_POST['f_servs_id']) ? intval($_POST['f_servs_id']) : -1;
-$f_grups_id = isset($_POST['f_grups_id']) ? intval($_POST['f_grups_id']) : -1;
-$f_bgrup_id = isset($_POST['f_bgrup_id']) ? intval($_POST['f_bgrup_id']) : -1;
-$f_walls_id = isset($_POST['f_walls_id']) ? intval($_POST['f_walls_id']) : -1;
-$f_users_id = isset($_POST['f_users_id']) ? intval($_POST['f_users_id']) : -1;
-$filter = "";
-if ($f_servs_id > -1) $filter .= " AND money.servs_id=" . $f_servs_id;
-if ($f_grups_id > -1) $filter .= " AND money.grups_id=" . $f_grups_id;
-if ($f_bgrup_id > -1) $filter .= " AND grups.bgrup_id=" . $f_bgrup_id;
-if ($f_walls_id > -1) $filter .= " AND money.walls_id=" . $f_walls_id;
-if ($f_users_id > -1) $filter .= " AND money.users_id=" . $f_users_id;
+$arr['f_servs_id'] = intval($_POST['f_servs_id'] ?? -1);
+$arr['f_grups_id'] = intval($_POST['f_grups_id'] ?? -1);
+$arr['f_bgrup_id'] = intval($_POST['f_bgrup_id'] ?? -1);
+$arr['f_walls_id'] = intval($_POST['f_walls_id'] ?? -1);
+$arr['f_users_id'] = intval($_POST['f_users_id'] ?? -1);
+$filter = '';
+if ($arr['f_servs_id'] > -1) $filter .= ' AND money.servs_id=' . $arr['f_servs_id'];
+if ($arr['f_grups_id'] > -1) $filter .= ' AND money.grups_id=' . $arr['f_grups_id'];
+if ($arr['f_bgrup_id'] > -1) $filter .= ' AND grups.bgrup_id=' . $arr['f_bgrup_id'];
+if ($arr['f_walls_id'] > -1) $filter .= ' AND money.walls_id=' . $arr['f_walls_id'];
+if ($arr['f_users_id'] > -1) $filter .= ' AND money.users_id=' . $arr['f_users_id'];
 
 //сортировка
 echo '<table class="money_table"><thead><tr><th>№<th class="edit" onclick="money_table(0,0)">';
-$order = "";
-$o = isset($_POST['o']) ? intval($_POST['o']) : 1;
-$result = byQu("SELECT order_by FROM money_order WHERE id=" . $o);
-if ($row = $result->fetch_row()) $order = "ORDER BY " . $row[0];
+$arr['o_money_order_id'] = intval($_POST['o_money_order_id'] ?? 1);
+$result = byQu("SELECT order_by FROM money_order WHERE id=" . $arr['o_money_order_id']);
+$order = ($row = $result->fetch_row()) ? "ORDER BY " . $row[0] : '';
 
 function byOr($s) {
 	$result = byQu("SELECT id FROM money_order WHERE order_by LIKE '$s'");
@@ -120,17 +116,15 @@ $result = byQu("SELECT SUM(if(op_summ>0,op_summ,0)) AS summ1, SUM(if(op_summ<0,o
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
 while ($row = $result->fetch_assoc())
-	echo '<tr><td><td>Сумма<td><td class="plus">' . $row['summ1'] . '<td class="minus">' . $row['summ2'] . '<td><td><td><td>' . $row['name'] . '<td>';
+	echo '<tr><td><td>Сумма<td><td>' . $row['summ1'] . '<td>' . $row['summ2'] . '<td><td><td><td>' . $row['name'] . '<td>';
 
 //итого движение денег
 $result = byQu("SELECT SUM(op_summ) AS summ
 	FROM money
 	LEFT JOIN grups ON money.grups_id=grups.id
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter");
-if ($row = $result->fetch_assoc()) {
-	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
-	echo '<td><td>Итого<td><td><td>' . $row['summ'] . '<td><td><td><td><td>';
-}
+if ($row = $result->fetch_assoc())
+	echo '<tr><td><td>Итого<td><td><td class="' . ((floatval($row['summ']) < 0) ? 'minus' : 'plus') . '">' . $row['summ'] . '<td><td><td><td><td>';
 
 //остаток на день
 if ($f_dtto < date('Y-m-d')) {
@@ -140,10 +134,9 @@ $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
-while ($row = $result->fetch_assoc()) {
-	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
-	echo '<td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
-}}
+while ($row = $result->fetch_assoc())
+	echo '<tr><td><td>Остаток<td>' . $row['dt'] . '<td><td class="' . ((floatval($row['summ']) < 0) ? 'minus' : 'plus') . '">' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
+}
 
 //остаток
 $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
@@ -152,26 +145,29 @@ $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE true$filter
 	GROUP BY walls_id");
-while ($row = $result->fetch_assoc()) {
-	echo ((floatval($row['summ']) < 0) ? '<tr class="minus">' : '<tr class="plus">');
-	echo '<td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
-}
+while ($row = $result->fetch_assoc())
+	echo '<tr><td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
 echo '</tfoot>';
 echo '</table></article>';
 
 //фильтры
-echo '<article><table class="form">';
-echo '<tr><td>Фильтр: с <td><input type="date" id="from" value="' . $f_dtfr . '">';
-echo ' по <input type="date" id="to" value="' . $f_dtto . '">';
-bySe('группа:', 'f_bgrup_id', 'bgrup', $f_bgrup_id, 'Все');
-bySe('подгруппа:', 'f_grups_id', 'grups', $f_grups_id, 'Все');
-bySe('контора:', 'f_servs_id', 'servs', $f_servs_id, 'Все');
-bySe('кошелёк:', 'f_walls_id', 'walls', $f_walls_id, 'Все');
-bySe('пользователь:', 'f_users_id', 'users', $f_users_id, 'Все');
-bySe('Cортировка:', 'o', 'money_order', $o, 'Без сортировки');
-
-echo '<tr><td><td><input type="button" value="Обновить" onclick="money_table(1)"></table>';
+echo '<article>';
 if ($rep) echo $t;
-echo '</article>';
+echo '<div class="form">';
+echo '<div><label>Фильтр: с </label>
+<input type="date" value="' . $f_dtfr . '" name="from"> по <input type="date" value="' . $f_dtto . '" name="to"></div>';
+$j = '';
+$j .= byCb('f_servs_id');
+$j .= byCb('f_grups_id');
+$j .= byCb('f_bgrup_id');
+$j .= byCb('f_walls_id');
+$j .= byCb('f_users_id');
+//bySe('Cортировка:', 'o', 'money_order', $o, 'Без сортировки');
+$j .= byCb('o_money_order_id');
+
+echo '<div><label> </label>
+<input type="button" value="Обновить" onclick="money_table(1)"></div></div></article>
+<script id="js">';
+echo $j;
+echo '</script>';
 ?>
-<script id="combojs">$(".combobox").combobox();</script>
