@@ -1,6 +1,6 @@
 <?php
-$f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
-$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -1 year'));
+$f_dtto = date('Y-m-d', strtotime($_POST['p_date_to'] ?? 'now'));
+$f_dtfr = date('Y-m-d', strtotime($_POST['p_date_from'] ?? 'first day of this month -1 year'));
 $g = intval($_POST['r_grups_id'] ?? 1);
 echo '<article><div class="form"><div><label>Отчёт №8, помесячно с</label>
 <input type="date" value="' . $f_dtfr . '" name="p_date_from" placeholder="Дата">

@@ -1,5 +1,5 @@
 <main><section><article class="login_form"><form>
-	<div class='error_msg'><?php if ($errm != '') echo $errm ?></div>
+	<div class='error_msg'><?php echo $errm ?></div>
 	<label>Имя пользователя :</label><br>
 	<input type="text" id="username" placeholder="имя" value="<?php if ($reme == 'true') echo $user ?>"><br><br>
 	<label>Пароль :</label><br>

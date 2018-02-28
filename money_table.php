@@ -12,15 +12,11 @@ if (isset($_POST['mo'])) {
 	$f_dtto = date('Y-m-d');
 	$f_dtfr = byDt('MIN');
 } elseif ($f == 5) { //from report
-	$f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
-	$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d');
+	$f_dtto = date('Y-m-d', strtotime($_POST['p_date_to'] ?? 'now'));
+	$f_dtfr = date('Y-m-d', strtotime($_POST['p_date_from'] ?? '-1 month'));
 } else {
-	$f_dtto = isset($_POST['to']) ? date('Y-m-d', strtotime($_POST['to'])) : date('Y-m-d');
-	if (isset($_POST['from'])) {
-		$f_dtfr = date('Y-m-d', strtotime($_POST['from']));
-	} else {
-		$f_dtfr = (new DateTime(byDt('MAX')))->modify('first day of this month -1 month')->format('Y-m-d');
-	}
+	$f_dtto = date('Y-m-d', strtotime($_POST['to'] ?? 'now'));
+	$f_dtfr = date('Y-m-d', strtotime($_POST['from'] ?? byDt('MAX') . ' first day of this month -1 month'));
 }
 $arr['f_servs_id'] = intval($_POST['f_servs_id'] ?? -1);
 $arr['f_grups_id'] = intval($_POST['f_grups_id'] ?? -1);

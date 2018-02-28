@@ -1,6 +1,6 @@
 <?php
-$f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -1 day'));
-$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : date('Y-m-d', strtotime(date('Y-m-') . '01 -1 year'));
+$f_dtto = date('Y-m-d', strtotime($_POST['p_date_to'] ?? 'first day of this month -1 day'));
+$f_dtfr = date('Y-m-d', strtotime($_POST['p_date_from'] ?? 'first day of this month -1 year'));
 $d1 = strtotime($f_dtfr);
 $d2 = strtotime($f_dtto . ' +1 day');
 $d = 0;

@@ -1,7 +1,7 @@
 <?php
-$tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
+$tbl = $mysqli->real_escape_string($_POST['tbl'] ?? '');
 if ($tbl == '') die('table?');
-$e_id = isset($_POST['id']) ? intval($_POST['id']) : -1;
+$e_id = intval($_POST['id'] ?? -1);
 if (substr($tbl, -2) == '_v') {
 	$table = substr($tbl, 0, -2);
 } else {

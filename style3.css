@@ -155,34 +155,27 @@ input:focus, input:active, input:hover, .edit:hover {
 .form div {
 	line-height: 25px;
 }
-
 .form div label {
 	display: inline-block;
 	width: 110px;
 	text-align: right;
 }
-
-.form div input[type=text].combobox_input {
+.form div div {
+	display: inline-block;
+}
+input[type=text].combobox_input {
 	width: 320px;
 }
-
-.form div input[type=text] {
-	width: 342px;
+input[type=text] {
+	width: 341px;
 }
-
-.form div input[type=button].combobox_button {
+input[type=button].combobox_button {
 	margin-left: -6px;
-	width: 24px;
+	width: 23px;
 }
-
-.form div input[type=button] {
+input[type=button] {
 	width: 120px;
 }
-
-.form div select.combobox_list {
-	margin-left: 114px;
-}
-
-.form div select {
-	width: 341px;
+select {
+	width: 345px;
 }

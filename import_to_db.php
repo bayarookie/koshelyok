@@ -1,4 +1,4 @@
-<article><h1>Импорт</h1>
+<article><h1>Импорт операций</h1>
 <input type="button" value="Закрыть" onclick="id_close('import_form')">
 <?php
 $impo = "INSERT INTO money (op_date, op_summ, servs_id, grups_id, walls_id, users_id, comment) VALUES

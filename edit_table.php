@@ -1,5 +1,5 @@
 <?php
-$tbl = isset($_POST['tbl']) ? $mysqli->real_escape_string($_POST['tbl']) : '';
+$tbl = $mysqli->real_escape_string($_POST['tbl'] ?? '');
 if ($tbl == '') die('table?');
 $title = $tbl_nam[$tbl];
 $t = '<p>' . $title . '
@@ -8,10 +8,9 @@ $t = '<p>' . $title . '
 $result = byQu("SELECT * FROM $tbl");
 $finfo = $result->fetch_fields();
 $th = '<tr><th>№<th>';
-for ($i = 1; $i < count($finfo); $i++) {
-	$f = $finfo[$i]->name;
-	$th .= '<th>' . $fld_nam[$f];
-}
+for ($i = 1; $i < count($finfo); $i++)
+	$th .= '<th>' . $fld_nam[$finfo[$i]->name];
+
 echo '<article>' . $t . '<table>' . $th;
 $imax = $result->field_count;
 $cnt = 0;
@@ -23,7 +22,8 @@ while ($row = $result->fetch_row()) {
 			echo '<td class="num' . ((intval($row[$i]) > 0) ? ' edit" onclick="money_table(3,' . $row[0] . ')' : '') . '">' . $row[$i];
 		} elseif (($i == 2) && ($tbl == 'users')) {
 			echo '<td>*******';
-		} else echo '<td>' . $row[$i];
+		} else
+			echo '<td>' . $row[$i];
 	}
 }
 echo '</table>';

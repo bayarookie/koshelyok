@@ -1,6 +1,6 @@
 <?php
-$f_dtto = isset($_POST['p_date_to']) ? date('Y-m-d', strtotime($_POST['p_date_to'])) : date('Y-m-d');
-$f_dtfr = isset($_POST['p_date_from']) ? date('Y-m-d', strtotime($_POST['p_date_from'])) : byDt('MIN');
+$f_dtto = date('Y-m-d', strtotime($_POST['p_date_to'] ?? 'now'));
+$f_dtfr = date('Y-m-d', strtotime($_POST['p_date_from'] ?? byDt('MIN')));
 echo '<article><p>Отчёт №6, по пользователям
 с <input type="date" value="' . $f_dtfr . '" name="p_date_from" placeholder="Дата">
 по <input type="date" value="' . $f_dtto . '" name="p_date_to" placeholder="Дата">

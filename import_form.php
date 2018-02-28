@@ -10,6 +10,6 @@ $j = byCb('i_walls_id');
 </div>
 <div id="import_form2"></div>
 </article>
-<script id="combojs">
+<script id="js">
 <?php echo $j;?>
 </script>

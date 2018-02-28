@@ -19,7 +19,7 @@ $v = '';
 $result = byQu("SELECT * FROM $table LIMIT 1");
 $row = $result->fetch_row();
 $finfo = $result->fetch_fields();
-if (isset($_POST['debug'])) {
+if ($debug) {
 echo '<pre>';
 foreach ($finfo as $val) {
 	printf("Name:      %s\n",   $val->name);

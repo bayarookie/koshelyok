@@ -116,7 +116,7 @@ tx_e_servs_id.onkeyup = function(e){
 				sl_e_servs_id.selectedIndex = 0;
 			}
 		}
-		if(sl_e_servs_id.options.length == 1){
+		if((e.keyCode == "13")&&(sl_e_servs_id.options.length == 1)){
 			sl_e_servs_id.selectedIndex = 0;
 			fn_e_servs_id();
 		}
@@ -178,7 +178,8 @@ function fn_' . $idn . '(){
 	dv_' . $idn . '.style.display = "none";
 	va_' . $idn . '.value = sl_' . $idn . '.value;
 	tx_' . $idn . '.value = sl_' . $idn . '.options[sl_' . $idn . '.selectedIndex].text;
-	tx_' . $idn . '.parentElement.nextElementSibling.children[1].focus();
+	var l = tx_' . $idn . '.parentElement.parentElement.nextElementSibling.children[1];
+	if(l.children[0]) l.children[0].focus(); else l.focus();
 }
 tx_' . $idn . '.onkeydown = function(e){
 	if(e.keyCode == "9"){
@@ -207,6 +208,10 @@ tx_' . $idn . '.onkeyup = function(e){
 			if(sl_' . $idn . '.options.length > 0){
 				sl_' . $idn . '.selectedIndex = 0;
 			}
+		}
+		if((e.keyCode == "13")&&(sl_' . $idn . '.options.length == 1)){
+			sl_' . $idn . '.selectedIndex = 0;
+			fn_' . $idn . '();
 		}
 	}
 }
@@ -240,12 +245,12 @@ sl_' . $idn . '.onkeyup = function(e){
 
 ';
 	}
-	echo '<div><label>' . $txt . '</label>
-	<input type="text" value="' . $nam . '" id="tx_' . $idn . '" class="combobox_input">
-	<input type="button" value="&#9662;" id="bt_' . $idn . '" class="combobox_button" tabindex="-1">
-	<input type="hidden" value="' . $id . '" id="' . $idn . '" name="' . $idn . '">
-	<div id="dv_' . $idn . '" style="display: none; position: absolute; z-index: 10;">
-	<select id="sl_' . $idn . '" class="combobox_list"></select></div></div>';
+	echo '<div><label>' . $txt . '</label> <div>
+<input type="text" value="' . $nam . '" id="tx_' . $idn . '" class="combobox_input">
+<input type="button" value="&#9662;" id="bt_' . $idn . '" class="combobox_button" tabindex="-1">
+<input type="hidden" value="' . $id . '" id="' . $idn . '" name="' . $idn . '">
+<div id="dv_' . $idn . '" style="display: none; position: absolute; z-index: 10;">
+<select id="sl_' . $idn . '" class="combobox_list"></select></div></div></div>';
 	return $ret;
 }
 

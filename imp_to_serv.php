@@ -1,4 +1,4 @@
-<article><h1>Импорт</h1>
+<article><h1>Импорт контор</h1>
 <input type="button" value="Закрыть" onclick="id_close('import_form')">
 <?php
 $impo = "INSERT INTO servs (name, grups_id, comment) VALUES

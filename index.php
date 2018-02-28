@@ -120,10 +120,10 @@ function money_table(fltr, id, s){
 function edit_to_db(tbl){
 	var data = "frm=edit_to_db&tbl=" + encodeURIComponent(tbl),
 		efrm = document.getElementById("edit_form");
-	data += get_inputs(efrm, "input[type=hidden], input[type=text], input[type=date], input[type=number], input[type=password], select");
+	data += get_inputs(efrm, "input, select");
 	if(tbl == "money"){
 		var sect = document.getElementById("money_table");
-		data += get_inputs(sect, "input[type=date], select");
+		data += get_inputs(sect, "input[type=date], input[type=hidden], select");
 	}else var sect = document.getElementById("edit_table");
 	id_close("edit_form");
 	ajaxsend(data, sect);
