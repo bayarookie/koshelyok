@@ -168,6 +168,18 @@ function get_report(form_id){
 	ajaxsend(data, sect);
 }
 
+var combos = [];
+
+document.onclick = function(e){
+	combos.forEach(function(s) {
+		var el = document.getElementById("cb_" + s);
+		if((el) && (el.lastChild.style.display == "block") && (!e.target.id.match(s))){
+			el.children[0].focus();
+			el.children[3].style.display = "none";
+		}
+	});
+}
+
 window.onload = load();
 </script>
 </body></html>

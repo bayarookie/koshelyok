@@ -73,8 +73,6 @@ function byCb($idn) {
 			if ($row['id'] == $id) $nam = $n;
 		}
 		$ret .= ']);
-var id_e_servs_id = document.getElementById("id_e_servs_id");
-
 var va_e_servs_id = document.getElementById("e_servs_id");
 var tx_e_servs_id = document.getElementById("tx_e_servs_id");
 var bt_e_servs_id = document.getElementById("bt_e_servs_id");
@@ -112,13 +110,21 @@ tx_e_servs_id.onkeyup = function(e){
 		}
 		if(e.keyCode == "40"){
 			sl_e_servs_id.focus();
-			if(sl_e_servs_id.options.length > 0){
+			if(sl_e_servs_id.options.length > 1){
+				sl_e_servs_id.selectedIndex = 1;
+			}else if(sl_e_servs_id.options.length > 0){
 				sl_e_servs_id.selectedIndex = 0;
 			}
 		}
-		if((e.keyCode == "13")&&(sl_e_servs_id.options.length == 1)){
-			sl_e_servs_id.selectedIndex = 0;
-			fn_e_servs_id();
+		if(e.keyCode == "13"){
+			if(sl_e_servs_id.options.length == 1){
+				sl_e_servs_id.selectedIndex = 0;
+				fn_e_servs_id();
+			}else if(sl_e_servs_id.options.length == 0){
+				dv_e_servs_id.style.display = "none";
+				va_e_servs_id.value = tx_e_servs_id.value;
+				tx_e_grups_id.focus();
+			}
 		}
 	}
 }
@@ -152,13 +158,6 @@ sl_e_servs_id.onkeyup = function(e){
 		tx_e_servs_id.focus();
 	}
 }
-document.onclick = function(e){
-	if(dv_e_servs_id.style.display == "block" && e.target.id !== "dv_e_servs_id" && e.target.id !== "bt_e_servs_id"){
-		dv_e_servs_id.style.display = "none";
-		tx_e_servs_id.focus();
-	}
-}
-
 ';
 	} else {
 		$ret = 'var ar_' . $idn . ' = ([[-1, ""],';
@@ -233,19 +232,18 @@ bt_' . $idn . '.onclick = function(){
 sl_' . $idn . '.onclick = fn_' . $idn . ';
 sl_' . $idn . '.onkeyup = function(e){
 	if(e.keyCode == "13"){
-		dv_' . $idn . '.style.display = "none";
-		va_' . $idn . '.value = sl_' . $idn . '.value;
-		tx_' . $idn . '.value = sl_' . $idn . '.options[sl_' . $idn . '.selectedIndex].text;
-		tx_' . $idn . '.focus();
+		fn_' . $idn . '();
 	}else if(e.keyCode == "27"){
 		dv_' . $idn . '.style.display = "none";
 		tx_' . $idn . '.focus();
 	}
 }
-
 ';
 	}
-	echo '<div><label>' . $txt . '</label> <div>
+	$ret .= 'if(combos.indexOf("' . $idn . '") < 0) combos.push("' . $idn . '");
+
+';
+	echo '<div><label>' . $txt . '</label> <div id="cb_' . $idn . '">
 <input type="text" value="' . $nam . '" id="tx_' . $idn . '" class="combobox_input">
 <input type="button" value="&#9662;" id="bt_' . $idn . '" class="combobox_button" tabindex="-1">
 <input type="hidden" value="' . $id . '" id="' . $idn . '" name="' . $idn . '">
@@ -298,7 +296,7 @@ if ($user != '') {
 }
 if ($user_id > 0) {
 	if (isset($_POST['load']) || isset($_POST['login'])) include 'menu.php';
-	$frm = isset($_POST['frm']) ? $_POST['frm'] : '';
+	$frm = $mysqli->real_escape_string($_POST['frm']);
 	if ($frm != '') include $frm . '.php';
 	if ($debug) {
 		echo '<pre>';

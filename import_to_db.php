@@ -6,7 +6,7 @@ $impo = "INSERT INTO money (op_date, op_summ, servs_id, grups_id, walls_id, user
 $i = 0;
 while (isset($_POST["imp_$i"])) {
 	if ($i > 0) $impo .= ",\n";
-	list($date, $summ, $s_id, $g_id, $w_id) = explode(";", $_POST["imp_$i"]);
+	list($date, $summ, $s_id, $g_id, $w_id) = explode(";", $mysqli->real_escape_string($_POST["imp_$i"]));
 	$impo .= "(STR_TO_DATE('$date', '%Y-%m-%d'), $summ, $s_id, $g_id, $w_id, $user_id, '')";
 	$i++;
 }

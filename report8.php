@@ -109,6 +109,7 @@ echo '],labels: [' . $mo . ']';
 		}
 	}
 });
+
 <?php echo $j;?>
 </script>
 </article>

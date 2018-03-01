@@ -6,7 +6,7 @@ $impo = "INSERT INTO servs (name, grups_id, comment) VALUES
 $i = 0;
 while (isset($_POST["srv_$i"])) {
 	if ($i > 0) $impo .= ",\n";
-	list($nm, $t) = explode(";", $_POST["srv_$i"]);
+	list($nm, $t) = explode(";", $mysqli->real_escape_string($_POST["srv_$i"]));
 	$impo .= "('$nm', -1, '')";
 	$i++;
 }

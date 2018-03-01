@@ -47,7 +47,7 @@ function byTr($date, $nm, $summ) {
 		$g_id = $row[2];
 	} else {
 		$result = byQu("SELECT id, name, grups_id FROM servs WHERE name LIKE '$nm%'");
-		if ($result->num_rows == 1 && $row = $result->fetch_row()) {
+		if (($result->num_rows == 1) && ($row = $result->fetch_row())) {
 			$s_id = $row[0];
 			$name = $row[1];
 			$g_id = $row[2];

@@ -158,7 +158,6 @@ $j .= byCb('f_grups_id');
 $j .= byCb('f_bgrup_id');
 $j .= byCb('f_walls_id');
 $j .= byCb('f_users_id');
-//bySe('Cортировка:', 'o', 'money_order', $o, 'Без сортировки');
 $j .= byCb('o_money_order_id');
 
 echo '<div><label> </label>
