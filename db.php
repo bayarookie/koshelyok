@@ -74,16 +74,16 @@ function byCb($idn) {
 		}
 		$ret .= ']);
 var va_e_servs_id = document.getElementById("e_servs_id");
-var tx_e_servs_id = document.getElementById("tx_e_servs_id");
-var bt_e_servs_id = document.getElementById("bt_e_servs_id");
-var dv_e_servs_id = document.getElementById("dv_e_servs_id");
-var sl_e_servs_id = document.getElementById("sl_e_servs_id");
 function fn_e_servs_id(){
 	dv_e_servs_id.style.display = "none";
-	va_e_servs_id.value = sl_e_servs_id.value.split("\t")[0];
-	va_e_grups_id.value = sl_e_servs_id.value.split("\t")[1];
-	tx_e_grups_id.value = sl_e_servs_id.value.split("\t")[2];
-	tx_e_servs_id.value = sl_e_servs_id.options[sl_e_servs_id.selectedIndex].text;
+	if(sl_e_servs_id.value){
+		va_e_servs_id.value = sl_e_servs_id.value.split("\t")[0];
+		va_e_grups_id.value = sl_e_servs_id.value.split("\t")[1];
+		tx_e_grups_id.value = sl_e_servs_id.value.split("\t")[2];
+		tx_e_servs_id.value = sl_e_servs_id.options[sl_e_servs_id.selectedIndex].text;
+	}else{
+		va_e_servs_id.value = -1;
+	}
 	tx_e_grups_id.focus();
 }
 tx_e_servs_id.onkeydown = function(e){
@@ -110,9 +110,7 @@ tx_e_servs_id.onkeyup = function(e){
 		}
 		if(e.keyCode == "40"){
 			sl_e_servs_id.focus();
-			if(sl_e_servs_id.options.length > 1){
-				sl_e_servs_id.selectedIndex = 1;
-			}else if(sl_e_servs_id.options.length > 0){
+			if(sl_e_servs_id.options.length > 0){
 				sl_e_servs_id.selectedIndex = 0;
 			}
 		}
@@ -125,6 +123,11 @@ tx_e_servs_id.onkeyup = function(e){
 				va_e_servs_id.value = tx_e_servs_id.value;
 				tx_e_grups_id.focus();
 			}
+		}
+	}else{
+		if(e.keyCode == "13"){
+			sl_e_servs_id.value = "";
+			fn_e_servs_id();
 		}
 	}
 }
@@ -169,14 +172,14 @@ sl_e_servs_id.onkeyup = function(e){
 		}
 		$ret .= ']);
 var va_' . $idn . ' = document.getElementById("' . $idn . '");
-var tx_' . $idn . ' = document.getElementById("tx_' . $idn . '");
-var bt_' . $idn . ' = document.getElementById("bt_' . $idn . '");
-var dv_' . $idn . ' = document.getElementById("dv_' . $idn . '");
-var sl_' . $idn . ' = document.getElementById("sl_' . $idn . '");
 function fn_' . $idn . '(){
 	dv_' . $idn . '.style.display = "none";
-	va_' . $idn . '.value = sl_' . $idn . '.value;
-	tx_' . $idn . '.value = sl_' . $idn . '.options[sl_' . $idn . '.selectedIndex].text;
+	if(sl_' . $idn . '.value){
+		va_' . $idn . '.value = sl_' . $idn . '.value;
+		tx_' . $idn . '.value = sl_' . $idn . '.options[sl_' . $idn . '.selectedIndex].text;
+	}else{
+		va_' . $idn . '.value = -1;
+	}
 	var l = tx_' . $idn . '.parentElement.parentElement.nextElementSibling.children[1];
 	if(l.children[0]) l.children[0].focus(); else l.focus();
 }
@@ -210,6 +213,11 @@ tx_' . $idn . '.onkeyup = function(e){
 		}
 		if((e.keyCode == "13")&&(sl_' . $idn . '.options.length == 1)){
 			sl_' . $idn . '.selectedIndex = 0;
+			fn_' . $idn . '();
+		}
+	}else{
+		if(e.keyCode == "13"){
+			sl_' . $idn . '.value = "";
 			fn_' . $idn . '();
 		}
 	}

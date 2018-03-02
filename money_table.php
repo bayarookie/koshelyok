@@ -64,14 +64,29 @@ byTh('walls.name', 'Кошелёк');
 byTh('users.name', 'Юзер');
 
 //таблица, остаток на начало
-$result = byQu("SELECT SUM(op_summ) AS summ, walls.name FROM money
+$result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
+	FROM money
 	LEFT JOIN grups ON money.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<'$f_dtfr'$filter
 	GROUP BY walls_id");
-while ($row = $result->fetch_assoc())
-	echo '<tr><td><td>На начало<td>' . $f_dtfr . '<td>' . $row['summ'] . '<td><td><td><td><td>' . $row['name'] . '<td>';
+$cnt = 0;
+while ($row = $result->fetch_assoc()) {
+	echo '<tr><td><td>На начало<td>' . $row['dt'] . '<td>' . $row['summ'] . '<td><td><td><td><td>' . $row['name'] . '<td>';
+	$cnt++;
+}
 echo '</thead><tbody>';
+
+//итого на начало
+if ($cnt > 1) {
+$result = byQu("SELECT SUM(op_summ) AS summ, MAX(op_date) AS dt
+	FROM money
+	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN walls ON money.walls_id=walls.id
+	WHERE op_date<'$f_dtfr'$filter");
+if ($row = $result->fetch_assoc())
+	echo '<tr><td><td>Итого<td>' . $row['dt'] . '<td>' . $row['summ'] . '<td><td><td><td><td><td>';
+}
 
 //движение денег
 $result = byQu("SELECT money.id, op_date,
@@ -89,7 +104,7 @@ $result = byQu("SELECT money.id, op_date,
 $rep = ($result->num_rows > 25);
 $cnt = 0;
 while ($ro2 = $result->fetch_assoc()) {
-	echo (($ro2['summ1'] == '') ? '<tr class="minus">' : '<tr class="plus">');
+	echo '<tr>';
 	$cnt++;
 	echo '<td>' . $cnt;
 	echo '<td class="edit" onclick="get_form(\'edit_form\',' . $ro2['id'] . ',\'money\')">Редактировать';
@@ -120,10 +135,9 @@ $result = byQu("SELECT SUM(op_summ) AS summ
 	LEFT JOIN grups ON money.grups_id=grups.id
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc())
-	echo '<tr><td><td>Итого<td><td><td class="' . ((floatval($row['summ']) < 0) ? 'minus' : 'plus') . '">' . $row['summ'] . '<td><td><td><td><td>';
+	echo '<tr><td><td>Итого<td><td><td>' . $row['summ'] . '<td><td><td><td><td>';
 
 //остаток на день
-if ($f_dtto < date('Y-m-d')) {
 $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	FROM money
 	LEFT JOIN grups ON money.grups_id=grups.id
@@ -131,18 +145,17 @@ $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	WHERE op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
 while ($row = $result->fetch_assoc())
-	echo '<tr><td><td>Остаток<td>' . $row['dt'] . '<td><td class="' . ((floatval($row['summ']) < 0) ? 'minus' : 'plus') . '">' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
-}
+	echo '<tr><td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
 
-//остаток
-$result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
+//итого на день
+$result = byQu("SELECT SUM(op_summ) AS summ, MAX(op_date) AS dt
 	FROM money
 	LEFT JOIN grups ON money.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
-	WHERE true$filter
-	GROUP BY walls_id");
-while ($row = $result->fetch_assoc())
-	echo '<tr><td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
+	WHERE op_date<='$f_dtto'$filter");
+if ($row = $result->fetch_assoc())
+	echo '<tr><td><td>Итого<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td><td>';
+
 echo '</tfoot>';
 echo '</table></article>';
 
@@ -162,7 +175,8 @@ $j .= byCb('o_money_order_id');
 
 echo '<div><label> </label>
 <input type="button" value="Обновить" onclick="money_table(1)"></div></div></article>
-<script id="js">';
+<script id="js">
+color_tr();';
 echo $j;
 echo '</script>';
 ?>

@@ -168,6 +168,16 @@ function get_report(form_id){
 	ajaxsend(data, sect);
 }
 
+function color_tr(){
+	trs = document.getElementsByTagName("tr");
+	for(var i=0; i<trs.length; i++){
+		var t = trs[i];
+		if(t.children[3].innerHTML) var f3 = parseFloat(t.children[3].innerHTML); else var f3 = 0;
+		if(t.children[4].innerHTML) var f4 = parseFloat(t.children[4].innerHTML); else var f4 = 0;
+		if((f3 + f4)<0) t.className = "minus"; else t.className = "plus";
+	}
+}
+
 var combos = [];
 
 document.onclick = function(e){
