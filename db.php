@@ -278,13 +278,13 @@ if ($mysqli->connect_errno) {
 $mysqli->set_charset(DB_CHARS);
 
 //проверка на вшивость
-$user = isset($_COOKIE['user']) ? $mysqli->real_escape_string($_COOKIE['user']) : '';
-$pass = isset($_COOKIE['pass']) ? $mysqli->real_escape_string($_COOKIE['pass']) : '';
+$user = $mysqli->real_escape_string($_COOKIE['user'] ?? '');
+$pass = $mysqli->real_escape_string($_COOKIE['pass'] ?? '');
 $reme = ($user != '') ? 'true' : 'false';
 if (isset($_POST['login'])) {
-	$user = isset($_POST['username']) ? $mysqli->real_escape_string($_POST['username']) : '';
-	$pass = isset($_POST['password']) ? $mysqli->real_escape_string($_POST['password']) : '';
-	$reme = isset($_POST['remember']) ? $_POST['remember'] : 'false';
+	$user = $mysqli->real_escape_string($_POST['username'] ?? '');
+	$pass = $mysqli->real_escape_string($_POST['password'] ?? '');
+	$reme = $_POST['remember'] ?? 'false';
 }
 if ($user != '') {
 	$result = byQu("SELECT id, walls_id FROM users WHERE username='$user' AND password='$pass'");
@@ -304,7 +304,7 @@ if ($user != '') {
 }
 if ($user_id > 0) {
 	if (isset($_POST['load']) || isset($_POST['login'])) include 'menu.php';
-	$frm = $mysqli->real_escape_string($_POST['frm']);
+	$frm = $mysqli->real_escape_string($_POST['frm'] ?? '');
 	if ($frm != '') include $frm . '.php';
 	if ($debug) {
 		echo '<pre>';

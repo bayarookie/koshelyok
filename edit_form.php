@@ -1,5 +1,5 @@
 <?php
-$tbl = $mysqli->real_escape_string($_POST['tbl']);
+$tbl = $mysqli->real_escape_string($_POST['tbl'] ?? '');
 if ($tbl == '') die('table?');
 $e_id = intval($_POST['id'] ?? -1);
 if (substr($tbl, -2) == '_v') {

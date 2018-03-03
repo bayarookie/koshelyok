@@ -31,7 +31,7 @@ if ($arr['f_walls_id'] > -1) $filter .= ' AND money.walls_id=' . $arr['f_walls_i
 if ($arr['f_users_id'] > -1) $filter .= ' AND money.users_id=' . $arr['f_users_id'];
 
 //сортировка
-echo '<table class="money_table"><thead><tr><th>№<th class="edit" onclick="money_table(0,0)">';
+echo '<table id="id_money" class="money_table"><thead><tr><th>№<th class="edit" onclick="money_table(0,0)">';
 $arr['o_money_order_id'] = intval($_POST['o_money_order_id'] ?? 1);
 $result = byQu("SELECT order_by FROM money_order WHERE id=" . $arr['o_money_order_id']);
 $order = ($row = $result->fetch_row()) ? "ORDER BY " . $row[0] : '';
@@ -76,7 +76,6 @@ while ($row = $result->fetch_assoc()) {
 	$cnt++;
 }
 echo '</thead><tbody>';
-
 //итого на начало
 if ($cnt > 1) {
 $result = byQu("SELECT SUM(op_summ) AS summ, MAX(op_date) AS dt
@@ -126,16 +125,21 @@ $result = byQu("SELECT SUM(if(op_summ>0,op_summ,0)) AS summ1, SUM(if(op_summ<0,o
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
-while ($row = $result->fetch_assoc())
+$cnt = 0;
+while ($row = $result->fetch_assoc()){
 	echo '<tr><td><td>Сумма<td><td>' . $row['summ1'] . '<td>' . $row['summ2'] . '<td><td><td><td>' . $row['name'] . '<td>';
-
+	if (floatval($row['summ1']) != 0) $cnt++;
+	if (floatval($row['summ2']) != 0) $cnt++;
+}
 //итого движение денег
+if ($cnt > 1){
 $result = byQu("SELECT SUM(op_summ) AS summ
 	FROM money
 	LEFT JOIN grups ON money.grups_id=grups.id
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc())
 	echo '<tr><td><td>Итого<td><td><td>' . $row['summ'] . '<td><td><td><td><td>';
+}
 
 //остаток на день
 $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
@@ -144,10 +148,13 @@ $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
-while ($row = $result->fetch_assoc())
+$cnt = 0;
+while ($row = $result->fetch_assoc()){
 	echo '<tr><td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
-
+	$cnt++;
+}
 //итого на день
+if ($cnt > 1){
 $result = byQu("SELECT SUM(op_summ) AS summ, MAX(op_date) AS dt
 	FROM money
 	LEFT JOIN grups ON money.grups_id=grups.id
@@ -155,7 +162,7 @@ $result = byQu("SELECT SUM(op_summ) AS summ, MAX(op_date) AS dt
 	WHERE op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc())
 	echo '<tr><td><td>Итого<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td><td>';
-
+}
 echo '</tfoot>';
 echo '</table></article>';
 

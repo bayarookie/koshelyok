@@ -169,12 +169,11 @@ function get_report(form_id){
 }
 
 function color_tr(){
-	trs = document.getElementsByTagName("tr");
-	for(var i=0; i<trs.length; i++){
-		var t = trs[i];
-		if(t.children[3].innerHTML) var f3 = parseFloat(t.children[3].innerHTML); else var f3 = 0;
-		if(t.children[4].innerHTML) var f4 = parseFloat(t.children[4].innerHTML); else var f4 = 0;
-		if((f3 + f4)<0) t.className = "minus"; else t.className = "plus";
+	for(var i = 0; i < id_money.rows.length; i++){
+		var t = id_money.rows[i];
+		if(t.cells[3].innerHTML) var t3 = parseFloat(t.cells[3].innerHTML); else var t3 = 0;
+		if(t.cells[4].innerHTML) var t4 = parseFloat(t.cells[4].innerHTML); else var t4 = 0;
+		if((t3 + t4) < 0) t.className = "minus"; else t.className = "plus";
 	}
 }
 

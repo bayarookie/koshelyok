@@ -226,11 +226,8 @@ select {
 
 ::-webkit-scrollbar-thumb {
 	border-radius: 5px;
-	background-color:var(--af);
 	box-shadow:0px 1px 1px #fff inset;
-	background-image:url(data:image/webp;base64,UklGRloAAABXRUJQVlA4WAoAAAAQAAAABgAABgAAQUxQSAwAAAABDzAzERFifCL6HypWUDggKAAAAJABAJ0BKgcABwAPwP4lpAAC3IjgAADftuWdmLGFc2LQAfN3U0BAAAA=);
-	background-position:center;
-	background-repeat:no-repeat;
+	background:var(--af) url(data:image/webp;base64,UklGRloAAABXRUJQVlA4WAoAAAAQAAAABgAABgAAQUxQSAwAAAABDzAzERFifCL6HypWUDggKAAAAJABAJ0BKgcABwAPwP4lpAAC3IjgAADftuWdmLGFc2LQAfN3U0BAAAA=) no-repeat center;
 }
 
 ::-webkit-resizer{

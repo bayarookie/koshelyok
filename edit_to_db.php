@@ -1,5 +1,5 @@
 <?php
-$tbl = $mysqli->real_escape_string($_POST['tbl']);
+$tbl = $mysqli->real_escape_string($_POST['tbl'] ?? '');
 $e_id = intval($_POST['e_id'] ?? -1);
 if (empty($tbl)) die('table?');
 if ($tbl == 'servs_v') {
@@ -39,7 +39,7 @@ for ($i = 1; $i < count($finfo); $i++) {
 	} elseif (in_array($finfo[$i]->type, [1,2,3,8,9])) { //int
 		$s = intval($_POST['e_' . $f] ?? -1);
 		if (($f == 'servs_id')&&($s == 0)) {
-			$a = $mysqli->real_escape_string($_POST['e_' . $f]);
+			$a = $mysqli->real_escape_string($_POST['e_' . $f] ?? '');
 			if ($a !== '') {
 				byQu("INSERT INTO servs (name, grups_id, comment) VALUES ('$a', -1, '')");
 				$s = $mysqli->insert_id;
@@ -48,7 +48,7 @@ for ($i = 1; $i < count($finfo); $i++) {
 	} elseif ($finfo[$i]->type == 246) {
 		$s = floatval($_POST['e_' . $f] ?? 0);
 	} else {
-		$s = "'" . $mysqli->real_escape_string($_POST['e_' . $f]) . "'";
+		$s = "'" . $mysqli->real_escape_string($_POST['e_' . $f] ?? '') . "'";
 	}
 	if ($e_id > -1) {
 		if ($p != '') $p .= ", ";
