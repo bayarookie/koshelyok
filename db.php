@@ -72,96 +72,7 @@ function byCb($idn) {
 			$ret .= '[' . $row['id'] . ', "' . $n . '", ' . $row['grups_id'] . ', "' . $row['grups_name'] . '"],';
 			if ($row['id'] == $id) $nam = $n;
 		}
-		$ret .= ']);
-var va_e_servs_id = document.getElementById("e_servs_id");
-function fn_e_servs_id(){
-	dv_e_servs_id.style.display = "none";
-	if(sl_e_servs_id.value){
-		va_e_servs_id.value = sl_e_servs_id.value.split("\t")[0];
-		va_e_grups_id.value = sl_e_servs_id.value.split("\t")[1];
-		tx_e_grups_id.value = sl_e_servs_id.value.split("\t")[2];
-		tx_e_servs_id.value = sl_e_servs_id.options[sl_e_servs_id.selectedIndex].text;
-	}else{
-		va_e_servs_id.value = -1;
-	}
-	tx_e_grups_id.focus();
-}
-tx_e_servs_id.onkeydown = function(e){
-	if(e.keyCode == "9"){
-		dv_e_servs_id.style.display = "none";
-	}
-}
-tx_e_servs_id.onkeyup = function(e){
-	dv_e_servs_id.style.display = "none";
-	sl_e_servs_id.options.length = 0;
-	if((tx_e_servs_id.value)||(e.keyCode == "40")){
-		dv_e_servs_id.style.display = "block";
-		sl_e_servs_id.size = 2;
-		var testRegExp = new RegExp(RegExp.escape(tx_e_servs_id.value),"i");
-		for(var i = 0; i < ar_e_servs_id.length; i++){
-			var s = ar_e_servs_id[i][1];
-			if(s.match(testRegExp)){
-				var opt = document.createElement("option");
-				opt.text = s;
-				opt.value = ar_e_servs_id[i][0] + "\t" + ar_e_servs_id[i][2] + "\t" + ar_e_servs_id[i][3];
-				sl_e_servs_id.appendChild(opt);
-				sl_e_servs_id.size = Math.max(2,Math.min(sl_e_servs_id.options.length,10));
-			}
-		}
-		if(e.keyCode == "40"){
-			sl_e_servs_id.focus();
-			if(sl_e_servs_id.options.length > 0){
-				sl_e_servs_id.selectedIndex = 0;
-			}
-		}
-		if(e.keyCode == "13"){
-			if(sl_e_servs_id.options.length == 1){
-				sl_e_servs_id.selectedIndex = 0;
-				fn_e_servs_id();
-			}else if(sl_e_servs_id.options.length == 0){
-				dv_e_servs_id.style.display = "none";
-				va_e_servs_id.value = tx_e_servs_id.value;
-				tx_e_grups_id.focus();
-			}
-		}
-	}else{
-		if(e.keyCode == "13"){
-			sl_e_servs_id.value = "";
-			fn_e_servs_id();
-		}
-	}
-}
-bt_e_servs_id.onclick = function(){
-	if(dv_e_servs_id.style.display == "none"){
-		dv_e_servs_id.style.display = "block";
-		sl_e_servs_id.options.length = 0;
-		var sel = -1;
-		for(var i = 0; i < ar_e_servs_id.length; i++){
-			var opt = document.createElement("option");
-			opt.value = ar_e_servs_id[i][0] + "\t" + ar_e_servs_id[i][2] + "\t" + ar_e_servs_id[i][3];
-			opt.text = ar_e_servs_id[i][1];
-			sl_e_servs_id.appendChild(opt);
-			if(ar_e_servs_id[i][0] == tx_e_servs_id.value){
-				sel = i;
-			}
-		}
-		sl_e_servs_id.size = Math.max(2,Math.min(sl_e_servs_id.options.length,10));
-		sl_e_servs_id.selecteIndex = sel;
-	}else{
-		dv_e_servs_id.style.display = "none";
-		tx_e_servs_id.focus();
-	}
-}
-sl_e_servs_id.onclick = fn_e_servs_id;
-sl_e_servs_id.onkeyup = function(e){
-	if(e.keyCode == "13"){
-		fn_e_servs_id();
-	}else if(e.keyCode == "27"){
-		dv_e_servs_id.style.display = "none";
-		tx_e_servs_id.focus();
-	}
-}
-';
+		$ret .= ']);';
 	} else {
 		$ret = 'var ar_' . $idn . ' = ([[-1, ""],';
 		$result = byQu("SELECT id, name, comment FROM $tbl ORDER BY name");
@@ -170,18 +81,48 @@ sl_e_servs_id.onkeyup = function(e){
 			$ret .= '[' . $row['id'] . ', "' . $n . '"],';
 			if ($row['id'] == $id) $nam = $n;
 		}
-		$ret .= ']);
-var va_' . $idn . ' = document.getElementById("' . $idn . '");
+		$ret .= ']);';
+	}
+	$ret .= '
 function fn_' . $idn . '(){
 	dv_' . $idn . '.style.display = "none";
 	if(sl_' . $idn . '.value){
-		va_' . $idn . '.value = sl_' . $idn . '.value;
-		tx_' . $idn . '.value = sl_' . $idn . '.options[sl_' . $idn . '.selectedIndex].text;
+		tx_' . $idn . '.value = sl_' . $idn . '.options[sl_' . $idn . '.selectedIndex].text;';
+if ($idn == 'e_servs_id') {
+$ret .= '
+		var a = sl_e_servs_id.value.split("\t");
+		va_e_servs_id.value = a[0];
+		va_e_grups_id.value = a[1];
+		tx_e_grups_id.value = a[2];';
+} else {
+$ret .= '
+		va_' . $idn . '.value = sl_' . $idn . '.value;';
+}
+$ret .= '
 	}else{
 		va_' . $idn . '.value = -1;
 	}
 	var l = tx_' . $idn . '.parentElement.parentElement.nextElementSibling.children[1];
 	if(l.children[0]) l.children[0].focus(); else l.focus();
+}
+function sh_' . $idn . '(a){
+	dv_' . $idn . '.style.display = "block";
+	sl_' . $idn . '.options.length = 0;
+	var sel = -1;
+	var testRegExp = new RegExp(RegExp.escape(tx_' . $idn . '.value),"i");
+	for(var i = 0; i < ar_' . $idn . '.length; i++){
+		var s = ar_' . $idn . '[i];
+		if(s[1].match(testRegExp)||a){
+			var opt = document.createElement("option");
+			opt.value = s[0];
+			opt.text = s[1];
+			if(s.length > 2) opt.value += "\t" + s[2] + "\t" + s[3];
+			sl_' . $idn . '.appendChild(opt);
+		}
+		if(s[1].toLowerCase() == tx_' . $idn . '.value.toLowerCase()) sel = i;
+	}
+	sl_' . $idn . '.size = Math.max(2,Math.min(sl_' . $idn . '.options.length,10));
+	sl_' . $idn . '.selectedIndex = sel;
 }
 tx_' . $idn . '.onkeydown = function(e){
 	if(e.keyCode == "9"){
@@ -189,31 +130,27 @@ tx_' . $idn . '.onkeydown = function(e){
 	}
 }
 tx_' . $idn . '.onkeyup = function(e){
-	dv_' . $idn . '.style.display = "none";
-	sl_' . $idn . '.options.length = 0;
 	if((tx_' . $idn . '.value)||(e.keyCode == "40")){
-		dv_' . $idn . '.style.display = "block";
-		sl_' . $idn . '.size = 2;
-		var testRegExp = new RegExp(RegExp.escape(tx_' . $idn . '.value),"i");
-		for(var i = 0; i < ar_' . $idn . '.length; i++){
-			var s = ar_' . $idn . '[i][1];
-			if(s.match(testRegExp)){
-				var opt = document.createElement("option");
-				opt.text = s;
-				opt.value = ar_' . $idn . '[i][0];
-				sl_' . $idn . '.appendChild(opt);
-				sl_' . $idn . '.size = Math.max(2,Math.min(sl_' . $idn . '.options.length,10));
-			}
-		}
+		sh_' . $idn . '(false);
 		if(e.keyCode == "40"){
 			sl_' . $idn . '.focus();
-			if(sl_' . $idn . '.options.length > 0){
+			if((sl_' . $idn . '.selectedIndex < 0)&&(sl_' . $idn . '.options.length > 0)){
 				sl_' . $idn . '.selectedIndex = 0;
 			}
 		}
-		if((e.keyCode == "13")&&(sl_' . $idn . '.options.length == 1)){
-			sl_' . $idn . '.selectedIndex = 0;
-			fn_' . $idn . '();
+		if(e.keyCode == "13"){
+			if(sl_' . $idn . '.options.length == 1){
+				sl_' . $idn . '.selectedIndex = 0;
+				fn_' . $idn . '();';
+if ($idn == 'e_servs_id') {
+	$ret .= '
+			}else if(sl_e_servs_id.options.length == 0){
+				dv_e_servs_id.style.display = "none";
+				va_e_servs_id.value = tx_e_servs_id.value;
+				tx_e_grups_id.focus();';
+}
+$ret .= '
+			}
 		}
 	}else{
 		if(e.keyCode == "13"){
@@ -224,15 +161,8 @@ tx_' . $idn . '.onkeyup = function(e){
 }
 bt_' . $idn . '.onclick = function(){
 	if(dv_' . $idn . '.style.display == "none"){
-		dv_' . $idn . '.style.display = "block";
-		sl_' . $idn . '.options.length = 0;
-		for(var i = 0; i < ar_' . $idn . '.length; i++){
-			var opt = document.createElement("option");
-			opt.value = ar_' . $idn . '[i][0];
-			opt.text = ar_' . $idn . '[i][1];
-			sl_' . $idn . '.appendChild(opt);
-		}
-		sl_' . $idn . '.size = Math.max(2,Math.min(sl_' . $idn . '.options.length,10));
+		sh_' . $idn . '(true);
+		sl_' . $idn . '.focus();
 	}else{
 		dv_' . $idn . '.style.display = "none";
 	}
@@ -246,15 +176,13 @@ sl_' . $idn . '.onkeyup = function(e){
 		tx_' . $idn . '.focus();
 	}
 }
-';
-	}
-	$ret .= 'if(combos.indexOf("' . $idn . '") < 0) combos.push("' . $idn . '");
+if(combos.indexOf("' . $idn . '") < 0) combos.push("' . $idn . '");
 
 ';
 	echo '<div><label>' . $txt . '</label> <div id="cb_' . $idn . '">
 <input type="text" value="' . $nam . '" id="tx_' . $idn . '" class="combobox_input">
 <input type="button" value="&#9662;" id="bt_' . $idn . '" class="combobox_button" tabindex="-1">
-<input type="hidden" value="' . $id . '" id="' . $idn . '" name="' . $idn . '">
+<input type="hidden" value="' . $id . '" id="va_' . $idn . '" name="' . $idn . '">
 <div id="dv_' . $idn . '" style="display: none; position: absolute; z-index: 10;">
 <select id="sl_' . $idn . '" class="combobox_list"></select></div></div></div>';
 	return $ret;
