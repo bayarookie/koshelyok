@@ -91,16 +91,16 @@ function fn_' . $idn . '(){
 if ($idn == 'e_servs_id') {
 $ret .= '
 		var a = sl_e_servs_id.value.split("\t");
-		va_e_servs_id.value = a[0];
-		va_e_grups_id.value = a[1];
+		e_servs_id.value = a[0];
+		e_grups_id.value = a[1];
 		tx_e_grups_id.value = a[2];';
 } else {
 $ret .= '
-		va_' . $idn . '.value = sl_' . $idn . '.value;';
+		' . $idn . '.value = sl_' . $idn . '.value;';
 }
 $ret .= '
 	}else{
-		va_' . $idn . '.value = -1;
+		' . $idn . '.value = -1;
 	}
 	var l = tx_' . $idn . '.parentElement.parentElement.nextElementSibling.children[1];
 	if(l.children[0]) l.children[0].focus(); else l.focus();
@@ -127,6 +127,9 @@ function sh_' . $idn . '(a){
 tx_' . $idn . '.onkeydown = function(e){
 	if(e.keyCode == "9"){
 		dv_' . $idn . '.style.display="none";
+		if(!tx_' . $idn . '.value){
+			' . $idn . '.value = "-1";
+		}
 	}
 }
 tx_' . $idn . '.onkeyup = function(e){
@@ -146,7 +149,7 @@ if ($idn == 'e_servs_id') {
 	$ret .= '
 			}else if(sl_e_servs_id.options.length == 0){
 				dv_e_servs_id.style.display = "none";
-				va_e_servs_id.value = tx_e_servs_id.value;
+				e_servs_id.value = tx_e_servs_id.value;
 				tx_e_grups_id.focus();';
 }
 $ret .= '
@@ -182,7 +185,7 @@ if(combos.indexOf("' . $idn . '") < 0) combos.push("' . $idn . '");
 	echo '<div><label>' . $txt . '</label> <div id="cb_' . $idn . '">
 <input type="text" value="' . $nam . '" id="tx_' . $idn . '" class="combobox_input">
 <input type="button" value="&#9662;" id="bt_' . $idn . '" class="combobox_button" tabindex="-1">
-<input type="hidden" value="' . $id . '" id="va_' . $idn . '" name="' . $idn . '">
+<input type="hidden" value="' . $id . '" id="' . $idn . '" name="' . $idn . '">
 <div id="dv_' . $idn . '" style="display: none; position: absolute; z-index: 10;">
 <select id="sl_' . $idn . '" class="combobox_list"></select></div></div></div>';
 	return $ret;

@@ -132,7 +132,7 @@ input:active, select:active, .edit:active {
 
 .money_table td:nth-child(3),
 .money_table td:nth-child(9) {
-	width: 80px;
+	min-width: 80px;
 }
 
 .money_table td:nth-child(4),
