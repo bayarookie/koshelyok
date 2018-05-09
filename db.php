@@ -156,8 +156,9 @@ $ret .= '
 			}
 		}
 	}else{
+		sl_' . $idn . '.value = "";
+		' . $idn . '.value = "-1";
 		if(e.keyCode == "13"){
-			sl_' . $idn . '.value = "";
 			fn_' . $idn . '();
 		}
 	}
