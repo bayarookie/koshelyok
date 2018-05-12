@@ -6,12 +6,12 @@ if (move_uploaded_file($_FILES['bankstate']['tmp_name'], $uploadfile)) {
 } else {
 	$s = 'Возможная атака с помощью файловой загрузки!';
 }
+$path_parts = pathinfo($uploadfile);
 if ($debug) {
 echo '<pre>';
 echo $s . '
 Некоторая отладочная информация:';
 print_r($_FILES);
-$path_parts = pathinfo($uploadfile);
 echo $path_parts['extension'];
 echo '</pre>';
 }
