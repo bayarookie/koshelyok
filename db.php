@@ -49,6 +49,12 @@ if (isset($_POST['logout'])) {
 
 include 'config.php';
 
+$frm = $_POST['frm'] ?? '';
+if ($frm == 'install') {
+	include 'install.php';
+	die();
+}
+
 function byQu($query) {
 	$mysqli = $GLOBALS['mysqli'];
 	$result = $mysqli->query($query);
@@ -204,8 +210,15 @@ function byDt($m) {
 
 //подключение к базе
 $mysqli = new mysqli(DB_ADRES, DB_LOGIN, DB_PASSW, DB_DATAB);
-if ($mysqli->connect_errno) {
-	die('Не удалось подключиться: ' . $mysqli->connect_error);
+$i = $mysqli->connect_errno;
+if ($i) {
+	$s = 'Не удалось подключиться: ' . $mysqli->connect_errno . ' ' . $mysqli->connect_error;
+	if ($i == 1045) {
+		die('<main>' . $s . '<br>Возможно, это первый запуск, запустить установку?
+<input type="button" value="Установить" onclick="get_form(\'install\',0,\'\')"></main>');
+	} else {
+		die($s);
+	}
 }
 $mysqli->set_charset(DB_CHARS);
 
@@ -236,7 +249,6 @@ if ($user != '') {
 }
 if ($user_id > 0) {
 	if (isset($_POST['load']) || isset($_POST['login'])) include 'menu.php';
-	$frm = $mysqli->real_escape_string($_POST['frm'] ?? '');
 	if ($frm != '') include $frm . '.php';
 	if ($debug) {
 		echo '<pre>';
