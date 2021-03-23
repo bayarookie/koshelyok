@@ -105,6 +105,10 @@ function money_table(fltr, id, s){
 		data += "&f=5&f_bgrup_id=" + id + s;
 		var el_2 = document.getElementById("report");
 		if(el_2) data += get_inputs(el_2, "input[type=date]");
+	}else if(fltr == 10){
+		data += "&f=5&f_bgrup_id=" + id + s;
+		var el_2 = document.getElementById("report");
+		if(el_2) data += get_inputs(el_2, "input[type=hidden], select");
 	}else if(fltr >= 0){
 		var el_1 = document.getElementById("o_money_order_id");
 		if(fltr == 0) if(el_1) el_1.value = id;
@@ -164,7 +168,7 @@ function get_report(form_id){
 	var data = "frm=" + form_id,
 		sect = document.getElementById("report");
 	if(sect) data += get_inputs(sect, "input[type=date], input[type=hidden], select");
-	else sect = get_new_sect("report");
+	sect = get_new_sect("report");
 	ajaxsend(data, sect);
 }
 
@@ -187,6 +191,45 @@ document.onclick = function(e){
 			el.children[3].style.display = "none";
 		}
 	});
+}
+
+document.onkeyup = function(e) {
+	if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) exit;
+	if (e.key == 'Insert') {
+		if (document.getElementById("edit_table_servs_v")) {
+			get_form('edit_form', -1, 'servs_v');
+		} 
+		else
+		if (document.getElementById("edit_table_grups_v")) {
+			get_form('edit_form', -1, 'grups_v');
+		} 
+		else
+		if (document.getElementById("edit_table_bgrup")) {
+			get_form('edit_form', -1, 'bgrup');
+		} 
+		else
+		if (document.getElementById("edit_table_walls")) {
+			get_form('edit_form', -1, 'walls');
+		} 
+		else
+		if (document.getElementById("edit_table_users")) {
+			get_form('edit_form', -1, 'users');
+		} 
+		else
+		if (document.getElementById("edit_table_money_order")) {
+			get_form('edit_form', -1, 'money_order');
+		} 
+		else
+			get_form('edit_form', -1, 'money');
+	}
+	else
+	if (e.key == 'Escape') {
+		if (document.getElementById("edit_form")) {
+			id_close('edit_form');
+		}
+		else
+			id_close('edit_table');
+	};
 }
 
 window.onload = load();

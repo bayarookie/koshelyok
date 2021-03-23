@@ -2,10 +2,8 @@
 $tbl = $mysqli->real_escape_string($_POST['tbl'] ?? '');
 $e_id = intval($_POST['e_id'] ?? -1);
 if (empty($tbl)) die('table?');
-if ($tbl == 'servs_v') {
-	$table = 'servs';
-} elseif ($tbl == 'grups_v') {
-	$table = 'grups';
+if (substr($tbl, -2) == '_v') {
+	$table = substr($tbl, 0, -2);
 } else {
 	$table = $tbl;
 }
@@ -38,11 +36,13 @@ for ($i = 1; $i < count($finfo); $i++) {
 		$s = "STR_TO_DATE('" . $mysqli->real_escape_string($_POST['e_' . $f] ?? date('Y-m-d')) . "', '%Y-%m-%d')";
 	} elseif (in_array($finfo[$i]->type, [1,2,3,8,9])) { //int
 		$s = intval($_POST['e_' . $f] ?? -1);
-		if (($f == 'servs_id')&&($s == 0)) {
+		if ($s == 0) {
 			$a = $mysqli->real_escape_string($_POST['e_' . $f] ?? '');
 			if ($a !== '') {
-				byQu("INSERT INTO servs (name, grups_id, comment) VALUES ('$a', -1, '')");
-				$s = $mysqli->insert_id;
+				if ($f == 'servs_id') {
+					byQu("INSERT INTO servs (name, grups_id, comment) VALUES ('$a', -1, '')");
+					$s = $mysqli->insert_id;
+				}
 			}
 		}
 	} elseif ($finfo[$i]->type == 246) {

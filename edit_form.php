@@ -39,7 +39,7 @@ for ($i = 1; $i < count($finfo); $i++) {
 		} elseif ($f == 'password') {
 			echo '<input type="password"';
 		} else {
-			echo '<input type="text"';
+			echo '<input type="text" autocomplete="off"';
 		}
 		echo ' value="' . $row[$i] . '" name="e_' . $f . '"></div>';
 	}

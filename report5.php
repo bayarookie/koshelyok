@@ -12,7 +12,7 @@ $sm = 0; $sg = ''; $su = 0;
 $result = byQu("SELECT servs_id, grups.name, IF(servs.comment='',servs.name,servs.comment) AS gnam, SUM(op_summ) as summ
 	FROM money
 	LEFT JOIN servs ON money.servs_id=servs.id
-	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 	GROUP BY grups.id, servs_id
 	ORDER BY grups.name, servs.name");

@@ -1,11 +1,16 @@
 <?php
 include 'db.php';
+$lev1 = isset($_GET['l']) ? intval($_GET['l']) : 1;
 header('Content-type: text/plain; charset=utf-8');
-header('Content-Disposition: attachment; filename=' . DB_DATAB . '.sql');
+if ($lev1 == 1) {
+	header('Content-Disposition: attachment; filename=' . DB_DATAB . '.sql');
+} else {
+	header('Content-Disposition: attachment; filename=data.sql');
+}
 
 echo "-- Koshelyok SQL Dump
 -- version 0.0.2
--- http://bayarookie.wallst.ru
+-- https://gitlab.com/bayarookie/koshelyok
 --
 -- Хост: " . DB_ADRES . "
 -- Время создания: " . date('F j Y, H:i') . "
@@ -45,8 +50,9 @@ if ($ro1[1] == 'VIEW') {
 ";
 	$res2 = byQu("SHOW CREATE TABLE " . $table);
 	$ro2 = $res2->fetch_row();
-	echo $ro2[1] . ";
-
+	echo $ro2[1] . ";\n";
+	if ($lev1 == 1) {
+	echo "
 --
 -- Дамп данных таблицы `$table`
 --
@@ -74,6 +80,6 @@ if ($ro1[1] == 'VIEW') {
 			if ($ro3 = $res3->fetch_row()) echo ","; else break;
 		}
 	echo ";\n";
-	}
+	}}
 }}
 ?>

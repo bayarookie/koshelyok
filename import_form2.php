@@ -38,19 +38,16 @@ function byTr($date, $nm, $summ) {
 	$tb .= '<tr class="' . (($summ < 0) ? 'minus' : 'plus') . '">';
 	$s_id = -1;
 	$name = 'не найден';
-	$g_id = -1;
 	$nm = $mysqli->real_escape_string($nm);
-	$result = byQu("SELECT id, name, grups_id FROM servs WHERE name LIKE '$nm'");
+	$result = byQu("SELECT id, name FROM servs WHERE name LIKE '$nm'");
 	if ($row = $result->fetch_row()) {
 		$s_id = $row[0];
 		$name = $row[1];
-		$g_id = $row[2];
 	} else {
-		$result = byQu("SELECT id, name, grups_id FROM servs WHERE name LIKE '$nm%'");
+		$result = byQu("SELECT id, name FROM servs WHERE name LIKE '$nm%'");
 		if (($result->num_rows == 1) && ($row = $result->fetch_row())) {
 			$s_id = $row[0];
 			$name = $row[1];
-			$g_id = $row[2];
 		} elseif ($result->num_rows == 0) {
 			if (!in_array($nm, $sr)) $sr[] = $nm;
 		}
@@ -64,7 +61,7 @@ function byTr($date, $nm, $summ) {
 		$chkd = ' checked';
 		$trnz = '<td>Новая тр';
 	}
-	$arr = $date . ";" . $summ . ";" . intval($s_id) . ";" . intval($g_id) . ";" . $w_id;
+	$arr = $date . ";" . $summ . ";" . $s_id . ";" . $w_id;
 	$tb .= '<td><input type="checkbox" id="imp_' . $c2 . '" value="' . $arr . '"' . $chkd . '>';
 	$tb .= '<td class="num">' . $c2;
 	$tb .= '<td>' . $date;

@@ -25,10 +25,10 @@ $arr['f_walls_id'] = intval($_POST['f_walls_id'] ?? -1);
 $arr['f_users_id'] = intval($_POST['f_users_id'] ?? -1);
 $filter = '';
 if ($arr['f_servs_id'] > -1) $filter .= ' AND money.servs_id=' . $arr['f_servs_id'];
-if ($arr['f_grups_id'] > -1) $filter .= ' AND money.grups_id=' . $arr['f_grups_id'];
+if ($arr['f_grups_id'] > -1) $filter .= ' AND servs.grups_id=' . $arr['f_grups_id'];
 if ($arr['f_bgrup_id'] > -1) $filter .= ' AND grups.bgrup_id=' . $arr['f_bgrup_id'];
 if ($arr['f_walls_id'] > -1) $filter .= ' AND money.walls_id=' . $arr['f_walls_id'];
-if ($arr['f_users_id'] > -1) $filter .= ' AND money.users_id=' . $arr['f_users_id'];
+if ($arr['f_users_id'] > -1) $filter .= ' AND walls.users_id=' . $arr['f_users_id'];
 
 //сортировка
 echo '<table id="id_money" class="money_table"><thead><tr><th>№<th class="edit" onclick="money_table(0,0)">';
@@ -59,20 +59,21 @@ byTh('op_date', 'Дата');
 byTh('op_summ', 'Сумма');
 byTh('servs_name', 'Контора');
 byTh('grups.name', 'Подгруппа');
-byTh('money.comment', 'Описание');
 byTh('walls.name', 'Кошелёк');
 byTh('users.name', 'Юзер');
+byTh('comment', 'Описание');
 
 //таблица, остаток на начало
 $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	FROM money
-	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<'$f_dtfr'$filter
 	GROUP BY walls_id");
 $cnt = 0;
 while ($row = $result->fetch_assoc()) {
-	echo '<tr><td><td>На начало<td>' . $row['dt'] . '<td>' . $row['summ'] . '<td><td><td><td><td>' . $row['name'] . '<td>';
+	echo '<tr><td><td>На начало<td>' . $row['dt'] . '<td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td><td>';
 	$cnt++;
 }
 echo '</thead><tbody>';
@@ -80,7 +81,8 @@ echo '</thead><tbody>';
 if ($cnt > 1) {
 $result = byQu("SELECT SUM(op_summ) AS summ, MAX(op_date) AS dt
 	FROM money
-	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<'$f_dtfr'$filter");
 if ($row = $result->fetch_assoc())
@@ -91,16 +93,15 @@ if ($row = $result->fetch_assoc())
 $result = byQu("SELECT money.id, op_date,
 	IF(op_summ>=0,op_summ,NULL) AS summ1, IF(op_summ<0,op_summ,NULL) AS summ2,
 	IF(servs.comment='',servs.name,servs.comment) AS servs_name,
-	grups.name AS grups_name, money.comment, walls.name AS walls_name, users.name AS users_name
+	grups.name AS grups_name, walls.name AS walls_name, users.name AS users_name, money.comment
 	FROM money
 	LEFT JOIN servs ON money.servs_id=servs.id
-	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	LEFT JOIN bgrup ON grups.bgrup_id=bgrup.id
 	LEFT JOIN walls ON money.walls_id=walls.id
-	LEFT JOIN users ON money.users_id=users.id
+	LEFT JOIN users ON walls.users_id=users.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'$filter
 	$order");
-$rep = ($result->num_rows > 25);
 $cnt = 0;
 while ($ro2 = $result->fetch_assoc()) {
 	echo '<tr>';
@@ -112,30 +113,33 @@ while ($ro2 = $result->fetch_assoc()) {
 	echo '<td>' . $ro2['summ2'];
 	echo '<td>' . mb_substr($ro2['servs_name'], 0, 18);
 	echo '<td>' . $ro2['grups_name'];
-	echo '<td>' . mb_substr($ro2['comment'], 0, 18);
 	echo '<td>' . $ro2['walls_name'];
 	echo '<td>' . $ro2['users_name'];
+	echo '<td>' . mb_substr($ro2['comment'], 0, 18);
 }
 
 echo '</tbody><tfoot>';
 //сумма движения денег
 $result = byQu("SELECT SUM(if(op_summ>0,op_summ,0)) AS summ1, SUM(if(op_summ<0,op_summ,0)) AS summ2, walls.name
 	FROM money
-	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
 $cnt = 0;
 while ($row = $result->fetch_assoc()){
-	echo '<tr><td><td>Сумма<td><td>' . $row['summ1'] . '<td>' . $row['summ2'] . '<td><td><td><td>' . $row['name'] . '<td>';
+	echo '<tr><td><td>Сумма<td><td>' . $row['summ1'] . '<td>' . $row['summ2'] . '<td><td><td>' . $row['name'] . '<td><td>';
 	if (floatval($row['summ1']) != 0) $cnt++;
 	if (floatval($row['summ2']) != 0) $cnt++;
 }
-//итого движение денег
+//итого сумма движения денег
 if ($cnt > 1){
 $result = byQu("SELECT SUM(op_summ) AS summ
 	FROM money
-	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
+	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date>='$f_dtfr' and op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc())
 	echo '<tr><td><td>Итого<td><td><td>' . $row['summ'] . '<td><td><td><td><td>';
@@ -144,20 +148,22 @@ if ($row = $result->fetch_assoc())
 //остаток на день
 $result = byQu("SELECT SUM(op_summ) AS summ, walls.name, MAX(op_date) AS dt
 	FROM money
-	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<='$f_dtto'$filter
 	GROUP BY walls_id");
 $cnt = 0;
 while ($row = $result->fetch_assoc()){
-	echo '<tr><td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td><td>' . $row['name'] . '<td>';
+	echo '<tr><td><td>Остаток<td>' . $row['dt'] . '<td><td>' . $row['summ'] . '<td><td><td>' . $row['name'] . '<td><td>';
 	$cnt++;
 }
-//итого на день
+//итого остаток на день
 if ($cnt > 1){
 $result = byQu("SELECT SUM(op_summ) AS summ, MAX(op_date) AS dt
 	FROM money
-	LEFT JOIN grups ON money.grups_id=grups.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	LEFT JOIN walls ON money.walls_id=walls.id
 	WHERE op_date<='$f_dtto'$filter");
 if ($row = $result->fetch_assoc())
@@ -167,8 +173,7 @@ echo '</tfoot>';
 echo '</table></article>';
 
 //фильтры
-echo '<article>';
-if ($rep) echo $t;
+echo '<article>' . $t;
 echo '<div class="form">';
 echo '<div><label>Фильтр: с </label>
 <input type="date" value="' . $f_dtfr . '" name="from"> по <input type="date" value="' . $f_dtto . '" name="to"></div>';

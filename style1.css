@@ -104,7 +104,7 @@ input:focus, input:active, input:hover, .edit:hover {
 }
 
 .money_table td:nth-child(3),
-.money_table td:nth-child(9) {
+.money_table td:nth-child(8) {
 	min-width: 80px;
 }
 

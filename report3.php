@@ -17,7 +17,8 @@ $sd = '';
 $gr = '';
 $res0 = byQu("SELECT grups_id, grups.name, SUM(op_summ) AS summ
 	FROM money
-	LEFT JOIN grups ON grups_id=grups.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 	GROUP BY grups_id
 	ORDER by summ DESC");
@@ -28,6 +29,7 @@ while ($row0 = $res0->fetch_assoc()) {
 	$gr .= '"' . $row0['name'] . '",';
 	$res1 = byQu("SELECT SUM(op_summ) as summ
 		FROM money
+		LEFT JOIN servs ON money.servs_id=servs.id
 		WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto' AND grups_id=" . $row0['grups_id']);
 	if ($row1 = $res1->fetch_assoc()) {
 		$s = floatval($row1['summ'])/$d;

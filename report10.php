@@ -1,41 +1,46 @@
 <?php
-$f_dtto = date('Y-m-d', strtotime($_POST['p_date_to'] ?? 'now'));
-$f_dtfr = date('Y-m-d', strtotime($_POST['p_date_from'] ?? 'first day of this month -1 year'));
-$g = intval($_POST['r_grups_id'] ?? 1);
-echo '<article><div class="form"><div><label>Отчёт №8, помесячно с</label>
+$dtto = strtotime($_POST['p_date_to'] ?? 'now');
+$dtfr = strtotime($_POST['p_date_from'] ?? 'first day of this month -3 month');
+$f_dtto = date('Y-m-d', $dtto);
+$f_dtfr = date('Y-m-d', $dtfr);
+$u = intval($_POST['r_users_id'] ?? 1);
+$arr['r_users_id'] = $u;
+$g = intval($_POST['r_bgrup_id'] ?? 2);
+$arr['r_bgrup_id'] = $g;
+echo '<article><div class="form"><div><label>Отчёт №10, помесячно с</label>
 <input type="date" value="' . $f_dtfr . '" name="p_date_from" placeholder="Дата">
 по <input type="date" value="' . $f_dtto . '" name="p_date_to" placeholder="Дата"></div>';
-$arr['r_grups_id'] = $g;
-$j = byCb('r_grups_id');
-echo '<div><label> </label> <input type="button" value="Отчёт" onclick="get_report(\'report8\')">
+$j = byCb('r_users_id');
+$j = byCb('r_bgrup_id');
+echo '<div><label> </label> <input type="button" value="Отчёт" onclick="get_report(\'report10\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></div></div>
 <table><tr><th>Месяц';
-$res0 = byQu("SELECT grups_id, grups.name, SUM(op_summ) as summ
+$res0 = byQu("SELECT bgrup_id, bgrup.name, users_id, SUM(op_summ) as summ
 	FROM money
 	LEFT JOIN servs ON money.servs_id=servs.id
 	LEFT JOIN grups ON servs.grups_id=grups.id
-	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto' AND grups_id=$g");
+	LEFT JOIN bgrup ON grups.bgrup_id=bgrup.id
+	LEFT JOIN walls ON money.walls_id=walls.id
+	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto' AND users_id=$u AND bgrup_id=$g");
 while ($row0 = $res0->fetch_assoc()) echo '<th>' . $row0['name'];
 $gr = "";
 $sm = 0;
-$res1 = byQu("SELECT DATE_FORMAT(op_date,'%Y-%m') as mo, SUM(op_summ) as summ
-	FROM money
-	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-	GROUP BY mo");
-while ($row1 = $res1->fetch_assoc()) {
-	echo '<tr><td>' . $row1['mo'];
+for($d = $dtfr; $d <= $dtto; $d = $d + 86400){
+	$dt = date('Y-m-d', $d);
+	echo '<tr><td>' . $dt;
 	$res0->data_seek(0);
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
 			LEFT JOIN servs ON money.servs_id=servs.id
-			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto' AND grups_id=$g
-			AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
+			LEFT JOIN grups ON servs.grups_id=grups.id
+			LEFT JOIN walls ON money.walls_id=walls.id
+			WHERE op_date='$dt' AND users_id=$u AND bgrup_id=$g");
 		if ($row2 = $res2->fetch_assoc())
 			if ($row2['summ'] == '')
 				echo '<td class="num">0.00';
 			else
-				echo '<td class="edit num" onclick="money_table(4,' . $row0['grups_id'] . ',\'&mo=' . $row1['mo'] . '\')">' . $row2['summ'];
+				echo '<td class="edit num" onclick="money_table(10,' . $row0['bgrup_id'] . ',\'&users_id=' . $row0['users_id'] . '&p_date_from=' . $dt . '&p_date_to=' . $dt . '\')">' . $row2['summ'];
 	}
 	$sm = $sm + floatval($row1['summ']);
 }
@@ -54,8 +59,9 @@ var myChart = new Chart(ctx, {
 		datasets: [
 <?php
 $mo = '';
-$res1->data_seek(0);
-while ($row1 = $res1->fetch_assoc()) $mo .= '"' . $row1['mo'] . '",';
+for($d = $dtfr; $d <= $dtto; $d = $d + 86400){
+	$mo .= '"' . date('Y-m-d', $d) . '",';
+}
 $res0->data_seek(0);
 while ($row0 = $res0->fetch_assoc()) {
 	$co = byCo();
@@ -65,13 +71,14 @@ while ($row0 = $res0->fetch_assoc()) {
 	borderColor: "' . $co . '",
 	fill: false,
 	data: [';
-	$res1->data_seek(0);
-	while ($row1 = $res1->fetch_assoc()) {
+	for($d = $dtfr; $d <= $dtto; $d = $d + 86400){
+		$dt = date('Y-m-d', $d);
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
 			LEFT JOIN servs ON money.servs_id=servs.id
-			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto' AND grups_id=$g
-			AND DATE_FORMAT(op_date,'%Y-%m')='" . $row1['mo'] . "'");
+			LEFT JOIN grups ON servs.grups_id=grups.id
+			LEFT JOIN walls ON money.walls_id=walls.id
+			WHERE op_date='$dt' AND users_id=$u AND bgrup_id=$g");
 		if ($row2 = $res2->fetch_assoc()) echo ($row2['summ'] ? abs($row2['summ']) : '0.00') . ',';
 	}
 	echo ']

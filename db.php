@@ -34,6 +34,25 @@ $fld_nam = array(
 'money_order_id' => 'Сортировка',
 );
 
+$frm = isset($_POST['frm']) ? $_POST['frm'] : '';
+
+if (!file_exists('config.php')) {
+	if ($frm == 'instal2') {
+		include 'instal2.php';
+	} else {
+		include 'install.php';
+	}
+	die();
+}
+if ($frm == 'install') {
+	include 'install.php';
+	die();
+}
+if ($frm == 'instal2') {
+	include 'instal2.php';
+	die();
+}
+
 if (isset($_POST['logout'])) {
 	$_SESSION['user_id'] = '';
 	session_destroy();
@@ -49,12 +68,6 @@ if (isset($_POST['logout'])) {
 
 include 'config.php';
 
-$frm = $_POST['frm'] ?? '';
-if ($frm == 'install') {
-	include 'install.php';
-	die();
-}
-
 function byQu($query) {
 	$mysqli = $GLOBALS['mysqli'];
 	$result = $mysqli->query($query);
@@ -62,6 +75,17 @@ function byQu($query) {
 	return $result;
 }
 
+/* Filtered ComboBox html5 javascript css
+ * tx_idn - input[type=text]
+ * bt_idn - input[type=button]
+ *    idn - input[type=hidden] id storage, if value = -1 {add tx_idn.value to database}
+ * dv_idn - div display: block or none
+ * sl_idn - select
+ * fn_idn - function, get value from select, focus next element
+ * sh_idn - function, show select
+ * ar_idn - array
+ * echo byCb('e_table_id'); fieldname = tablename . '_id';
+ */
 function byCb($idn) {
 	$fld_nam = $GLOBALS['fld_nam'];
 	$arr = $GLOBALS['arr'];
@@ -69,42 +93,19 @@ function byCb($idn) {
 	$txt = $fld_nam[$tbl . '_id'];
 	$id = $arr[$idn];
 	$nam = '';
-	if ($idn == 'e_servs_id') {
-		$ret = 'var ar_e_servs_id = ([[-1, "", -1, ""],';
-		$result = byQu("SELECT servs.id, servs.name, servs.comment, grups_id, grups.name as grups_name
-		FROM servs LEFT JOIN grups ON grups_id=grups.id ORDER BY name");
-		while ($row = $result->fetch_assoc()) {
-			$n = $row['name'] . (($row['comment']) ? ' - ' . $row['comment'] : '');
-			$ret .= '[' . $row['id'] . ', "' . $n . '", ' . $row['grups_id'] . ', "' . $row['grups_name'] . '"],';
-			if ($row['id'] == $id) $nam = $n;
-		}
-		$ret .= ']);';
-	} else {
-		$ret = 'var ar_' . $idn . ' = ([[-1, ""],';
-		$result = byQu("SELECT id, name, comment FROM $tbl ORDER BY name");
-		while ($row = $result->fetch_assoc()) {
-			$n = $row['name'] . (($row['comment']) ? ' - ' . $row['comment'] : '');
-			$ret .= '[' . $row['id'] . ', "' . $n . '"],';
-			if ($row['id'] == $id) $nam = $n;
-		}
-		$ret .= ']);';
+	$ret = 'var ar_' . $idn . ' = ([[-1, ""],';
+	$result = byQu("SELECT id, name, comment FROM $tbl ORDER BY name");
+	while ($row = $result->fetch_assoc()) {
+		$n = $row['name'] . (($row['comment']) ? ' - ' . $row['comment'] : '');
+		$ret .= '[' . $row['id'] . ', "' . $n . '"],';
+		if ($row['id'] == $id) $nam = $n;
 	}
-	$ret .= '
+	$ret .= ']);
 function fn_' . $idn . '(){
 	dv_' . $idn . '.style.display = "none";
 	if(sl_' . $idn . '.value){
-		tx_' . $idn . '.value = sl_' . $idn . '.options[sl_' . $idn . '.selectedIndex].text;';
-if ($idn == 'e_servs_id') {
-$ret .= '
-		var a = sl_e_servs_id.value.split("\t");
-		e_servs_id.value = a[0];
-		e_grups_id.value = a[1];
-		tx_e_grups_id.value = a[2];';
-} else {
-$ret .= '
-		' . $idn . '.value = sl_' . $idn . '.value;';
-}
-$ret .= '
+		tx_' . $idn . '.value = sl_' . $idn . '.options[sl_' . $idn . '.selectedIndex].text;
+		' . $idn . '.value = sl_' . $idn . '.value;
 	}else{
 		' . $idn . '.value = -1;
 	}
@@ -133,35 +134,33 @@ function sh_' . $idn . '(a){
 tx_' . $idn . '.onkeydown = function(e){
 	if(e.keyCode == "9"){
 		dv_' . $idn . '.style.display="none";
-		if(!tx_' . $idn . '.value){
-			' . $idn . '.value = "-1";
+		if(tx_' . $idn . '.value && ' . $idn . '.value == "-1"){
+			tx_' . $idn . '.value = "";
 		}
 	}
 }
 tx_' . $idn . '.onkeyup = function(e){
-	if((tx_' . $idn . '.value)||(e.keyCode == "40")){
+	if(e.keyCode == "38" || e.keyCode == "40"){
 		sh_' . $idn . '(false);
-		if(e.keyCode == "40"){
-			sl_' . $idn . '.focus();
-			if((sl_' . $idn . '.selectedIndex < 0)&&(sl_' . $idn . '.options.length > 0)){
-				sl_' . $idn . '.selectedIndex = 0;
-			}
+		sl_' . $idn . '.focus();
+		if((sl_' . $idn . '.selectedIndex < 0)&&(sl_' . $idn . '.options.length > 0)){
+			sl_' . $idn . '.selectedIndex = 0;
 		}
-		if(e.keyCode == "13"){
-			if(sl_' . $idn . '.options.length == 1){
-				sl_' . $idn . '.selectedIndex = 0;
-				fn_' . $idn . '();';
-if ($idn == 'e_servs_id') {
-	$ret .= '
-			}else if(sl_e_servs_id.options.length == 0){
-				dv_e_servs_id.style.display = "none";
-				e_servs_id.value = tx_e_servs_id.value;
-				tx_e_grups_id.focus();';
-}
-$ret .= '
-			}
+	}else if(tx_' . $idn . '.value && e.keyCode == "13"){
+		sh_' . $idn . '(false);
+		if(sl_' . $idn . '.options.length == 1){
+			sl_' . $idn . '.selectedIndex = 0;
+			fn_' . $idn . '();
+		}else{
+			' . $idn . '.value = tx_' . $idn . '.value;
+			dv_' . $idn . '.style.display = "none";
+			var l = tx_' . $idn . '.parentElement.parentElement.nextElementSibling.children[1];
+			if(l.children[0]) l.children[0].focus(); else l.focus();
 		}
+	}else if(tx_' . $idn . '.value){
+		sh_' . $idn . '(false);
 	}else{
+		dv_' . $idn . '.style.display = "none";
 		sl_' . $idn . '.value = "";
 		' . $idn . '.value = "-1";
 		if(e.keyCode == "13"){
@@ -190,7 +189,7 @@ if(combos.indexOf("' . $idn . '") < 0) combos.push("' . $idn . '");
 
 ';
 	echo '<div><label>' . $txt . '</label> <div id="cb_' . $idn . '">
-<input type="text" value="' . $nam . '" id="tx_' . $idn . '" class="combobox_input">
+<input type="text" value="' . $nam . '" id="tx_' . $idn . '" class="combobox_input" autocomplete="off" placeholder="Все">
 <input type="button" value="&#9662;" id="bt_' . $idn . '" class="combobox_button" tabindex="-1">
 <input type="hidden" value="' . $id . '" id="' . $idn . '" name="' . $idn . '">
 <div id="dv_' . $idn . '" style="display: none; position: absolute; z-index: 10;">
@@ -213,7 +212,7 @@ $mysqli = new mysqli(DB_ADRES, DB_LOGIN, DB_PASSW, DB_DATAB);
 $i = $mysqli->connect_errno;
 if ($i) {
 	$s = 'Не удалось подключиться: ' . $mysqli->connect_errno . ' ' . $mysqli->connect_error;
-	if ($i == 1045) {
+	if (($i == 1045)||($i == 1049)) {
 		die('<main>' . $s . '<br>Возможно, это первый запуск, запустить установку?
 <input type="button" value="Установить" onclick="get_form(\'install\',0,\'\')"></main>');
 	} else {

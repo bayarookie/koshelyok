@@ -1,15 +1,16 @@
 <?php
 $f_dtto = date('Y-m-d', strtotime($_POST['p_date_to'] ?? 'now'));
 $f_dtfr = date('Y-m-d', strtotime($_POST['p_date_from'] ?? byDt('MIN')));
-echo '<article><p>Отчёт №6, по пользователям
+echo '<article><p>Отчёт №6, по пользователям, подгруппам
 с <input type="date" value="' . $f_dtfr . '" name="p_date_from" placeholder="Дата">
 по <input type="date" value="' . $f_dtto . '" name="p_date_to" placeholder="Дата">
 <input type="button" value="Отчёт" onclick="get_report(\'report6\')">
 <input type="button" value="Закрыть" onclick="id_close(\'report\')"></p>';
-echo '<table><tr><th>Группа';
+echo '<table><tr><th>Подгруппа';
 $res0 = byQu("SELECT users_id, users.name, SUM(op_summ) as summ
 	FROM money
-	LEFT JOIN users ON users_id=users.id
+	LEFT JOIN walls ON money.walls_id=walls.id
+	LEFT JOIN users ON walls.users_id=users.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 	GROUP BY users_id
 	ORDER BY users.name");
@@ -19,7 +20,8 @@ echo '<th>Сумма';
 $sm = 0;
 $res1 = byQu("SELECT grups_id, grups.name, SUM(op_summ) as summ
 	FROM money
-	LEFT JOIN grups ON grups_id=grups.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 	GROUP BY grups_id
 	ORDER BY summ DESC");
@@ -29,6 +31,8 @@ while ($row1 = $res1->fetch_assoc()) {
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
+			LEFT JOIN servs ON money.servs_id=servs.id
+			LEFT JOIN walls ON money.walls_id=walls.id
 			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 			AND grups_id=" . $row1['grups_id'] . " AND users_id='" . $row0['users_id'] . "'");
 		if ($row2 = $res2->fetch_assoc()) {
@@ -70,6 +74,8 @@ while ($row0 = $res0->fetch_assoc()) {
 	while ($row1 = $res1->fetch_assoc()) {
 		$res2 = byQu("SELECT ABS(SUM(op_summ)) as summ
 			FROM money
+			LEFT JOIN servs ON money.servs_id=servs.id
+			LEFT JOIN walls ON money.walls_id=walls.id
 			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 			AND grups_id=" . $row1['grups_id'] . " AND users_id='" . $row0['users_id'] . "'");
 		if ($row2 = $res2->fetch_assoc()) echo ($row2['summ'] ?: '0.00') . ',';
@@ -99,7 +105,7 @@ echo '],labels: [' . $us . ']';
 				display: true,
 				scaleLabel: {
 					display: true,
-					labelString: 'Группа'
+					labelString: 'Подгруппа'
 				}
 			}],
 			yAxes: [{

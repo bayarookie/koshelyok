@@ -14,8 +14,9 @@ $sd = '';
 $gr = '';
 $result = byQu("SELECT bgrup_id, bgrup.name, SUM(op_summ) as summ
 	FROM money
-	LEFT JOIN grups ON grups_id=grups.id
-	LEFT JOIN bgrup ON bgrup_id=bgrup.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
+	LEFT JOIN bgrup ON grups.bgrup_id=bgrup.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 	GROUP BY bgrup_id
 	ORDER BY summ DESC");

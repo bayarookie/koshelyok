@@ -16,8 +16,9 @@ echo '<th>Сумма';
 $sm = 0;
 $res1 = byQu("SELECT bgrup_id, bgrup.name, SUM(op_summ) as summ
 	FROM money
-	LEFT JOIN grups ON grups_id=grups.id
-	LEFT JOIN bgrup ON bgrup_id=bgrup.id
+	LEFT JOIN servs ON money.servs_id=servs.id
+	LEFT JOIN grups ON servs.grups_id=grups.id
+	LEFT JOIN bgrup ON grups.bgrup_id=bgrup.id
 	WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
 	GROUP BY bgrup_id
 	ORDER BY summ DESC");
@@ -27,9 +28,10 @@ while ($row1 = $res1->fetch_assoc()) {
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
-			LEFT JOIN grups ON grups_id=grups.id
+			LEFT JOIN servs ON money.servs_id=servs.id
+			LEFT JOIN grups ON servs.grups_id=grups.id
 			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-			AND bgrup_id=" . $row1['bgrup_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
+			AND bgrup_id=" . intval($row1['bgrup_id']) . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc())
 			if ($row2['summ'] == '')
 				echo '<td class="num">0.00';
@@ -70,9 +72,10 @@ while ($row1 = $res1->fetch_assoc()) {
 	while ($row0 = $res0->fetch_assoc()) {
 		$res2 = byQu("SELECT SUM(op_summ) as summ
 			FROM money
-			LEFT JOIN grups ON grups_id=grups.id
+			LEFT JOIN servs ON money.servs_id=servs.id
+			LEFT JOIN grups ON servs.grups_id=grups.id
 			WHERE op_date>='$f_dtfr' AND op_date<='$f_dtto'
-			AND bgrup_id=" . $row1['bgrup_id'] . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
+			AND bgrup_id=" . intval($row1['bgrup_id']) . " AND DATE_FORMAT(op_date,'%Y-%m')='" . $row0['mo'] . "'");
 		if ($row2 = $res2->fetch_assoc()) echo ($row2['summ'] ? abs($row2['summ']) : '0.00') . ',';
 	}
 	echo ']
